@@ -2,7 +2,7 @@ import React, { useReducer } from 'react'
 
 import { defaultReducer } from './reducers'
 
-export const appContext = React.createContext()
+export const appContext = React.createContext() 
 
 function Provider({ children }){
 
@@ -13,6 +13,8 @@ function Provider({ children }){
     const [ descripcion, dispatchDescripcion ] = useReducer(defaultReducer, [])
     const [ comentario, dispatchComentario ] = useReducer(defaultReducer, [])
     const [ contramedida, dispatchContramedida ] = useReducer(defaultReducer, [])
+    const [ timeout, dispatchTimeout ] = useReducer(defaultReducer, [])
+    const [ cantidad, dispatchCantidad ] = useReducer(defaultReducer, [])
     const [ faltas, dispatchFaltas ] = useReducer(defaultReducer, '')
     const [ linea, dispatchLinea ] = useReducer(defaultReducer, '')
     const [ incidencias, dispatchIncidencias ] = useReducer(defaultReducer, '')
@@ -25,12 +27,12 @@ function Provider({ children }){
     return(
         <appContext.Provider
             value={{
-                plan, faltas, linea, incidencias,
+                plan, faltas, linea, incidencias,timeout, cantidad,
                 consola, bajas, job, entrenamiento, mod, actual,
                 diferencia, codigo, descripcion, comentario,
                 dispatchPlan, dispatchFaltas, dispatchLinea, contramedida,
-                dispatchIncidencias, dispatchConsola, dispatchBajas,
-                dispatchJob, dispatchEntrenamiento, dispatchMod, dispatchActual,
+                dispatchIncidencias, dispatchConsola, dispatchBajas, dispatchTimeout,
+                dispatchJob, dispatchEntrenamiento, dispatchMod, dispatchActual, dispatchCantidad,
                 dispatchDiferencia, dispatchCodigo, dispatchDescripcion, dispatchComentario, dispatchContramedida
             }}
         >

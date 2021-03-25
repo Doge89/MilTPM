@@ -27,9 +27,9 @@ function PanelTable({ machine, activities, card }){
 
     return(
         <Table>
-            <div className="machine">{ machine.nombre }</div>
+            <div className="machine">{ machine.nombre }</div> 
             {activityTypes.map((activityType, idx) => (
-                <div className="table" key={idx}>
+                <div className="table margin" key={idx}>
                     <div className="table-header">{activityType.slice(0, 1).toUpperCase() + activityType.slice(1, activityType.length)}</div>
                     <div className="table-row">
                         <PanelTableCell width="10%" className="header">No.</PanelTableCell>

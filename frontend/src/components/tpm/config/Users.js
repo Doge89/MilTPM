@@ -17,7 +17,11 @@ function Users({ users, setUsers }){
     const [userToEdit, setUserToEdit] = useState(null)
 
     const openModal = () => setModalOpen(true)
-    const closeModal = () => setModalOpen(false)
+    const closeModal = () => {
+        setModalOpen(false)
+        setUserToEdit(null)
+    }
+
     const openModalDeleteUser = (idx) => {
         setModalOpenDeleteUser(true)
         setUserID(idx)

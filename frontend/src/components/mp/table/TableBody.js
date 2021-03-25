@@ -1,10 +1,10 @@
 import React, { useContext } from 'react'
 
-import RadioButton from '../common/RadioButton'
+import RadioButton from '../../common/RadioButton'
 
-import { TableRow } from '../../styles/mp'
+import { TableRow } from '../../../styles/mp'
 
-import { appContext } from '../../reducers/ProviderMP'
+import { appContext } from '../../../reducers/ProviderMP'
 
 function TableBody(){
 

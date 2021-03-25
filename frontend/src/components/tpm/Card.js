@@ -1,7 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react'
+import axios from 'axios'
 
 import { Card as CardComponent, CardInfo } from '../../styles/tpm'
 import { ButtonPrimary, Container } from '../../styles/common'
+
+import { URL } from '../../var'
 
 function Card({ info, edit, history }){
 
@@ -12,6 +15,22 @@ function Card({ info, edit, history }){
 
     const handleInputProposed = e => setProposed(e.target.value)
     const handleInputImplemented = e => setImplemented(e.target.value)
+
+    const updateData = async (data) => {
+        const res = await axios({
+            url: `${URL}/tpm`,
+            method: 'PUT',
+            data
+        })
+
+        return res.data
+    }
+
+    const handleBtn = () => {
+        /* updateData({ proposed, implemented }).then(() => {
+
+        }).catch(e => console.log(e)) */
+    }
 
     useEffect(() => {
         ref.current.scrollIntoView({ behavior: 'smooth' })
@@ -101,6 +120,7 @@ function Card({ info, edit, history }){
                             width="100%"
                             justifyContent="center"
                             alignItems="center"
+                            onClick={handleBtn}
                         >
                             <ButtonPrimary width="15vw" height="4vh">Gurdar cambios</ButtonPrimary>
                         </Container>

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import MainContainer from '../components/common/MainContainer'
-import Table from '../components/mp/Table'
+import Table from '../components/mp/table/Table'
 
 import { TableContainer } from '../styles/mp'
 

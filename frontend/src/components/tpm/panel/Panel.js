@@ -3,11 +3,14 @@ import React, { useState, useContext } from 'react';
 import MachineSelector from '../Selector'
 import PanelTable from './PanelTable'
 import Card from '../Card'
+import axios from 'axios'
 
 import { Container, SatusContainer, Status } from '../../../styles/tpm'
 import { ButtonPrimary } from '../../../styles/common'
 
 import { appContext } from '../../../reducers/ProviderTPM' 
+
+import { URL } from '../../../var'
 
 function Panel({ setMachine, machines, machine, activities }){
 
@@ -16,6 +19,24 @@ function Panel({ setMachine, machines, machine, activities }){
     const [card, setCard] = useState(false)
     const [cardType, setCardType] = useState(false)
     const [description, setDescription] = useState('')
+
+    const postData = async (data) => {
+        const res = await axios({
+            url: `${URL}/tpm`,
+            method: 'POST',
+            data
+        })
+
+        return res.data
+    }
+
+    const postInfo = () => {
+        postData({ status: context.status }).then((data) => {
+
+        }).catch(e => {
+            console.log(e)
+        })
+    }
 
     const showCard = () => {
         setCard(!card)

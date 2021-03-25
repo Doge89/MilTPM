@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 
 import Input from '../../common/Input'
 
@@ -10,29 +10,17 @@ function TableDateFTQ({ getWidthCell, idx, history, info }){
 
     const context = useContext(appContext)
 
-    const [codigo, setCodigo] = useState('')
-    const [cantidad, setCantidad] = useState('')
-
     const handleInputCondigo = e => {
-        setCodigo(e.target.value)
         let newCodigo = [...context.codigo]
         newCodigo[idx] = e.target.value
         context.dispatchCodigo({ type: 'SET', value: newCodigo })
     }
 
     const handleInputCantidad = e => {
-        setCantidad(e.target.value)
         let newCantidad = [...context.cantidad]
         newCantidad[idx] = e.target.value
         context.dispatchCantidad({ type: 'SET', value: newCantidad })
     }
-
-    useEffect(() => {
-        const valueCode = info.code?.find(infoCode => infoCode.from === Number(info.start.split(':')[0]))
-        const valueQuantity = info.quantity?.find(infoQuantity => infoQuantity.from === Number(info.start.split(':')[0]))
-        if(valueCode){ setCodigo(valueCode.value) }
-        if(valueQuantity){ setCantidad(valueQuantity.value) }
-    }, [info])
 
     return(
         <>
@@ -44,7 +32,7 @@ function TableDateFTQ({ getWidthCell, idx, history, info }){
                 width="80%"
                 woLabel
                 inputClassName="border-bottom text-align"
-                value={codigo}
+                value={context.codigo[idx] || ''}
                 onChange={handleInputCondigo}
                 disabled={history}
             />
@@ -57,7 +45,7 @@ function TableDateFTQ({ getWidthCell, idx, history, info }){
                 width="80%"
                 woLabel
                 inputClassName="border-bottom text-align"
-                value={cantidad}
+                value={context.cantidad[idx] || ''}
                 onChange={handleInputCantidad}
                 disabled={history}
             />

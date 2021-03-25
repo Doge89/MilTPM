@@ -30,11 +30,11 @@ function Provider({ children }){
         <appContext.Provider
             value={{
                 failType, line, technician, superMTTO, superPRDN, reportedBy, machineType, machineTag, description,
-                type, failType, productionAffected, technician, technicianChief, startedAt, endAt, fixedBy,
+                type, productionAffected, technicianChief, startedAt, endAt, fixedBy,
                 partsUsed, causedBy, timeout,validatedBy ,
-                dispatchFailType, dispatchLine, dispatchTechnician, dispatchSuperMTTO, dispatchDescription,
+                dispatchLine, dispatchTechnician, dispatchSuperMTTO, dispatchDescription,
                 dispatchSuperPRDN, dispatchReportedBy, dispatchMachineType, dispatchMachineTag, dispatchType,
-                dispatchFailType, dispatchProductionAffected, dispatchTechnician, dispatchTechnicianChief,
+                dispatchFailType, dispatchProductionAffected, dispatchTechnicianChief,
                 dispatchStartedAt, dispatchEndAt, dispatchFixedBy, dispatchPartsUsed, dispatchCausedBy,
                 dispatchTimeout, dispatchValidatedBy
             }}

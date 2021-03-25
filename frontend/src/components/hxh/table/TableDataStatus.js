@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 
 import Input from '../../common/Input'
 
@@ -6,23 +6,15 @@ import { Cell } from '../../../styles/hxh'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-function TableDataStatus({ getWidthCell, idx, history, info }){
+function TableDataStatus({ getWidthCell, idx, history }){
 
     const context = useContext(appContext)
 
-    const [descripcion, setDescripcion] = useState('')
-
     const handleInput = e => {
-        setDescripcion(e.target.value)
         let newDescripcion = [...context.descripcion]
         newDescripcion[idx] = e.target.value
         context.dispatchDescripcion({ type: 'SET', value: newDescripcion })
     }
-
-    useEffect(() => {
-        const valueDescription = info.description?.find(infoDescription => infoDescription.from === Number(info.start.split(':')[0]))
-        if(valueDescription){ setDescripcion(valueDescription.value) }
-    }, [info])
 
     return(
         <Cell
@@ -33,7 +25,7 @@ function TableDataStatus({ getWidthCell, idx, history, info }){
                 width="80%"
                 woLabel
                 inputClassName="border-bottom text-align"
-                value={descripcion}
+                value={context.descripcion[idx] || ''}
                 onChange={handleInput}
                 disabled={history}
             />

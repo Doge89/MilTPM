@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 
 import Input from '../../common/Input'
 
@@ -6,23 +6,15 @@ import { Cell } from '../../../styles/hxh'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-function TableDataContramedida({ getWidthCell, idx, history, info }){
+function TableDataContramedida({ getWidthCell, idx, history }){
 
     const context = useContext(appContext)
 
-    const [contramedida, setContramedida] = useState('')
-
     const handleInput = e => {
-        setContramedida(e.target.value)
         let newContramedida = [...context.contramedida]
         newContramedida[idx] = e.target.value
         context.dispatchComentario({ type: 'SET', value: newContramedida })
     }
-
-    useEffect(() => {
-        const valueContramedida = info.contramedida?.find(infoContramedida => infoContramedida.from === Number(info.start.split(':')[0]))
-        if(valueContramedida){ setContramedida(valueContramedida.value) }
-    }, [info])
 
     return(
         <Cell
@@ -34,7 +26,7 @@ function TableDataContramedida({ getWidthCell, idx, history, info }){
                 woLabel
                 inputClassName="border-bottom"
                 textarea
-                value={contramedida}
+                value={context.contramedida[idx] || ''}
                 onChange={handleInput}
                 disabled={history}
             />

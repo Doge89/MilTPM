@@ -1,14 +1,14 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 
-import RadioButtons from '../common/RadioButton'
-import Input from '../common/Input'
+import RadioButtons from '../../common/RadioButton'
+import Input from '../../common/Input'
 
-import { Container, Text } from '../../styles/common'
-import { SelectContainer } from '../../styles/mp'
+import { Container, Text } from '../../../styles/common'
+import { SelectContainer } from '../../../styles/mp'
 
-import { appContext } from '../../reducers/ProviderMP'
+import { appContext } from '../../../reducers/ProviderMP'
 
-import { twoDigits } from '../../scripts'
+import { twoDigits } from '../../../scripts'
 
 const date = `${twoDigits(new Date().getDate())}/${twoDigits(new Date().getMonth() +1)}/${new Date().getFullYear()}`
 

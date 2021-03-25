@@ -60,12 +60,12 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
 
     useEffect(() => {
         return () => {
-            if(type !== ''){
+            if(type !== '' && timerRunning){
                 clearInterval(intervalID)
                 localStorage.setItem(`timeBeforeExit${type}`, Date.now())
             }
         }
-    }, [intervalID, type])
+    }, [intervalID, type, timerRunning])
 
     useEffect(() => {
         if(timerPaused){ 

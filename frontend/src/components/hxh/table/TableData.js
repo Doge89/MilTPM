@@ -25,7 +25,7 @@ function TableData({ width, height, subtitlesCentered, subtitles, title, info, i
         >
             {title === "Hora" ? (
                 <TableDataHour 
-                    info={{ start: info.start, end: info.end, plan: info.plan }}
+                    info={{ start: info.start, end: info.end }}
                     getWidthCell={getWidthCell}
                     idx={idx}
                     history={history}
@@ -35,37 +35,32 @@ function TableData({ width, height, subtitlesCentered, subtitles, title, info, i
                     getWidthCell={getWidthCell}
                     idx={idx}
                     history={history}
-                    info={{ start: info.start, end: info.end, actual: info.actual, difference: info.difference, timeout: info.timeout }}
                 />
             ) : title === "FTQ" ? (
                 <TableDataFTQ 
                     getWidthCell={getWidthCell} 
                     idx={idx}
                     history={history}
-                    info={{ start: info.start, end: info.end, actual: info.actual, code: info.code, quantity: info.quantity }}
                 />
             ) : title === "Status" ? (
                 <TableDataStatus 
                     getWidthCell={getWidthCell} 
                     idx={idx}
                     history={history}
-                    info={{ start: info.start, end: info.end, actual: info.actual, description: info.description }}
                 />
             ) : title === "Comentarios" ? (
                 <TableDataComentarios 
                     getWidthCell={getWidthCell} 
                     idx={idx}
                     history={history}
-                    info={{ start: info.start, end: info.end, actual: info.actual, comments: info.comments }}
                 />
             ) : (
                 <TableDataContramedida 
                     getWidthCell={getWidthCell} 
                     idx={idx}
                     history={history}
-                    info={{ start: info.start, end: info.end, actual: info.actual, contramedida: info.contramedida }}
                 />
-            )}
+            ) }
         </Container>
     )
 }

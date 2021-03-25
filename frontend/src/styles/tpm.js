@@ -159,11 +159,13 @@ export const Table = styled.div`
     }
 
     .table{
-        width: 100%;
+        width: ${props => props.tableWidth || '100%'};
         display: flex;
         flex-direction: column;
         border: 2px solid black;
     }
+
+    .table.margin{ margin-bottom: 2vh; }
 
     .table-header{
         width: 100%;
@@ -335,7 +337,7 @@ export const CardInfo = styled.div`
     align-items: ${props => props.column ? 'flex-start' : 'center'};
     margin-bottom: 1vw;
     min-height: 5vh;
-    width: 100%;
+    width: ${props => props.width || '100%'};
 
     span, label{
         font-family: Arial, Helvetica, sans-serif;

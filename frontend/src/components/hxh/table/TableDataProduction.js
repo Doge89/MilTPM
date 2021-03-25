@@ -8,16 +8,14 @@ import { appContext } from '../../../reducers/ProviderHXH'
 
 import { twoDigits } from '../../../scripts'
 
-function TableDataProduction({ getWidthCell, idx, history, info }){
+function TableDataProduction({ getWidthCell, idx, history }){
 
     const context = useContext(appContext)
-
-    const [actual, setActual] = useState('0')
-    const [diferencia, setDiferencia] = useState('0')
+    
     const [timeoutHxh, setTimeoutHxh] = useState('00:00:00')
+    const [diferencia, setDiferencia] = useState('')
 
     const handleInputActual = e => {
-        setActual(e.target.value)
         let newActual = [...context.actual]
         newActual[idx] = e.target.value
         context.dispatchActual({ type: 'SET', value: newActual })
@@ -39,18 +37,28 @@ function TableDataProduction({ getWidthCell, idx, history, info }){
     }
 
     const setDifference = dif => {
-        let newDiferencia = [...context.diferencia]
-        newDiferencia[idx] = dif.toString()
-        context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
         setDiferencia(dif.toString())
+        let newDiferencia = [...context.diferencia]
+        if(newDiferencia.length !== 0){
+            newDiferencia[idx] = dif.toString()
+            context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
+        }
+        
     }
 
     const setTimeoutValue = dif => {
+        let newTimeout = [...context.timeout]
         if(dif < 0){
             const timeout = (Math.abs(dif) * 60 * 60 ) / Number(context.plan[idx])
-            setTimeoutHxh(`${twoDigits(Math.floor(timeout / 3600) % 60)}:${twoDigits(Math.floor(timeout / 60) % 60)}:${twoDigits(timeout%60)}`)
+            const timeoutValue = `${twoDigits(Math.floor(timeout / 3600) % 60)}:${twoDigits(Math.floor(timeout / 60) % 60)}:${twoDigits(parseInt(timeout%60))}`
+            setTimeoutHxh(timeoutValue)
+            newTimeout[idx] = timeoutValue
+        }else{ 
+            setTimeoutHxh('00:00:00') 
+            newTimeout[idx] = '00:00:00'
         }
-    }
+        context.dispatchTimeout({ type: 'SET', value: newTimeout })
+    } 
 
     useEffect(() => {
         const dif = Number(context.actual[idx]) - Number(context.plan[idx])
@@ -59,15 +67,6 @@ function TableDataProduction({ getWidthCell, idx, history, info }){
             setTimeoutValue(dif)
         }
     }, [context.plan[idx], context.actual[idx]])
-
-    useEffect(() => {
-        const valueActual = info.actual?.find(infoActual => infoActual.from === Number(info.start.split(':')[0]))
-        const valueDifference = info.difference?.find(infoDifference => infoDifference.from === Number(info.start.split(':')[0]))
-        const valueTimeout = info.timeout?.find(infoTimeout => infoTimeout.from === Number(info.start.split(':')[0]))
-        if(valueActual){ setActual(valueActual.value) }
-        if(valueDifference){ setDiferencia(valueDifference.value) }
-        if(valueTimeout){ setTimeoutHxh(valueTimeout.value) }
-    }, [info])
 
     return(
         <>
@@ -80,7 +79,7 @@ function TableDataProduction({ getWidthCell, idx, history, info }){
                 woLabel
                 inputClassName="border-bottom text-align"
                 onChange={handleInputActual}
-                value={actual}
+                value={context.actual[idx] || ''}
                 type="number"
                 disabled={history}
             />

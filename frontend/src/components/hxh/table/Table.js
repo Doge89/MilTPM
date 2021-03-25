@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react' 
+import React, { useContext, useEffect, useState } from 'react' 
 import axios from 'axios'
 import querystring from 'querystring'
 import { history, useHistory } from 'react-router-dom'
@@ -14,7 +14,7 @@ import { appContext } from '../../../reducers/ProviderHXH'
 
 import { columns, scheduleA, scheduleB, scheduleC, URL } from '../../../var'
 
-function Table({ setRerender, rerender, hxhHistory, data }){
+function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     let timeout
 
@@ -24,9 +24,11 @@ function Table({ setRerender, rerender, hxhHistory, data }){
 
     const history = useHistory()
 
+    const [dataFetched, setDataFetched] = useState([])
+
     const postData = async (data) => {
         const res = await axios({
-            url: `${URL}/jobs/`,
+            url: `${URL}/hxh/post/`,
             method: 'POST',
             data: querystring.stringify(data),
             headers: {
@@ -39,22 +41,28 @@ function Table({ setRerender, rerender, hxhHistory, data }){
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}/Vistas/`,
+            url: `${URL}/hxh/get/`,
             method: 'GET'
         })
 
         return res.data
     }
 
+    const prepareData = () => {
+        return JSON.stringify({
+            actual: context.actual.map(value => Number(value)), diferencia: context.diferencia.map(value => Number(value)), 
+            codigo: context.codigo, descripcion: context.descripcion, plan: context.plan.map(value => Number(value)),
+            comentario: context.comentario,tiempoMuerto: context.timeout, faltas: context.faltas, linea: context.linea, 
+            incidencias: context.incidencias, mod: context.mod, entrenamiento: context.entrenamiento, bajas: context.bajas,
+            consola: context.consola, contramedida: context.contramedida, job: context.job, cantidad: context.cantidad
+        })
+    }
+
     const handleBtn = () => {
         const data = {
-            actual: JSON.stringify(context.actual), diferencia: JSON.stringify(context.diferencia),
-            codigo: JSON.stringify(context.codigo), descripcion: JSON.stringify(context.descripcion), 
-            comentario: JSON.stringify(context.comentario), plan: JSON.stringify(context.plan), 
-            faltas: context.faltas, linea: context.linea, incidencias: context.incidencias,
-            mod: context.mod, entrenamiento: context.entrenamiento, bajas: context.bajas,
-            consola: context.consola, contramedida: context.contramedida, job: context.job
+            data: prepareData()
         }
+        console.log(data)
         postData(data).then(() => {
             window.location.reload()
         }).catch(e => console.log(e))
@@ -70,10 +78,49 @@ function Table({ setRerender, rerender, hxhHistory, data }){
         timeout = setTimeout(checkHour, 1000 * 60)
     }
 
+    const setInfoTable = (data) => {
+
+        let newPLan = []
+        let newActual = []
+        let newDiferencia = []
+        let newCodigo = []
+        let newDescripcion = []
+        let newComentario = []
+        let newContramedida = []
+        let newCantidad = []
+        let newTimeout = []
+
+        for(let i = 0; i < data.length; i++){
+            newPLan[i] = data[i].plan.toString()
+            newActual[i] = data[i].actual.toString()
+            newDiferencia[i] = data[i].diferencia.toString()
+            newCodigo[i] = data[i].codigo
+            newDescripcion[i] = data[i].descripcion
+            newComentario[i] = data[i].comentarios
+            newContramedida[i] = data[i].contramedida
+            newCantidad[i] = data[i].cantidad
+            newTimeout[i] = data[i].tiempoMuerto
+        }
+
+        context.dispatchPlan({ type: 'SET', value: newPLan })
+        context.dispatchActual({ type: 'SET', value: newActual })
+        context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
+        context.dispatchCodigo({ type: 'SET', value: newCodigo })
+        context.dispatchDescripcion({ type: 'SET', value: newDescripcion })
+        context.dispatchComentario({ type: 'SET', value: newComentario })
+        context.dispatchContramedida({ type: 'SET', value: newContramedida })
+        context.dispatchCantidad({ type: 'SET', value: newCantidad })
+        context.dispatchTimeout({ type: 'SET', value: newTimeout })
+    }
+
     useEffect(() => {
-        /* getData().then((data) => {
-            console.log(data)
-        }).catch(e => console.log(e)) */
+        getData().then(({ InfProd, InfGen }) => {
+            const dataInfo = JSON.parse(InfGen)
+            const data = JSON.parse(InfProd).map(row => row.fields)
+            setDataFetched(data)
+            setInfoTable(data)
+            setGeneralInfo(dataInfo)
+        }).catch(e => console.log(e))
         if(!history){ checkHour() }
         return () => { clearTimeout(timeout) }
     }, [])
@@ -96,7 +143,7 @@ function Table({ setRerender, rerender, hxhHistory, data }){
                     scheduleA.map(( hours, idx ) => (
                         <TableRow  
                             columns={columns} 
-                            info={{...hours}}
+                            info={{...hours, ...dataFetched[idx]}}
                             key={idx}
                             idx={idx}
                             length={scheduleA.length}
@@ -106,7 +153,7 @@ function Table({ setRerender, rerender, hxhHistory, data }){
                     scheduleB.map(( hours, idx ) => (
                         <TableRow  
                             columns={columns} 
-                            info={{...hours}}
+                            info={{...hours, ...dataFetched[idx]}}
                             key={idx}
                             idx={idx}
                             length={scheduleB.length}
@@ -116,7 +163,7 @@ function Table({ setRerender, rerender, hxhHistory, data }){
                     scheduleC.map(( hours, idx ) => (
                         <TableRow  
                             columns={columns} 
-                            info={{...hours}}
+                            info={{...hours, ...dataFetched[idx]}}
                             key={idx}
                             idx={idx}
                             length={scheduleC.length}

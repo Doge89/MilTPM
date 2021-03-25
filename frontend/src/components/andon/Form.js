@@ -25,14 +25,18 @@ function Form({ children, location }){
             setTimerPaused(true)
             localStorage.setItem(`timerPaused${type}`, true)
         }
-    } 
-
-    const endTimer = () => {
+    }
+    
+    const removeInfoTimer = () => {
         localStorage.removeItem(`timerValue${type}`)
         localStorage.removeItem(`timerPaused${type}`)
         localStorage.removeItem(`timeBeforeExit${type}`)
         setTimerRunning(false)
         clearInterval(intervalID)
+    }
+
+    const endTimer = () => {
+        removeInfoTimer()
         window.location.reload()
     }
 

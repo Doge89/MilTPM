@@ -32,7 +32,7 @@ function Input({ label, value, setValue, type, id, className, width, woLabel, in
                 <Textarea 
                     id={id}
                     value={value}
-                    onChange={handleInput}
+                    onChange={onChange || handleInput}
                     type={type || 'text'}
                     className={inputClassName}
                     disabled={disabled}

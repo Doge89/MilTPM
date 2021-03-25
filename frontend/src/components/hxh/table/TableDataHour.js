@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 
 import Input from '../../common/Input'
 
@@ -10,10 +10,7 @@ function TableDataHour({ info, getWidthCell, idx, history }){
 
     const context = useContext(appContext)
 
-    const [plan, setPlan] = useState('0')
-
     const handleInput = e => {
-        setPlan(e.target.value)
         let newPlan = [...context.plan]
         newPlan[idx] = e.target.value
         context.dispatchPlan({ type: 'SET', value: newPlan })
@@ -26,11 +23,6 @@ function TableDataHour({ info, getWidthCell, idx, history }){
         }
         return isNaN(total) ? '' : total
     }
-
-    useEffect(() => {
-        const value = info.plan?.find(infoPlan => infoPlan.from === Number(info.start.split(':')[0]))
-        if(value){ setPlan(value.value) }
-    }, [info])
 
     return(
         <>
@@ -55,7 +47,7 @@ function TableDataHour({ info, getWidthCell, idx, history }){
                 width="80%"
                 woLabel
                 inputClassName="border-bottom text-align"
-                value={plan}
+                value={context.plan[idx] || ''}
                 onChange={handleInput}
                 type="number"
                 disabled={history}

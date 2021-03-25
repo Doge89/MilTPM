@@ -37,6 +37,7 @@ export const Textarea = styled.textarea`
     width: 100%;
     appearance: none;
     margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
     
     height: 100%;
 
@@ -55,6 +56,7 @@ export const Input = styled.input`
     border: ${props => props.border || '0'};
     border-radius: ${props => props.borderRadius || '0'};
     appearance: none;
+    font-family: Arial, Helvetica, sans-serif;
     
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
@@ -200,6 +202,7 @@ export const Text = styled.span`
     font-family: Arial, Helvetica, sans-serif;
     font-size: ${props => props.size || '1vw'};
     color: ${props => props.color};
+    font-weight: ${props => props.weight || 'normal'};
 `
 export const Next = styled.span`
     background-color: ${red};

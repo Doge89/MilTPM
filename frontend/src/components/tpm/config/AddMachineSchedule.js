@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal';
+import axios from 'axios'
 
 import { CreateUserForm, CardInfo  } from '../../../styles/tpm'
-import { ButtonPrimary, Text, ModalContainer } from '../../../styles/common'
+import { ButtonPrimary, ModalContainer } from '../../../styles/common'
 
-import { days } from '../../../var'
+import { days, URL } from '../../../var'
  
 const customStyles = {
     content : {
@@ -26,13 +27,28 @@ function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine }){
 
     const [machine, setMachine] = useState(machines[0])
     const [day, setDay] = useState(days[0])
+    
+    const postData = async (data) => {
+        const res = await axios({
+            url: `${URL}/machines`,
+            method: 'POST',
+            data
+        })
+
+        return res.data
+    }
 
     const handleSelectMachine = e => setMachine(e.target.value)
     const handleSelectDay = e => setDay(e.target.value)
 
     const handleBtn = (e) => {
         e.preventDefault()
-        if(machine && day){ addMachine(day, machine) }
+        if(machine && day){
+            /* postData({ day, machine }).then(() => {
+                addMachine(day, machine)
+            }).catch(e => console.log(e)) */
+            addMachine(day, machine)
+        }
     }
 
     return(

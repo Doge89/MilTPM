@@ -130,3 +130,27 @@ export const TableRow = styled.div`
         }
     }
 `
+
+export const SearcherContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    padding: 0 5%;
+    margin-top: 2vh;
+
+    h1{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.5vw;
+        font-weight: bold;
+        margin-bottom: 5vh;
+    }
+
+    .inputs-container{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+`

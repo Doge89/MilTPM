@@ -23,7 +23,7 @@ function Info({ prevInfo, history }){
             case 'Bajas': return context.dispatchBajas({ type: 'SET', value: e.target.value })
             case 'Job': return context.dispatchJob({ type: 'SET', value: e.target.value })
             case 'Entrenamiento': return context.dispatchEntrenamiento({ type: 'SET', value: e.target.value })
-            case 'Mod': return context.dispatchMod({ type: 'SET', value: e.target.value })
+            default: return context.dispatchMod({ type: 'SET', value: e.target.value })
         }
     }
 
@@ -36,7 +36,7 @@ function Info({ prevInfo, history }){
             case 'Bajas': return context.bajas
             case 'Job': return context.job
             case 'Entrenamiento': return context.entrenamiento
-            case 'Mod': return context.mod
+            default: return context.mod
         }
     }
 

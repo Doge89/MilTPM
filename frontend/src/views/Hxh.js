@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import MainContainer from '../components/common/MainContainer'
 import Info from '../components/hxh/table/Info'
@@ -7,11 +7,16 @@ import Table from '../components/hxh/table/Table'
 function Hxh(){
 
     const [rerender, setRerender] = useState(false)
+    const [generalInfo, setGeneralInfo] = useState({})
 
     return (
         <MainContainer>
-            <Info />\
-            <Table setRerender={setRerender} rerender={rerender} />
+            <Info prevInfo={generalInfo} />
+            <Table 
+                setRerender={setRerender} 
+                rerender={rerender} 
+                setGeneralInfo={setGeneralInfo}
+            />
         </MainContainer>
     )
 }

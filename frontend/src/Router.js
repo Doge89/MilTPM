@@ -7,6 +7,8 @@ import Login from './views/Login'
 import Andon from './views/Andon'
 import Tpm from './views/Tpm'
 import Mp from './views/Mp'
+import MpHistory from './views/MpHistory'
+import Layout from './views/Layout'
 
 import ProviderHXH from './reducers/ProviderHXH'
 import ProviderTPM from './reducers/ProviderTPM'
@@ -26,23 +28,23 @@ function Router(){
                         <HxhHistory />
                     </ProviderHXH>
                 </Route>
-                <Route exact path="/" >
-                    <Redirect to="/login" />
-                </Route>
                 <Route exact path="/mp" >
                     <ProviderMP>
                         <Mp />
                     </ProviderMP>
                 </Route>
-                <Route exact path="/login" >
-                    <Login />
-                </Route>
-                <Route exact path="/andon" component={Andon} />
                 <Route exact path="/tpm" >
                     <ProviderTPM>
                         <Tpm />
                     </ProviderTPM>
                 </Route>
+                <Route exact path="/" >
+                    <Redirect to="/login" />
+                </Route>
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/mp/historial" component={MpHistory} />
+                <Route exact path="/andon" component={Andon} />
+                <Route exact path="/layout" component={Layout} />
             </Switch>
         </BrowserRouter>
     )

@@ -20,7 +20,7 @@ function Icon({ name, label, margin, onClick, active }){
             case "materiales": return materiales
             case "milwaukee": return milwaukee
             case "produccion": return produccion
-            case "calidad": return calidad
+            default: return calidad
         }
     }
 

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import Modal from 'react-modal';
+import axios from 'axios'
 
 import { CreateUserForm, CardInfo  } from '../../../styles/tpm'
 import { ButtonPrimary, Text, ModalContainer } from '../../../styles/common'
+
+import { URL } from '../../../var'
  
 const customStyles = {
     content : {
@@ -42,6 +45,26 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
         closeModal()
     }
 
+    const postData = async (data) => {
+        const res = await axios({
+            url: `${URL}/users`,
+            method: 'POST',
+            data
+        })
+
+        return res.data
+    }
+
+    const updateData = async (data) => {
+        const res = await axios({
+            url: `${URL}/users`,
+            method: 'PUT',
+            data
+        })
+
+        return res.data
+    }
+
     const checkData = () =>{
         setErr(false)
         if(!user || !password){
@@ -59,7 +82,15 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
     const handleBtn = (e) => {
         e.preventDefault()
         if(checkData()){
+            if(userToEdit){
+                /* updateData({ user, password, typeUser }).then(() => {
 
+                }).catch(e => console.log(e)) */
+            }else{
+                /* postData({ user, password, typeUser }).then(() => {
+
+                }).catch(e => console.log(e)) */
+            }
         }
     }
 
@@ -116,7 +147,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
                             <option value="user">Usuario</option>
                         </select>
                     </CardInfo>
-                    <ButtonPrimary width="10vw" height="4vh" onClick={handleBtn}>Crear Usuario</ButtonPrimary>
+                    <ButtonPrimary width="15vw" height="4vh" onClick={handleBtn}>{userToEdit ? 'Actualizar Usuario' : 'Crear Usuario'}</ButtonPrimary>
                     {err && <Text color="red">{message}</Text>}
                 </CreateUserForm>
             </ModalContainer>

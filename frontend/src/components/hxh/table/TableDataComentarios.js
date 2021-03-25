@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 
 import Input from '../../common/Input'
 
@@ -6,23 +6,15 @@ import { Cell } from '../../../styles/hxh'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-function TableDataComentarios({ getWidthCell, idx, history, info }){
-
+function TableDataComentarios({ getWidthCell, idx, history }){
+    
     const context = useContext(appContext)
 
-    const [comentario, setComentario] = useState('')
-
     const handleInput = e => {
-        setComentario(e.target.value)
         let newComentario = [...context.comentario]
         newComentario[idx] = e.target.value
         context.dispatchComentario({ type: 'SET', value: newComentario })
     }
-
-    useEffect(() => {
-        const valueComments = info.comments?.find(infoComments => infoComments.from === Number(info.start.split(':')[0]))
-        if(valueComments){ setComentario(valueComments.value) }
-    }, [info])
 
     return(
         <Cell
@@ -34,7 +26,7 @@ function TableDataComentarios({ getWidthCell, idx, history, info }){
                 woLabel
                 inputClassName="border-bottom"
                 textarea
-                value={comentario}
+                value={context.comentario[idx] || ''}
                 onChange={handleInput}
                 disabled={history}
             />

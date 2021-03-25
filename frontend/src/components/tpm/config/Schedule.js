@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 import AddMachineSchedule from './AddMachineSchedule'
 
 import { Container, Table, PanelTableCell } from '../../../styles/tpm'
 import { ButtonPrimary } from '../../../styles/common'
 
-import { days } from '../../../var'
+import { days, URL } from '../../../var'
 
 import trash from '../../../assets/img/basura.png'
 
@@ -23,6 +24,15 @@ function Schedule({ machines }){
     const openModal = () => setModalOpen(true)
     const closeModal = () => setModalOpen(false)
 
+    const deleteData = async (machine) => {
+        const res = await axios({
+            url: `${URL}/machines?id=${machine.id}`,
+            method: 'DELETE'
+        })
+
+        return res.data
+    }
+
     const renderMachines = day => {
         switch(day){
             case 'Lunes': return machinesMonday.map(machine => machine.nombre)
@@ -35,7 +45,7 @@ function Schedule({ machines }){
         }
     }
 
-    const getDayValue = (day) => {
+    const getMachines = (day) => {
         switch(day){
             case 'Lunes': return machinesMonday
             case 'Martes': return machinesTuesday
@@ -47,7 +57,7 @@ function Schedule({ machines }){
         }
     }
 
-    const getDaySetValue = (day) => {
+    const getSetMachines = (day) => {
         switch(day){
             case 'Lunes': return setMachinesMonday
             case 'Martes': return setMachinesTuesday
@@ -60,9 +70,9 @@ function Schedule({ machines }){
     }
 
     const addMachine = (day, machine) => {
-        const newDayValue = [...getDayValue(day)]
+        const newDayValue = [...getMachines(day)]
         newDayValue.push(machine)
-        getDaySetValue(day)(newDayValue)
+        getSetMachines(day)(newDayValue)
         closeModal()
     }
 
@@ -120,9 +130,13 @@ function Schedule({ machines }){
     }
 
     const deleteMachine = (day, idx) => {
-        const newDayValue = [...getDayValue(day)]
-        newDayValue.splice(idx, 1)
-        getDaySetValue(day)(newDayValue)
+        const newMachinesDay = [...getMachines(day)]
+        /* deleteData(newMachinesDay[idx]).then(() => {
+            newMachinesDay.splice(idx, 1)
+            getSetMachines(day)(newMachinesDay)
+        }).catch(e => console.log(e)) */
+        newMachinesDay.splice(idx, 1)
+        getSetMachines(day)(newMachinesDay)
     }
 
     useEffect(() => {
