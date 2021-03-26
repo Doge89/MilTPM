@@ -5,6 +5,7 @@ import TableData from './TableData'
 import { Row } from '../../../styles/hxh'
 
 function TableRow({ columns, info, idx, length, history }){
+
     return(
         <Row borderBottom={idx === length - 1 ? "1px solid rgb(83, 83, 83)" : '0'}>
             {columns.map((column, i) => (

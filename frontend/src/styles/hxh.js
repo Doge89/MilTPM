@@ -86,6 +86,7 @@ export const SearcherContainer = styled.div`
         border: 1px solid black;
         height: 3vh;
         margin-right: 1vw;
+        margin-bottom: 2vh;
     }
 `;
 

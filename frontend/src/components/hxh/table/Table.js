@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react' 
 import axios from 'axios'
 import querystring from 'querystring'
-import { history, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import TableHeadRow from './TableHeadRow'
 import TableRow from './TableRow'
@@ -12,7 +12,7 @@ import { ButtonPrimary } from '../../../styles/common'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-import { columns, scheduleA, scheduleB, scheduleC, URL } from '../../../var'
+import { columns, scheduleA, scheduleB, scheduleC, URL, allDay } from '../../../var'
 
 function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
@@ -102,6 +102,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             newTimeout[i] = data[i].tiempoMuerto
         }
 
+        console.log(newPLan)
+
         context.dispatchPlan({ type: 'SET', value: newPLan })
         context.dispatchActual({ type: 'SET', value: newActual })
         context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
@@ -114,27 +116,34 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     }
 
     useEffect(() => {
-        getData().then(({ InfProd, InfGen }) => {
-            const dataInfo = JSON.parse(InfGen)
-            const data = JSON.parse(InfProd).map(row => row.fields)
-            setDataFetched(data)
-            setInfoTable(data)
-            setGeneralInfo(dataInfo)
-        }).catch(e => console.log(e))
-        if(!history){ checkHour() }
+        
+        if(!hxhHistory){
+            checkHour()
+            getData().then(({ InfProd, InfGen }) => {
+                const dataInfo = JSON.parse(InfGen)
+                const data = JSON.parse(InfProd).map(row => row.fields)
+                setDataFetched(data)
+                setInfoTable(data)
+                setGeneralInfo(dataInfo)
+            }).catch(e => console.log(e))
+        }
         return () => { clearTimeout(timeout) }
     }, [])
+
+    useEffect(() => {
+        if(hxhHistory){ setInfoTable(data) }
+    }, [data])
 
     return(
         <TableContainer>
             <TableHeadRow columns={columns} />
-            {hxhHistory ? [...scheduleA, ...scheduleB, ...scheduleC].map(( hours, idx ) => (
+            {hxhHistory ? allDay.map(( hours, idx ) => data && (
                 <TableRow  
                     columns={columns} 
-                    info={{...hours, ...data}}
+                    info={{...hours, ...data[idx]}}
                     key={idx}
                     idx={idx}
-                    length={[...scheduleA, ...scheduleB, ...scheduleC].length}
+                    length={allDay.length}
                     history
                 />
             )): (

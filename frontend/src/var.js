@@ -42,6 +42,10 @@ export const scheduleC = [{ start: '23:00:00', end: '24:00:00' }, { start: '24:0
 , { start: '00:00:00', end: '01:00:00' }, { start: '01:00:00', end: '02:00:00' }, { start: '02:00:00', end: '03:00:00' }
 , { start: '03:00:00', end: '04:00:00' }, { start: '04:00:00', end: '05:00:00' }, { start: '05:00:00', end: '06:00:00' }]
 
+export const allDay= [{ start: '00:00:00', end: '01:00:00' }, { start: '01:00:00', end: '02:00:00' }, { start: '02:00:00', end: '03:00:00' }
+, { start: '03:00:00', end: '04:00:00' }, { start: '04:00:00', end: '05:00:00' }, { start: '05:00:00', end: '06:00:00' }, ...scheduleA, ...scheduleB,
+{ start: '23:00:00', end: '24:00:00' }]
+
 export const URL = 'http://192.168.100.22:8000'
 
 export const modifyViews = [{ nombre: 'Usuarios', value: 'user' }, { nombre: 'Cronograma', value: 'schedule' }, { nombre: 'Puerto COM', value: 'port' }]
