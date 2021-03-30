@@ -90,7 +90,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         let newCantidad = []
         let newTimeout = []
 
-        for(let i = 0; i < data.length; i++){
+        for(let i = 0; i < data?.length; i++){
             newPLan[i] = data[i].plan.toString()
             newActual[i] = data[i].actual.toString()
             newDiferencia[i] = data[i].diferencia.toString()
@@ -135,7 +135,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     return(
         <TableContainer>
             <TableHeadRow columns={columns} />
-            {hxhHistory ? allDay.map(( hours, idx ) => data && (
+            {hxhHistory ? allDay?.map(( hours, idx ) => data && (
                 <TableRow  
                     columns={columns} 
                     info={{...hours, ...data[idx]}}
