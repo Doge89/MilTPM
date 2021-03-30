@@ -117,12 +117,12 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         
         if(!hxhHistory){
             checkHour()
-            getData().then(({ InfProd, InfGen }) => {
+            getData().then(({ InfProd, InfGen, Linea }) => {
                 const dataInfo = JSON.parse(InfGen)
                 const data = JSON.parse(InfProd).map(row => row.fields)
                 setDataFetched(data)
                 setInfoTable(data)
-                setGeneralInfo(dataInfo)
+                setGeneralInfo({...dataInfo, linea: Linea})
             }).catch(e => console.log(e))
         }
         return () => { clearTimeout(timeout) }

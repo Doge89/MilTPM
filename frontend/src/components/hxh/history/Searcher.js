@@ -31,6 +31,7 @@ function Searcher({ setData, setFound }){
         setLoading(true)
         setErr(false)
         getData().then((data) => {
+            console.log(data)
             setLoading(false)
             setFound(true)
 
