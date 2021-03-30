@@ -66,7 +66,7 @@ function TableHeader({ title, subtitlesCentered, subtitles, className, width, he
                     alignItems="center"
                     justifyContent="center"
                 >
-                    <h2>Contramedida efecto</h2>
+                    <h2>Contramedida defecto</h2>
                 </Container>
                 </>
             ):(

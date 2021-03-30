@@ -12,7 +12,6 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
     
 
     const startInterval = () => {
-        console.log(secondsElapsed)
         setTimerRunning(true)
         let newInterval = setInterval(() => {
             setTimer(timer => {

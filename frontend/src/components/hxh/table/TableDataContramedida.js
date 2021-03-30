@@ -13,7 +13,7 @@ function TableDataContramedida({ getWidthCell, idx, history }){
     const handleInput = e => {
         let newContramedida = [...context.contramedida]
         newContramedida[idx] = e.target.value
-        context.dispatchComentario({ type: 'SET', value: newContramedida })
+        context.dispatchContramedida({ type: 'SET', value: newContramedida })
     }
 
     return(

@@ -102,8 +102,6 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             newTimeout[i] = data[i].tiempoMuerto
         }
 
-        console.log(newPLan)
-
         context.dispatchPlan({ type: 'SET', value: newPLan })
         context.dispatchActual({ type: 'SET', value: newActual })
         context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
