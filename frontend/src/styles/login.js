@@ -52,4 +52,11 @@ export const FormContainer = styled.form`
         font-weight: bold;
         margin-bottom: 2vh
     }
+
+    span{
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1.5vw;
+        text-align: center;
+    }
 `;

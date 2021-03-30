@@ -64,7 +64,7 @@ function Form(){
     }, [])
 
     return(
-        <FormContainer>
+        <FormContainer> 
             <h1>INGRESE SUS DATOS</h1>
             <div>
                 <label htmlFor="user">Usuario</label>
@@ -85,7 +85,7 @@ function Form(){
             </div>  
             <CSRFToken />
             <button onClick={handleBtn}>Ingresar</button>
-            {err && <Text color="white" size="1.5vw">{message}</Text>}
+            {err && <span color="white" size="1.5vw">{message}</span>}
         </FormContainer>
     )
 }
