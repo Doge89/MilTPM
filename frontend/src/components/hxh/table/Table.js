@@ -122,7 +122,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                 const data = JSON.parse(InfProd).map(row => row.fields)
                 setDataFetched(data)
                 setInfoTable(data)
-                setGeneralInfo({...dataInfo, linea: Linea})
+                setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
             }).catch(e => console.log(e))
         }
         return () => { clearTimeout(timeout) }
