@@ -59,8 +59,11 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     objects = UsuariosManager()
 
-    def __str__(self):
-        return self.password
+    def __unicode__(self):
+        return "{} {} \n".format(self.username, self.password)
+
+    def __repr__(self):
+        return self.__unicode__()
 
     @property
     def token(self):
@@ -96,8 +99,8 @@ class Linea(models.Model):
         verbose_name = 'Linea'
         verbose_name_plural = 'Lineas'
     
-    def __str__(self):
-        return self.linea
+    def __unicode__(self):
+        return "%s %s" % (self.linea, self.usuario)
 
 class Andon(models.Model):
     Id = models.AutoField(primary_key=True)
@@ -111,7 +114,7 @@ class Andon(models.Model):
         verbose_name_plural = 'Estados'
 
     def __str__(self):
-        return "{} {} \n".format(self.estatus, self.linea)
+        return "%s %s " % (self.estatus, self.linea)
 
     def __repr__(self):
         return self.__str__()

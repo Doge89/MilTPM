@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 from datetime import datetime, timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'frontend\\build')
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,7 +28,10 @@ SECRET_KEY = 'll8za3b6zcq$yfv^s&gq#u@e7e%=h187vsy+#9yy!gr*ful8=z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    '192.168.100.22',
+]
 
 
 # Application definition
@@ -41,6 +46,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'usuarios',
+    'hxh',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +99,7 @@ ROOT_URLCONF = 'MW.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,7 +124,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'USER': 'root',
         'PASSWORD': '',
-        'NAME': 'mw_dj_2',
+        'NAME': 'pruebas_mw_2',
     }
 }
 
@@ -160,5 +166,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'frontend/build/static')
+]
 
 AUTH_USER_MODEL = 'usuarios.Usuarios'
