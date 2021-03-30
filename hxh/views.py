@@ -1,4 +1,5 @@
 import ast, json, time
+from itertools import chain
 from datetime import datetime
 from .models import infoGeneral, infoProduccion
 from usuarios.models import Usuarios, Linea
@@ -37,13 +38,16 @@ def get(request):
                         datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'{x+1}:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general)
             datosInfProd = _get_objects(Linea = request.session['Linea'])
             serializedInfProd = serializers.serialize('json', list(datosInfProd))
-            datInfGen = infoGeneral.objects.last()
-            #print(datInfGen)
+            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last() 
+            datLinea = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
             datInfGen = model_to_dict(datInfGen)
             serializedInfGen = json.dumps(datInfGen)
+            datLinea = model_to_dict(datLinea)
+            serializedLinea = json.dumps(datLinea)
             print(serializedInfProd)
             print(serializedInfGen)
-            return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen}, status = 200)
+            print(serializedLinea)
+            return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea}, status = 200)
         except Exception as e:
             print(e)
     return HttpResponse(status=401)
@@ -99,15 +103,13 @@ def historial_get(request):
         fecha = request.POST.get('fecha')
         print(fecha)
         dataProd = infoProduccion.objects.filter(fecha__exact=parse_date(f'{fecha}'), info_id__linea_id__linea__exact=f"{request.session['Linea']}")
-        serializedData = serializers.serialize('json', list(dataProd))
         dataGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last()
-        dataGen = model_to_dict(dataGen)
-        serializedDataGen = json.dumps(dataGen)
-
-        print(serializedData)
-        print(serializedDataGen)
-
-        return JsonResponse({'InfProd': serializedData, 'InfGen': serializedDataGen}, status = 200)
+        dataLinea = Linea.objects.filter(usuario_id__username__exact=f"{request.session['Usuario']}")
+        serializedData = serializers.serialize('json', list(dataProd))
+        serializedDataGen = json.dumps(model_to_dict(dataGen))
+        serializedDataLinea = serializers.serialize('json', list(dataLinea))
+        
+        return JsonResponse({'InfProd': serializedData, 'InfGen': serializedDataGen, 'Linea': serializedDataLinea}, status = 200)
     return HttpResponse(status=405)
 #METODOS SIN VISTAS 
 def _get_objects(Linea = None):
