@@ -6,7 +6,7 @@ import { twoDigits } from '../../scripts'
 
 let secondsElapsed = 0
 
-function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type }){
+function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer }){
 
     const [timer, setTimer] = useState(0)
     
@@ -26,6 +26,7 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
     const startTimeOut = (e) => {
         e.preventDefault();
         const timerValue = localStorage.getItem(`timerValue${type}`)
+        startTimer()
         if(!timerValue){ startInterval() }
     } 
 
