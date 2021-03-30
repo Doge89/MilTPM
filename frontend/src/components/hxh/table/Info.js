@@ -70,7 +70,7 @@ function Info({ prevInfo, history }){
                             margin="0"
                             onChange={e => handleInput(e, (i * 2) + 1)}
                             borderInput="1px solid black"
-                            disabled={history}
+                            disabled={history || labels[(i * 2) + 1] === 'Linea'}
                         />
                     )}
                 </div>
