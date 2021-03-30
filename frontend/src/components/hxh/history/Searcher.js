@@ -38,7 +38,7 @@ function Searcher({ setData, setFound }){
             const infGen = JSON.parse(data.InfGen)
             const infProd = JSON.parse(data.InfProd).map(item => item.fields)
 
-            setData({ InfGen: infGen, InfProd: infProd })
+            setData({ InfGen: { infGen, linea: JSON.parse(data.Linea).linea }, InfProd: infProd })
         }).catch(e => {
             setLoading(false)
             setFound(false)
