@@ -37,6 +37,7 @@ function Table(){
             method: 'GET'
         })
 
+        console.log(res.data)
         return res.data
     }
 
