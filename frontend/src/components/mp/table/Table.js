@@ -31,13 +31,13 @@ function Table(){
 
         return res.data
     }
+
     const getLine = async () => {
         const res = await axios({
             url: `${URL}/login/validate/`,
             method: 'GET'
         })
 
-        console.log(res.data)
         return res.data
     }
 
@@ -74,7 +74,8 @@ function Table(){
     } 
 
     useEffect(() => {
-        getLine().then(({ linea }) => {
+        getLine().then(({ linea, Logged }) => {
+            if(!Logged){ window.location.replace('/login') }
             context.dispatchLine({ type: 'SET', value: linea })
         }).catch(e => {
             console.log(e)
