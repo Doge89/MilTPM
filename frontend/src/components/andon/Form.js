@@ -60,7 +60,7 @@ function Form({ children, location }){
     }
 
     const endTimer = () => {
-        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage(`timerValue${type}`)) }).then((data) => {
+        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)) }).then((data) => {
             console.log(data)
             removeInfoTimer()
             window.location.reload()
