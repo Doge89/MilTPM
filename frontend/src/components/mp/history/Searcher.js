@@ -21,7 +21,7 @@ function Searcher({ setData, setSearched }){
         const res = await axios({
             url: `${URL}/mp/historial/get/`,
             method: 'POST',
-            data: querystring.stringify({ fecha: date, linea: line, turno })
+            data: querystring.stringify({ data: JSON.stringify({ fecha: date, linea: line, turno }) })
         })
 
         return res.data
@@ -49,7 +49,8 @@ function Searcher({ setData, setSearched }){
     }, [line, turno, date])
 
     useEffect(() => {
-        getLine().then(({ linea }) => {
+        getLine().then(({ linea, Logged }) => {
+            if(!Logged){ window.location.replace('/login') }
             setLine(linea)
         }).catch(e => {
             console.log(e)
