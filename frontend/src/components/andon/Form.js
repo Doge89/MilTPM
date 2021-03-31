@@ -30,6 +30,16 @@ function Form({ children, location }){
         return res.data
     }
 
+    const finishTimer = async () => {
+        const res = await axios({
+            url: `${URL}/andon/finish/`,
+            method: 'POST',
+            data: querystring.stringify({ clave: password, razon: type })
+        })
+
+        return res.data
+    }
+
     const pauseTimer = (e) => {
         e.preventDefault()
         if(timerPaused){
@@ -50,8 +60,13 @@ function Form({ children, location }){
     }
 
     const endTimer = () => {
-        removeInfoTimer()
-        window.location.reload()
+        finishTimer().then((data) => {
+            console.log(data)
+            removeInfoTimer()
+            window.location.reload()
+        }).catch(e => {
+            console.log(e)
+        })
     }
 
     const handleFinalize = (e) => {
