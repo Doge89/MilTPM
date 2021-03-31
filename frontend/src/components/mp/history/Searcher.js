@@ -40,7 +40,7 @@ function Searcher({ setData, setSearched }){
         if(date !== ''){
             setSearched(true)
             getData().then(({ infMP }) => {
-                const data = JSON.parse(infMP).map( item => item.fields )
+                const data = JSON.parse(infMP).map( item => {  return { ...item.fields, Id: item.pk } } )
                 setData(data)
             }).catch(e => {
                 console.log(e)
