@@ -37,11 +37,11 @@ function Table(){
             setErr(false)
             const { type, line, technicianChief, superMTTO, superPRDN, reportedBy, machineTag, description,
                 failType, technician, startedAt, endAt, fixedBy, partsUsed, causedBy, timeout, validatedBy } = context
-            postData({ data: {
+            postData({ data: JSON.stringify({
                 tipo: type, linea: line, tecnicoJefe: technicianChief, superMTTO, superPRDN, reportadoPor: reportedBy, tagMaquina: machineTag,
                 decripcion: description, tipoFalla: failType, tecnico: technician, iniciadoEn: startedAt, terminadoEn: endAt, arregladoPor: fixedBy,
                 refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy
-            } }).then((data) => {
+            })}).then((data) => {
                 console.log(data)
             }).catch(e => {
                 console.log(e)

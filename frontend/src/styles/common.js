@@ -1,10 +1,16 @@
 import styled from 'styled-components'
 
+import { device } from './device' 
+
 const red = "rgb(254, 13, 46)"
 
 export const TopBarContainer = styled.header`
     width: 100%;
     height: 16%;
+
+    #logo-mobile{
+        display: none;
+    }
 
     nav{
         width: 94%;
@@ -24,6 +30,22 @@ export const TopBarContainer = styled.header`
             flex-direction: row;
             width: 55vw;
             justify-content: space-between;
+        }
+    }
+
+    @media ${device.tablet} {
+        #logo-mobile{
+            display: block;
+            width: 20vw
+        }
+
+        nav{
+            background-color: black;
+            background-image: url('');
+
+            .row{
+                display: none;
+            }
         }
     }
     
@@ -103,7 +125,33 @@ export const ClockContainer = styled.div`
         color: white;
         margin: 0;
     }
+
+    @media ${device.tablet}{
+        display: none;
+    }
 `;
+
+export const ClockSlide = styled.div`
+    display: none;
+
+    @media ${device.tablet}{
+        display: flex;
+        position: absolute;
+        top: 5vh;
+        right: 0;
+        background-color: white;
+        height: 5vh;
+        width: 40vw;
+        border-bottom-left-radius: 5vh;
+        border-top-left-radius: 5vh;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        font-size: 4vw;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold;
+    }
+`
 
 export const Container = styled.div`
     display: flex;
@@ -180,7 +228,7 @@ export const ButtonSecondary = styled.button`
     align-items: center;
     justify-content: center;
     color: ${red};
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; 
     border: 1px solid ${red};
     cursor: pointer;
     border-radius: 0.5vw;
