@@ -39,8 +39,9 @@ function Searcher({ setData, setSearched }){
     useEffect(() => {
         if(date !== ''){
             setSearched(true)
-            getData().then(({ infMP }) => {
-                const data = JSON.parse(infMP).map( item => {  return { ...item.fields, Id: item.pk } } )
+            getData().then(({ infMP, Linea }) => {
+                const linea = JSON.parse(Linea).linea
+                const data = JSON.parse(infMP).map( item => {  return { ...item.fields, Id: item.pk, linea } } )
                 setData(data)
             }).catch(e => {
                 console.log(e)
