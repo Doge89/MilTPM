@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios'
+import querystring from 'querystring'
 
 import { FormContainer } from '../../styles/andon'
 import { ButtonPrimary, ButtonSecondary } from '../../styles/common'
+
+import { URL } from '../../var'
 
 function Form({ children, location }){
 
@@ -15,6 +19,16 @@ function Form({ children, location }){
     const handleInputPassword = e => setPassword(e.target.value)
 
     const handleInput = e => setDescription(e.target.value)
+
+    const fetchStartTimer = async () => {
+        const res = await axios({
+            url: `${URL}/andon/start/`,
+            method: 'POST',
+            data: querystring.stringify({ razon: type })
+        })
+
+        return res.data
+    }
 
     const pauseTimer = (e) => {
         e.preventDefault()
@@ -45,6 +59,12 @@ function Form({ children, location }){
         endTimer()
     }
 
+    const startTimer = () => {
+        fetchStartTimer().then((data) => {
+            console.log(data)
+        }).catch(e => console.log(e))
+    }
+
     useEffect(() => {
 
         const query = new URLSearchParams(location.search)
@@ -66,7 +86,7 @@ function Form({ children, location }){
                     value={descripction}
                     onChange={handleInput}
                 />
-                {React.cloneElement(children, { timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type })}
+                {React.cloneElement(children, { timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer })}
                 {timerRunning && (
                     <>
                     <label>Ingrese una contraseña</label>

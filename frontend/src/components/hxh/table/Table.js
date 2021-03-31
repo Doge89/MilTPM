@@ -45,6 +45,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             method: 'GET'
         })
 
+        console.log(res.data)
         return res.data
     }
 
