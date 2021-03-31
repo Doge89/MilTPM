@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import { SearcherContainer } from '../../../styles/mp'
 import { CardInfo } from '../../../styles/tpm'
@@ -18,7 +19,17 @@ function Searcher({ setData, setSearched }){
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}?date=${date}&line=${line}&turno=${turno}`,
+            url: `${URL}/mp/historial/get/`,
+            method: 'POST',
+            data: querystring.stringify({ fecha: date, linea: line, turno })
+        })
+
+        return res.data
+    }
+
+    const getLine = async () => {
+        const res = await axios({
+            url: `${URL}/login/validate/`,
             method: 'GET'
         })
 
@@ -29,12 +40,21 @@ function Searcher({ setData, setSearched }){
         if(date !== ''){
             setSearched(true)
             getData().then((data) => {
+                console.log(data)
                 setData(data)
             }).catch(e => {
                 console.log(e)
             })
         }
     }, [line, turno, date])
+
+    useEffect(() => {
+        getLine().then(({ linea }) => {
+            setLine(linea)
+        }).catch(e => {
+            console.log(e)
+        })
+    }, [])
 
     return(
         <SearcherContainer>

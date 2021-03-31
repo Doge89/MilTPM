@@ -12,6 +12,10 @@ function Clock(){
     const [hour, setHour] = useState('')
     const [date, setDate] = useState('')
 
+    const handleTouchMove = (e) => {
+        console.log(e)
+    }
+
     useEffect(() => {
         
         interval.current = setInterval(() => {
@@ -24,11 +28,11 @@ function Clock(){
 
     return(
         <>
-        <ClockSlide>
+        <ClockSlide onTouchMove={handleTouchMove} >
            {'<'} Deslizar
         </ClockSlide>
         <ClockContainer>
-            <h1>{hour}</h1>
+            <h1 >{hour}</h1>
             <h2>{date}</h2>
         </ClockContainer>
         </>

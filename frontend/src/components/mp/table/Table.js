@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import querystring from 'querystring'
@@ -27,6 +27,14 @@ function Table(){
             url: `${URL}/mp/post/`,
             method: 'POST',
             data: querystring.stringify(data)
+        })
+
+        return res.data
+    }
+    const getLine = async () => {
+        const res = await axios({
+            url: `${URL}/login/validate/`,
+            method: 'GET'
         })
 
         return res.data
@@ -63,6 +71,14 @@ function Table(){
         }
         return true
     } 
+
+    useEffect(() => {
+        getLine().then(({ linea }) => {
+            context.dispatchLine({ type: 'SET', value: linea })
+        }).catch(e => {
+            console.log(e)
+        })
+    }, [])
 
     return(
         <TableComponent>
