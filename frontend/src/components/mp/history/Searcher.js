@@ -31,6 +31,7 @@ function Searcher({ setData, setSearched }){
         if(date !== ''){
             setSearched(true)
             getData().then((data) => {
+                console.log(data)
                 setData(data)
             }).catch(e => {
                 console.log(e)
