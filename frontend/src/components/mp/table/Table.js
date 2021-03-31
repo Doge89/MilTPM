@@ -35,12 +35,13 @@ function Table(){
     const handleBtn = () => {
         if(checkData()){
             setErr(false)
-            const { type, line, technicianChief, superMTTO, superPRDN, reportedBy, machineTag, description, turno,
+            const { type, line, technicianChief, superMTTO, superPRDN, reportedBy, machineTag, description, turno, machineType,
                 failType, technician, startedAt, endAt, fixedBy, partsUsed, causedBy, timeout, validatedBy, productionAffected } = context
             postData({ data: JSON.stringify({
                 tipo: type, linea: line, tecnicoJefe: technicianChief, superMTTO, superPRDN, reportadoPor: reportedBy, tagMaquina: machineTag,
                 decripcion: description, tipoFalla: failType, tecnico: technician, iniciadoEn: startedAt, terminadoEn: endAt, arregladoPor: fixedBy,
-                refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy, afectaProduccion: productionAffected ? 1 : 0, turno
+                refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy, afectaProduccion: productionAffected ? 1 : 0, 
+                turno, tipoMaquina: machineType
             })}).then((data) => {
                 console.log(data)
             }).catch(e => {
