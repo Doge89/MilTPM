@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import TableHeader from './TableHeader'
 import TableBody from './TableBody'
@@ -23,9 +24,9 @@ function Table(){
 
     const postData = async (data) => {
         const res = await axios({
-            url: `${URL}/mp`,
+            url: `${URL}/mp/post/`,
             method: 'POST',
-            data
+            data: querystring.stringify(data)
         })
 
         return res.data
@@ -34,8 +35,14 @@ function Table(){
     const handleBtn = () => {
         if(checkData()){
             setErr(false)
-            postData().then(() => {
-
+            const { type, line, technicianChief, superMTTO, superPRDN, reportedBy, machineTag, description,
+                failType, technician, startedAt, endAt, fixedBy, partsUsed, causedBy, timeout, validatedBy } = context
+            postData({ data: {
+                tipo: type, linea: line, tecnicoJefe: technicianChief, superMTTO, superPRDN, reportadoPor: reportedBy, tagMaquina: machineTag,
+                decripcion: description, tipoFalla: failType, tecnico: technician, iniciadoEn: startedAt, terminadoEn: endAt, arregladoPor: fixedBy,
+                refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy
+            } }).then((data) => {
+                console.log(data)
             }).catch(e => {
                 console.log(e)
             })

@@ -51,3 +51,5 @@ export const URL = 'http://192.168.100.22:8000'
 export const modifyViews = [{ nombre: 'Usuarios', value: 'user' }, { nombre: 'Cronograma', value: 'schedule' }, { nombre: 'Puerto COM', value: 'port' }]
 
 export const days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+
+export const maxWidth = 768
