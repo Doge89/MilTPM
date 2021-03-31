@@ -5,6 +5,7 @@ import { ClockContainer, ClockSlide } from '../../styles/common'
 function Clock(){
 
     const interval = useRef(null)
+    const clockSlide = useRef(null)
 
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre',
                     'Octubre', 'Noviembre', 'Diciembre']
@@ -13,7 +14,11 @@ function Clock(){
     const [date, setDate] = useState('')
 
     const handleTouchMove = (e) => {
-        console.log(e)
+    
+        console.log(window.innerWidth - e.touches[0].pageX)
+        
+        document.getElementById('clock-slide').style.right = `${window.innerWidth - e.touches[0].pageX}px`
+        clockSlide.current.style.right = window.innerWidth - e.touches[0].pageX
     }
 
     useEffect(() => {
@@ -28,7 +33,7 @@ function Clock(){
 
     return(
         <>
-        <ClockSlide onTouchMove={handleTouchMove} >
+        <ClockSlide onTouchMove={handleTouchMove} ref={clockSlide} id="clock-slide">
            {'<'} Deslizar
         </ClockSlide>
         <ClockContainer>
