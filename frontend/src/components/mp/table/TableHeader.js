@@ -16,6 +16,8 @@ function TableHeader(){
 
     const context = useContext(appContext)
 
+    const handleSelect = e => context.dispatchTurno({ type: 'SET', value: e.target.value })
+
     const handleButtonMotores = () => context.dispatchType({ type: 'SET', value: 'motores' })
     const handleButtonEmpaques = () => context.dispatchType({ type: 'SET', value: 'empaques' })
     const handleButtonEnsambles = () => context.dispatchType({ type: 'SET', value: 'ensambles' })
@@ -87,11 +89,11 @@ function TableHeader(){
                 >
                     <SelectContainer>
                         <label>Turno:</label>
-                        <select>
-                            <option>A</option>
-                            <option>B</option>
-                            <option>C</option>
-                            <option>D</option>
+                        <select onChange={handleSelect} value={context.turno}> 
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
                         </select>
                     </SelectContainer>
                     <Input 
