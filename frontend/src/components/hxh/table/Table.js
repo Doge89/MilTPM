@@ -139,7 +139,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             {hxhHistory ? allDay?.map(( hours, idx ) => data && (
                 <TableRow  
                     columns={columns} 
-                    info={{...hours, ...data[idx]}}
+                    info={{...hours, ...data[idx]}} 
                     key={idx}
                     idx={idx}
                     length={allDay.length}

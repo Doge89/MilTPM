@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import { SearcherContainer } from '../../../styles/mp'
 import { CardInfo } from '../../../styles/tpm'
@@ -18,8 +19,9 @@ function Searcher({ setData, setSearched }){
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}?date=${date}&line=${line}&turno=${turno}`,
-            method: 'GET'
+            url: `${URL}/mp/historial/get/`,
+            method: 'POST',
+            data: querystring.stringify({ fecha: date, linea: line, turno })
         })
 
         return res.data
