@@ -30,11 +30,11 @@ function Form({ children, location }){
         return res.data
     }
 
-    const finishTimer = async () => {
+    const finishTimer = async (data) => {
         const res = await axios({
             url: `${URL}/andon/finish/`,
             method: 'POST',
-            data: querystring.stringify({ clave: password, razon: type })
+            data: querystring.stringify(data)
         })
 
         return res.data
@@ -60,7 +60,7 @@ function Form({ children, location }){
     }
 
     const endTimer = () => {
-        finishTimer().then((data) => {
+        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage(`timerValue${type}`)) }).then((data) => {
             console.log(data)
             removeInfoTimer()
             window.location.reload()
