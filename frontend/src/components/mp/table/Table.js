@@ -40,7 +40,7 @@ function Table(){
             postData({ data: JSON.stringify({
                 tipo: type, linea: line, tecnicoJefe: technicianChief, superMTTO, superPRDN, reportadoPor: reportedBy, tagMaquina: machineTag,
                 decripcion: description, tipoFalla: failType, tecnico: technician, iniciadoEn: startedAt, terminadoEn: endAt, arregladoPor: fixedBy,
-                refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy, afectaProduccion: productionAffected, turno
+                refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy, afectaProduccion: productionAffected ? 1 : 0, turno
             })}).then((data) => {
                 console.log(data)
             }).catch(e => {
