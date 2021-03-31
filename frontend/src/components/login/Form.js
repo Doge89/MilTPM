@@ -6,16 +6,18 @@ import Cookies from 'js-cookie'
 import CSRFToken from '../common/CSRFToken'
 
 import { FormContainer } from '../../styles/login'
-import { Text } from '../../styles/common'
 
-import { URL } from '../../var'
+import { URL, maxWidth } from '../../var'
+
+import logo from '../../assets/img/milwaukee.png'
 
 function Form(){
 
     const [err, setErr] = useState(false)
+    const [isMobile, setisMobile] = useState(false)
     const [message, setMessage] = useState('')
     const [user, setUser] = useState('')
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState('') 
 
     const handleInputUser = e => setUser(e.target.value)
     const handleInputPass = e => setPassword(e.target.value)
@@ -58,15 +60,30 @@ function Form(){
         }
     }
 
+    const resize = () => {
+        if(window.screen.width > maxWidth){ setisMobile(false) }
+        else{ setisMobile(true) }
+    }
+
     useEffect(() => {
+        resize()
+        window.addEventListener('resize', resize)
         isLogged().then((data) => {
             if(data.Logged){ window.location.replace('/hxh') }
         }).catch(e => console.log(e))
+
+        return () => {
+            window.removeEventListener('resize', resize)
+        }
     }, [])
 
     return(
         <FormContainer> 
-            <h1>INGRESE SUS DATOS</h1>
+            <div id="logo-mobile">
+                <img src={logo} />
+            </div>
+            <h1>{isMobile ? 'INICIA SESIÓN' : 'INGRESE SUS DATOS'}</h1>
+            <div id="mobile-title">Ingresar datos</div>
             <div>
                 <label htmlFor="user">Usuario</label>
                 <input 

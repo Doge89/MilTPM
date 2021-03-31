@@ -2,7 +2,7 @@ import React from 'react'
 
 import Form from '../components/login/Form'
 
-import { Container, Next } from '../styles/common'
+import { Container } from '../styles/common'
 
 import loginBg from '../assets/img/login-bg.jpeg'
 
@@ -20,7 +20,6 @@ function Login(){
             img={loginBg}
         >
             <Form />
-            <Next onClick={next}>-></Next>
         </Container>
     )
 }
