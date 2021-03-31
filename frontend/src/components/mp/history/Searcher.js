@@ -27,6 +27,15 @@ function Searcher({ setData, setSearched }){
         return res.data
     }
 
+    const getLine = async () => {
+        const res = await axios({
+            url: `${URL}/login/validate/`,
+            method: 'GET'
+        })
+
+        return res.data
+    }
+
     useEffect(() => {
         if(date !== ''){
             setSearched(true)
@@ -38,6 +47,14 @@ function Searcher({ setData, setSearched }){
             })
         }
     }, [line, turno, date])
+
+    useEffect(() => {
+        getLine().then(({ linea }) => {
+            setLine(linea)
+        }).catch(e => {
+            console.log(e)
+        })
+    }, [])
 
     return(
         <SearcherContainer>
