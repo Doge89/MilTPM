@@ -108,8 +108,7 @@ export const FormContainer = styled.form`
             font-size: 12vw;
             width: 60vw;
             word-break: break-word;
-            margin-bottom: 5vh;
-            font-family: 'Arial Black';
+            margin-bottom: 1vh;
         }
 
 

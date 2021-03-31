@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 
+import GlobalStyles from './styles/globalStyles'
 import Router from './Router'
 
 function App() {
@@ -14,7 +15,10 @@ function App() {
     }, [])
 
     return (
+        <>
+        <GlobalStyles />
         <Router/>
+        </>
     );
 }
 
