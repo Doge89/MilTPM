@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.middleware.csrf import get_token
 from django.http import JsonResponse, HttpResponse
 # Create your views here.
 
@@ -6,8 +7,11 @@ def validation(request):
     if 'Usuario' in request.session and 'Pass' in request.session:
         return JsonResponse({'Logged':True}, status = 200)
     else:
+        response = HttpResponse('CSFR', status = 200)
+        response.set_cookie(key = 'csrftoken', value = get_token(request), max_age=604800)
         print("NO TIENE AUTORIAZION")
-    return JsonResponse({'Logged':False}, status = 200)
+        return response
+    return JsonResponse({'Logged': False}, status = 200)
 
 #CIERRE DE SESION DE
 

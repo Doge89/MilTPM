@@ -105,7 +105,7 @@ class Linea(models.Model):
 class Andon(models.Model):
     Id = models.AutoField(primary_key=True)
     estatus = models.CharField(max_length=20, blank=True, default='', help_text=_('Estatus'), verbose_name=_('Estado'))
-    linea = models.ManyToManyField(Linea, related_query_name='Andon', related_name='Estados')
+    linea = models.ForeignKey(Linea, on_delete=models.CASCADE, related_name='Estados', default=None)
 
     class Meta:
         db_table = 'Andon'
@@ -118,3 +118,21 @@ class Andon(models.Model):
 
     def __repr__(self):
         return self.__str__()
+
+class AndonHist(models.Model):
+    Id = models.AutoField(primary_key=True)
+    estatus = models.CharField(max_length=15, blank=False, help_text=_('Estado de la linea en ese momento'), verbose_name=_('Estatus'))
+    linea = models.ForeignKey(Linea, on_delete=models.CASCADE, related_name='histLin', default=None)
+    registro = models.DateTimeField(verbose_name=_('Fecha de reporte'), auto_now_add=False)
+
+    class Meta:
+        db_table = 'AndonHist'
+        managed = True
+        verbose_name ='HistorialAndon'
+        verbose_name_plural ='HistorialAndones'
+
+    def __unicode__(self):
+        return "%s %s " % (self.estatus, self.registro)
+
+    def __repr__(self):
+        return self.__unicode__()

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'usuarios',
     'hxh',
+    'mp',
 ]
 
 MIDDLEWARE = [
@@ -66,18 +67,18 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOW_HEADERS = [
-    'x-csrftoken'
+CORS_ALLOWED_HEADERS = [
+    'X-CSRFToken'
 ]
 
-REST_FRAMEWORK = {
+# REST_FRAMEWORK = {
 
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
 
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',
+#     )
 
-}
+# }
 
 SIMPLE_JWT = {
 
@@ -124,7 +125,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'USER': 'root',
         'PASSWORD': '',
-        'NAME': 'pruebas_mw_2',
+        'NAME': 'pruebas_mw_3',
     }
 }
 
@@ -153,13 +154,13 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-mx'
 
-TIME_ZONE = 'America/Monterrey'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

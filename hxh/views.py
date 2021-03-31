@@ -33,9 +33,9 @@ def get(request):
 
                 for x in range(24):
                     if x == 23:
-                        datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'00:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general)
+                        datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'00:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general, fecha=datetime.date(datetime.now()))
                     else:
-                        datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'{x+1}:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general)
+                        datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'{x+1}:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general, fecha=datetime.date(datetime.now()))
             datosInfProd = _get_objects(Linea = request.session['Linea'])
             serializedInfProd = serializers.serialize('json', list(datosInfProd))
             datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last() 
@@ -50,6 +50,7 @@ def get(request):
             return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea}, status = 200)
         except Exception as e:
             print(e)
+        #return HttpResponse(status=200)
     return HttpResponse(status=401)
 
 #ACTUALIZA LA INFORMACION EN LA BD

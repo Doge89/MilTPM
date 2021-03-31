@@ -28,7 +28,9 @@ urlpatterns = [
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
 
     #TPM ENLACES
-    path('hxh/', include('hxh.urls'), name='HXH')
+    path('hxh/', include('hxh.urls'), name='HXH'),
+    path('andon/', include('andon.urls'), name='Andon'),
+    path('mp/', include('mp.urls'), name='MP')
 
 
 ]
