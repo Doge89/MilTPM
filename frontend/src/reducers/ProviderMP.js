@@ -25,18 +25,19 @@ function Provider({ children }){
     const [ causedBy, dispatchCausedBy ] = useReducer(defaultReducer, '')
     const [ timeout, dispatchTimeout ] = useReducer(defaultReducer, '')
     const [ validatedBy, dispatchValidatedBy ] = useReducer(defaultReducer, '')
+    const [ turno, dispatchTurno ] = useReducer(defaultReducer, 'A')
 
     return(
         <appContext.Provider
             value={{
                 failType, line, technician, superMTTO, superPRDN, reportedBy, machineType, machineTag, description,
                 type, productionAffected, technicianChief, startedAt, endAt, fixedBy,
-                partsUsed, causedBy, timeout,validatedBy ,
+                partsUsed, causedBy, timeout,validatedBy ,turno,
                 dispatchLine, dispatchTechnician, dispatchSuperMTTO, dispatchDescription,
                 dispatchSuperPRDN, dispatchReportedBy, dispatchMachineType, dispatchMachineTag, dispatchType,
                 dispatchFailType, dispatchProductionAffected, dispatchTechnicianChief,
                 dispatchStartedAt, dispatchEndAt, dispatchFixedBy, dispatchPartsUsed, dispatchCausedBy,
-                dispatchTimeout, dispatchValidatedBy
+                dispatchTimeout, dispatchValidatedBy, dispatchTurno
             }}
         >
             {children}
