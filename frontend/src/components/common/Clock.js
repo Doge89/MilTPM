@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 
-import { ClockContainer } from '../../styles/common'
+import { ClockContainer, ClockSlide } from '../../styles/common'
 
 function Clock(){
 
@@ -23,10 +23,15 @@ function Clock(){
     }, [])
 
     return(
+        <>
+        <ClockSlide>
+           {'<'} Deslizar
+        </ClockSlide>
         <ClockContainer>
             <h1>{hour}</h1>
             <h2>{date}</h2>
         </ClockContainer>
+        </>
     )
 }
 

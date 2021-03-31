@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { device } from './device'
+
 export const InfoContainer = styled.div`
     width: 90%;
     background-color: rgb(243, 243, 243);
@@ -14,6 +16,35 @@ export const InfoContainer = styled.div`
         flex-direction: column;
         align-items: flex-end;
     }
+
+    @media ${device.tablet} {
+        flex-direction: column;
+        background-color: transparent;
+        width: 80vw;
+        margin: 0 auto;
+
+        .column {
+            align-items: flex-start;
+
+            div{
+
+                label{
+                    color: white;
+                    font-size: 3vw;
+                    width: 40vw;
+                }
+
+                input{
+                    background-color: transparent;
+                    font-size: 3.5vw;
+                    color: white;
+                    border-bottom: 1px solid white;
+                    padding: 1vh 2vw;
+                    outline: none;
+                }
+            }
+        }
+    }
 `;
 
 export const TableContainer = styled.div`
@@ -21,6 +52,10 @@ export const TableContainer = styled.div`
     margin: 2vh 2% 0 2%;
     padding : ${props => props.padding || '0'};
     height: fit-content;
+
+    @media ${device.tablet} {
+        background-color: rgba(0, 0, 0, 0.5)
+    }
 `;
 
 export const Cell = styled.div`

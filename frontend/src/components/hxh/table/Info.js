@@ -51,7 +51,7 @@ function Info({ prevInfo, history }){
         if(prevInfo?.mod){ context.dispatchMod({ type: 'SET', value: prevInfo.mod }) }
     },[prevInfo])
 
-    return(
+    return( 
         <InfoContainer>
             {columns.map((c, i) => (
                 <div className='column' key={i}>
