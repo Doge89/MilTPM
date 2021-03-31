@@ -20,7 +20,7 @@ function Table({ searched, data }){
                         </div>
                         {data.map((report, idx) => (
                             <div className={`table-row ${idx === data.length - 1 ? 'border-none' : ''}`} key={idx}>
-                                <PanelTableCell width="20%">{report.id}</PanelTableCell>
+                                <PanelTableCell width="20%" className="clickable">{report.Id}</PanelTableCell>
                                 <PanelTableCell className="border" width="20%">{report.linea}</PanelTableCell>
                                 <PanelTableCell width="20%">{report.area}</PanelTableCell>
                                 <PanelTableCell className="border" width="20%">{report.nombre}</PanelTableCell>
