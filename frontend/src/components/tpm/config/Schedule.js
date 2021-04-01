@@ -144,7 +144,7 @@ function Schedule({ machines, schedule }){
         for(let i = 0; i < days.length; i++){
             const newDayValue = [...getMachines(days[i])]
             newDayValue = schedule.filter(machine => machine.dia === i).map(machineSchedule => { 
-                return { nombre : machines.find(machine => machine.id === machineSchedule.maquina) }
+                return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
             })
             getSetMachines(days[i])(newDayValue)
         }
