@@ -30,6 +30,7 @@ function Tpm(){
             method: 'GET'
         })
 
+        console.log(res.data)
         return res.data
     }
 
