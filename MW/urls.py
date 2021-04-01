@@ -18,6 +18,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 urlpatterns = [
+    #URLS PARA VALIDACIONES Y LOGIN
     path('admin/', admin.site.urls),
     path('login/', include('Login.urls'), name='login'),
     path('Login/', include('Login.urls'), name='login'),
@@ -30,7 +31,7 @@ urlpatterns = [
     #TPM ENLACES
     path('hxh/', include('hxh.urls'), name='HXH'),
     path('andon/', include('andon.urls'), name='Andon'),
-    path('mp/', include('mp.urls'), name='MP')
-
+    path('mp/', include('mp.urls'), name='MP'),
+    path('tpm/', include('tpm.urls'), name='TPM'),
 
 ]

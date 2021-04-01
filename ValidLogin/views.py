@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponse
 
 def validation(request):
     if 'Usuario' in request.session and 'Pass' in request.session:
-        return JsonResponse({'Logged':True}, status = 200)
+        return JsonResponse({'Logged':True, 'linea': request.session['Linea']}, status = 200)
     else:
         response = HttpResponse('CSFR', status = 200)
         response.set_cookie(key = 'csrftoken', value = get_token(request), max_age=604800)
@@ -23,5 +23,6 @@ def loggout(request):
         response.delete_cookie('refresh',path = '/')
         del request.session['Usuario']
         del request.session['Pass']
+        del request.session['Linea']
         return response
     return render(request, 'index.html')

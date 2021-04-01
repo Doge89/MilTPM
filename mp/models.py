@@ -6,8 +6,8 @@ from django.utils.translation import gettext_lazy as _
 class mp(models.Model):
     Id = models.AutoField(primary_key=True)
     linea = models.ForeignKey(Linea, on_delete=models.PROTECT)
-    fecha = models.DateTimeField(verbose_name = _('Fecha'), auto_now=False, help_text = _('Fecha de registro del MP'))
-    area = models.CharField(max_length=30, verbose_name = _('Area'), help_text = _('Area de la produccion'), blank=False)
+    fecha = models.DateField(verbose_name = _('Fecha'), auto_now=False, help_text = _('Fecha de registro del MP'))
+    area = models.CharField(max_length= 30, verbose_name = _('Area'), help_text = _('Area de la produccion'), blank=False)
     turno = models.CharField(max_length=1, verbose_name = _('Turno'), help_text =_('Turno de la produccion'), blank=False)
     tecnico = models.CharField(max_length=50, verbose_name = _('Tecnico'), help_text = _('Tecnico encargado'), blank=False)
     superMTTO = models.CharField(max_length=30, verbose_name = _('SuperMtto'), help_text = _('Supervisor de Mantenimiento'), blank=True, default='')
@@ -34,7 +34,7 @@ class mp(models.Model):
         verbose_name_plural = 'Mps'
 
     def __unicode__(self):
-        return "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" % (self.linea, self.fecha, self.area, self.turno, self.tecnico, self.superMTTO, self.superPRDN, self.nombre, self.hora, self.tipoMaquina, self.tagMaquina, self.descripcion, self.tipoFalla, self.afecta, self.horaInicio, self.horaFinal, self.reparacion, self.refacciones, self.causa, self.tiempoMuerto, self.validado)
+        return " %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" % (self.Id, self.linea, self.fecha, self.area, self.turno, self.tecnico, self.superMTTO, self.superPRDN, self.nombre, self.hora, self.tipoMaquina, self.tagMaquina, self.descripcion, self.tipoFalla, self.afecta, self.horaInicio, self.horaFinal, self.reparacion, self.refacciones, self.causa, self.tiempoMuerto, self.validado)
 
     def __repr__(self):
         return self.__unicode__()
