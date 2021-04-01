@@ -25,10 +25,11 @@ function Schedule({ machines, schedule }){
     const openModal = () => setModalOpen(true)
     const closeModal = () => setModalOpen(false)
 
-    const deleteData = async (machine) => {
+    const deleteData = async (data) => {
         const res = await axios({
-            url: `${URL}/tpm/modificar/cronograma/get/?dia=${machine.day}&maquina=${machine.id}`,
-            method: 'DELETE'
+            url: `${URL}/tpm/modificar/cronograma/delete/`,
+            method: 'POST',
+            data: querystring.stringify(data)
         })
 
         return res.data
@@ -132,7 +133,7 @@ function Schedule({ machines, schedule }){
 
     const deleteMachine = (day, idx) => {
         const newMachinesDay = [...getMachines(day)]
-        deleteData({ machine: newMachinesDay[idx], day: getNumberDay(day) }).then(() => {
+        deleteData({ data: JSON.stringify({maquina: newMachinesDay[idx], dia: getNumberDay(day)}) }).then(() => {
             newMachinesDay.splice(idx, 1)
             getSetMachines(day)(newMachinesDay)
         }).catch(e => console.log(e))

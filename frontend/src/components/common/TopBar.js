@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import Clock from './Clock'
 
-import { Image, TopBarContainer } from '../../styles/common' 
+import { Image, TopBarContainer, NavbarMobile } from '../../styles/common' 
 
 import TopBarBg from '../../assets/img/topbar.png'
 import LayoutImage from '../../assets/img/layout.png'
@@ -21,6 +21,7 @@ function TopBar(){
     const gotoLayout = () => history.push('/layout')
 
     return(
+        <>
         <TopBarContainer img={TopBarBg} >
             <nav>
                 <Clock />
@@ -33,6 +34,14 @@ function TopBar(){
                 </div>
             </nav>
         </TopBarContainer>
+        <NavbarMobile id="navbar-mobile">
+            <Image src={MilwaukeeImage} width='8vw' onClick={gotoTPM} id="logo-mobile"/>
+            <Image src={TpmImage} width='8vw' onClick={gotoTPM} />
+            <Image src={MpImage} width='8vw' onClick={gotoMP} />
+            <Image src={LayoutImage} width='8vw' onClick={gotoLayout} />
+            <Image src={MilwaukeeImage} width='12vw' onClick={gotoHXH} />
+        </NavbarMobile>
+        </>
     )
 }
 
