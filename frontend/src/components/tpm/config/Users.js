@@ -19,7 +19,7 @@ function Users({ users, setUsers }){
 
     const getUsers = async () => {
         const res = await axios({
-            url: `${URL}tpm/modificar/usuarios/`,
+            url: `${URL}/tpm/modificar/usuarios/`,
             mehotd: 'GET'
         })
 
