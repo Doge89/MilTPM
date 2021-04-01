@@ -10,6 +10,8 @@ import { ButtonPrimary } from '../../../styles/common'
 import trash from '../../../assets/img/basura.png'
 import pencil from '../../../assets/img/lapiz.png'
 
+import { URL } from '../../../var'
+
 function Users({ users, setUsers }){
 
     const [modalOpen ,setModalOpen] = useState(false)
