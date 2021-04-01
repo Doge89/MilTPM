@@ -24,6 +24,7 @@ function Searcher({ setData, setSearched }){
             data: querystring.stringify({ data: JSON.stringify({ fecha: date, linea: line, turno }) })
         })
 
+        console.log(res.data)
         return res.data
     }
 
