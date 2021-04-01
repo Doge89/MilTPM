@@ -127,7 +127,7 @@ export const ClockContainer = styled.div`
     }
 
     @media ${device.tablet}{
-        display: none;
+        &#clock-desktop{ display: none; }
     }
 `;
 
@@ -137,13 +137,16 @@ export const NavbarMobile = styled.div`
         width: 60vw;
         position: absolute;
         left: 100vw;
-        height: 100vh;
+        height: 90vh;
         background-color: white;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
         transition: transform 0.2s linear;
+        background-color: black;
+        top: 0;
+        padding: 5vh 0;
     }
 `
 

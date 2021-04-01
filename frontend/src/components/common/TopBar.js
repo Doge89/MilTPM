@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom'
 
 import Clock from './Clock'
+import SlideMenu from './SlideMenu'
 
 import { Image, TopBarContainer, NavbarMobile } from '../../styles/common' 
 
@@ -22,9 +23,11 @@ function TopBar(){
 
     return(
         <>
+        
         <TopBarContainer img={TopBarBg} >
             <nav>
-                <Clock />
+                <Clock id="clock-desktop"/>
+                <SlideMenu />
                 <Image src={MilwaukeeImage} width='8vw' onClick={gotoTPM} id="logo-mobile"/>
                 <div className="row">
                     <Image src={TpmImage} width='8vw' onClick={gotoTPM} />
@@ -35,11 +38,11 @@ function TopBar(){
             </nav>
         </TopBarContainer>
         <NavbarMobile id="navbar-mobile">
-            <Image src={MilwaukeeImage} width='8vw' onClick={gotoTPM} id="logo-mobile"/>
-            <Image src={TpmImage} width='8vw' onClick={gotoTPM} />
-            <Image src={MpImage} width='8vw' onClick={gotoMP} />
-            <Image src={LayoutImage} width='8vw' onClick={gotoLayout} />
-            <Image src={MilwaukeeImage} width='12vw' onClick={gotoHXH} />
+            <Clock id="clock-mobile"/>
+            <Image src={MilwaukeeImage} width='30vw' onClick={gotoTPM} id="logo-mobile"/>
+            <Image src={TpmImage} width='30vw' onClick={gotoTPM} />
+            <Image src={MpImage} width='30vw' onClick={gotoMP} />
+            <Image src={LayoutImage} width='30vw' onClick={gotoLayout} />
         </NavbarMobile>
         </>
     )

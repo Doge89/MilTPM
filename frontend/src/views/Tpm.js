@@ -17,6 +17,7 @@ function Tpm(){
     
     const [machines, setMachines] = useState([])
     const [schedule, setSchedule] = useState([])
+    const [machinesDay, setMchinesDay] = useState([])
     const [activities, setActivities] = useState([{ nombre: 'Checar tornillos', tipo: 'limpieza', id: 1 }, { nombre: 'Limpieza de equipo', tipo: 'limpieza', id: 2 },
                                     { nombre: 'Checar estado de cables', tipo: 'electrico', id: 3 }, { nombre: 'Checar estado de conectores', tipo: 'electrico', id: 4 }])
     const [history, setHistory] = useState([{ id: 1, fecha: '16-03-2021 16:21:00', tipo: false, maquina: 'runnibg_booth', usuario: 'admin', 
@@ -30,7 +31,15 @@ function Tpm(){
             method: 'GET'
         })
 
-        console.log(res.data)
+        return res.data
+    }
+
+    const getMachinesDay = async () => {
+        const res = await axios({
+            url: `${URL}/tpm/get/`,
+            method: 'GET'
+        })
+
         return res.data
     }
 
@@ -43,6 +52,14 @@ function Tpm(){
         }).catch(e => {
             console.log(e)
         })
+        getMachinesDay().then(({ maqdia}) =>{
+            const machines = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
+                return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
+            })
+            setMchinesDay(machines)
+        }).catch(e => {
+            console.log(e)
+        })
     }, [])
 
     return(
@@ -51,7 +68,7 @@ function Tpm(){
             <Info />
             {viewType === 'panel' ? (
                 <Panel 
-                    machines={machines}
+                    machines={machinesDay}
                     setMachine={setMachine}
                     machine={machine}
                     activities={activities}
