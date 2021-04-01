@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from axios
 
 import CreateUser from './CreateUser'
 import ModalMessage from '../../common/ModalMessage'
@@ -15,6 +16,15 @@ function Users({ users, setUsers }){
     const [modalOpenDeleteUser ,setModalOpenDeleteUser] = useState(false)
     const [userID, setUserID] = useState(0)
     const [userToEdit, setUserToEdit] = useState(null)
+
+    const getUsers = async () => {
+        const res = await axios({
+            url: `${URL}tpm/modificar/usuarios/`,
+            mehotd: 'GET'
+        })
+
+        return res.data
+    }
 
     const openModal = () => setModalOpen(true)
     const closeModal = () => {
@@ -40,6 +50,13 @@ function Users({ users, setUsers }){
         openModal()
     }
 
+    useEffect(() => {
+        getUsers().then(({ usuaiors }) => {
+            const users = JSON.parse(usuarios).map(user => user.fields)
+            setUsers(users)
+        }).catch(e=> console.log())
+    }, [])
+
     return(
         <Container>
             <Table width="70%">
@@ -54,10 +71,10 @@ function Users({ users, setUsers }){
                             <PanelTableCell width="33%" className="border-right border-bottom border-left move-left">
                                 <img src={pencil} alt="Icono de un lapiz" className="img-effect" onClick={() => editUser(user)}/>
                                 <div>
-                                    <span>{user.user}</span>
+                                    <span>{user.username}</span>
                                 </div>
                             </PanelTableCell>
-                            <PanelTableCell width="33%" className="border-right border-bottom move-left">{user.type}</PanelTableCell>
+                            <PanelTableCell width="33%" className="border-right border-bottom move-left">{user.email}</PanelTableCell>
                             <PanelTableCell width="33%" className="header clickable move-left" onClick={() => openModalDeleteUser(idx)}>
                                 <img src={trash} alt="Icono de un bote de basura"/>
                                 <span>Eliminiar Usuario</span>
