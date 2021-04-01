@@ -53,6 +53,7 @@ function Users({ users, setUsers }){
     useEffect(() => {
         getUsers().then(({ usuarios }) => {
             const users = JSON.parse(usuarios).map(user => user.fields)
+            console.log(users)
             setUsers(users)
         }).catch(e=> console.log())
     }, [])
@@ -63,7 +64,7 @@ function Users({ users, setUsers }){
                 <div className="table border-none">
                     <div className="table-row border-none">
                         <PanelTableCell width="33%" className="header border-right border-bottom border-top border-left move-left">Usuario</PanelTableCell>
-                        <PanelTableCell width="33%" className="header border-bottom border-right  border-top move-left">Tipo</PanelTableCell>
+                        <PanelTableCell width="33%" className="header border-bottom border-right  border-top move-left">Email</PanelTableCell>
                         
                     </div>
                     {users.map((user, idx) => (
