@@ -23,7 +23,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "npm i pkg.json && react-scripts build",
+    "build": "react-scripts build",
+    "ib": "npm i pkg.json && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
