@@ -25,9 +25,9 @@ function Schedule({ machines, schedule }){
     const openModal = () => setModalOpen(true)
     const closeModal = () => setModalOpen(false)
 
-    const deleteData = async (data) => {
+    const deleteData = async (machine) => {
         const res = await axios({
-            url: `${URL}/tpm/modificar/cronograma/get/`,
+            url: `${URL}/tpm/modificar/cronograma/get/?dia=${machine.day}&id=${machine.id}`,
             method: 'DELETE',
             data: querystring.stringify(data)
         })
@@ -133,10 +133,22 @@ function Schedule({ machines, schedule }){
 
     const deleteMachine = (day, idx) => {
         const newMachinesDay = [...getMachines(day)]
-        deleteData({ data: JSON.stringify(newMachinesDay[idx]) }).then(() => {
+        deleteData({ machine: newMachinesDay[idx], day: getNumberDay(day) }).then(() => {
             newMachinesDay.splice(idx, 1)
             getSetMachines(day)(newMachinesDay)
         }).catch(e => console.log(e))
+    }
+
+    const getNumberDay = (day) => {
+        switch(day){
+            case 'Lunes': return 0
+            case 'Martes': return 1
+            case 'Miercoles': return 2
+            case 'Jueves': return 3
+            case 'Viernes': return 4
+            case 'Sabado': return 5
+            default: return 6
+        }
     }
 
     const checkMachineExist = (machine, day) => {
@@ -197,6 +209,7 @@ function Schedule({ machines, schedule }){
                 modalOpen={modalOpen}
                 addMachine={addMachine}
                 checkMachineExist={checkMachineExist}
+                getNumberDay={getNumberDay}
             />
             <ButtonPrimary width="15vw" height="4vh" onClick={openModal}>Agregar Maquina</ButtonPrimary>
         </Container>
