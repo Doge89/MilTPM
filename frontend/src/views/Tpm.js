@@ -40,6 +40,7 @@ function Tpm(){
             method: 'GET'
         })
 
+        console.log(res.data)
         return res.data
     }
 
@@ -51,6 +52,8 @@ function Tpm(){
             setMachines(machines)
 
             getMachinesDay().then(({ maqdia}) =>{
+                console.log(maqdia)
+
                 const machines = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
                     return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
                 })
