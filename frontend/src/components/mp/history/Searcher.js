@@ -39,8 +39,8 @@ function Searcher({ setData, setSearched }){
 
     useEffect(() => {
         if(date !== ''){
-            setSearched(true)
             getData().then(({ infMP, Linea }) => {
+                setSearched(true)
                 console.log(infMP)
                 const linea = JSON.parse(Linea).linea
                 const data = JSON.parse(infMP).map( item => {  return { ...item.fields, Id: item.pk, linea } } )
@@ -54,7 +54,7 @@ function Searcher({ setData, setSearched }){
 
     useEffect(() => {
         getLine().then(({ linea, Logged }) => {
-            if(!Logged){ window.location.replace('/login') }
+            //if(!Logged){ window.location.replace('/login') }
             setLine(linea)
         }).catch(e => {
             console.log(e)

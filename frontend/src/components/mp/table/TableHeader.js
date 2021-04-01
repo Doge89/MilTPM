@@ -12,16 +12,24 @@ import { twoDigits } from '../../../scripts'
 
 const date = `${twoDigits(new Date().getDate())}/${twoDigits(new Date().getMonth() +1)}/${new Date().getFullYear()}`
 
-function TableHeader(){
+function TableHeader({ history }){
 
     const context = useContext(appContext)
 
     const handleSelect = e => context.dispatchTurno({ type: 'SET', value: e.target.value })
 
-    const handleButtonMotores = () => context.dispatchType({ type: 'SET', value: 'motores' })
-    const handleButtonEmpaques = () => context.dispatchType({ type: 'SET', value: 'empaques' })
-    const handleButtonEnsambles = () => context.dispatchType({ type: 'SET', value: 'ensambles' })
-    const handleButtonSwitch = () => context.dispatchType({ type: 'SET', value: 'switch' })
+    const handleButtonMotores = () => {
+        if(!history){ context.dispatchType({ type: 'SET', value: 'motores' }) }
+    }
+    const handleButtonEmpaques = () => {
+        if(!history){ context.dispatchType({ type: 'SET', value: 'empaques' }) }
+    }
+    const handleButtonEnsambles = () => {
+        if(!history){ context.dispatchType({ type: 'SET', value: 'ensambles' }) }
+    }
+    const handleButtonSwitch = () => {
+        if(!history){ context.dispatchType({ type: 'SET', value: 'switch' }) }
+    }
 
     const handleInputLine = e => context.dispatchLine({ type: 'SET', value: e.target.value })
     const handleInputTechnicianChief = e => context.dispatchTechnicianChief({ type: 'SET', value: e.target.value })
@@ -89,7 +97,7 @@ function TableHeader(){
                 >
                     <SelectContainer>
                         <label>Turno:</label>
-                        <select onChange={handleSelect} value={context.turno}> 
+                        <select onChange={handleSelect} value={context.turno} disabled={history}> 
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="C">C</option>
@@ -103,6 +111,7 @@ function TableHeader(){
                         labelColor="white"
                         labelMargin="0 0 0 2vw"
                         labelWidth="28vw"
+                        disabled={history}
                     />
                 </Container>
                 <Container
@@ -116,6 +125,7 @@ function TableHeader(){
                         label="Super MTTO"
                         labelColor="white"
                         labelWidth="10vw"
+                        disabled={history}
                     />
                     <Input 
                         value={context.superPRDN}
@@ -124,6 +134,7 @@ function TableHeader(){
                         labelColor="white"
                         labelMargin="0 0 0 2vw"
                         labelWidth="10vw"
+                        disabled={history}
                     />
                 </Container>
             </div>
