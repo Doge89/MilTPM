@@ -36,7 +36,7 @@ function Tpm(){
     useEffect(() => {
         getMachines().then(({ maquinas }) =>{
             const machines = JSON.parse(maquinas).map(item => item.fields)
-
+            setMachines(machines)
         }).catch(e => {
 
         })

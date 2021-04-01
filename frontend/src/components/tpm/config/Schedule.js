@@ -140,13 +140,7 @@ function Schedule({ machines }){
     }
 
     useEffect(() => {
-        setMachinesMonday(machines)
-        setMachinesTuesday(machines)
-        setMachinesWednesday(machines)
-        setMachinesThursday(machines)
-        setMachinesFriday(machines)
-        setMachinesSaturday(machines)
-        setMachinesSunday(machines)
+        
     }, [machines])
 
     return(
@@ -175,7 +169,7 @@ function Schedule({ machines }){
                                     >
                                         <img src={trash} alt="Icono de un bote de basura" className="img-effect" onClick={() => deleteMachine(day, idx)}/>
                                         <div>
-                                            <span>{machine}</span>
+                                            <span>{machine?.nombre}</span>
                                         </div>
                                     </PanelTableCell>
                                 ))}
