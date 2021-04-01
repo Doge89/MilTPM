@@ -17,7 +17,7 @@ function Tpm(){
     
     const [machines, setMachines] = useState([])
     const [schedule, setSchedule] = useState([])
-    const [machinesDay, setMchinesDay] = useState([])
+    const [machinesDay, setMachinesDay] = useState([])
     const [activities, setActivities] = useState([{ nombre: 'Checar tornillos', tipo: 'limpieza', id: 1 }, { nombre: 'Limpieza de equipo', tipo: 'limpieza', id: 2 },
                                     { nombre: 'Checar estado de cables', tipo: 'electrico', id: 3 }, { nombre: 'Checar estado de conectores', tipo: 'electrico', id: 4 }])
     const [history, setHistory] = useState([{ id: 1, fecha: '16-03-2021 16:21:00', tipo: false, maquina: 'runnibg_booth', usuario: 'admin', 
@@ -54,10 +54,10 @@ function Tpm(){
             getMachinesDay().then(({ maqdia}) =>{
                 console.log(maqdia)
 
-                const machines = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
+                const newMachinesDay = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
                     return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
                 })
-                setMchinesDay(machines)
+                setMachinesDay(newMachinesDay)
             }).catch(e => {
                 console.log(e)
             })
