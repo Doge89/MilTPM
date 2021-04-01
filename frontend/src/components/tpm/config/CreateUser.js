@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Modal from 'react-modal';
 import axios from 'axios'
+import querystring from 'querystring'
 
 import { CreateUserForm, CardInfo  } from '../../../styles/tpm'
 import { ButtonPrimary, Text, ModalContainer } from '../../../styles/common'
@@ -29,11 +30,15 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [message, setMessage] = useState('')
+    const [line, setLine] = useState('')
+    const [email, setEmail] = useState('')
     const [typeUser, setTypeUser] = useState('admin')
     const [err, setErr] = useState(false)
 
     const handleInputUser = e => setUser(e.target.value)
     const handleInpuPassword = e => setPassword(e.target.value)
+    const handleInputLine = e => setLine(e.target.value)
+    const handleInputEmail = e => setEmail(e.target.value)
     const handleInpuConfirmPassword = e => setConfirmPassword(e.target.value)
     const handleSelect = e => setTypeUser(e.target.value)
 
@@ -47,7 +52,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
 
     const postData = async (data) => {
         const res = await axios({
-            url: `${URL}/users`,
+            url: `${URL}/tpm/modificar/usuarios/`,
             method: 'POST',
             data
         })
@@ -59,7 +64,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
         const res = await axios({
             url: `${URL}/users`,
             method: 'PUT',
-            data
+            data: querystring.stringify(data)
         })
 
         return res.data
@@ -67,7 +72,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
 
     const checkData = () =>{
         setErr(false)
-        if(!user || !password){
+        if(!user || !password || !line || !email){
             setErr(true)
             setMessage('No puede dejar campos en blanco')
             return false
@@ -87,9 +92,9 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
 
                 }).catch(e => console.log(e)) */
             }else{
-                /* postData({ user, password, typeUser }).then(() => {
+                postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })}).then(() => {
 
-                }).catch(e => console.log(e)) */
+                }).catch(e => console.log(e))
             }
         }
     }
@@ -98,6 +103,8 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
         if(userToEdit){
             setUser(userToEdit.user)
             setTypeUser(userToEdit.type)
+            setEmail(userToEdit.email)
+            setLine(userToEdit.line)
         }
         return () => {
             setUser('')
@@ -138,6 +145,22 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
                             onChange={handleInpuConfirmPassword}
                             placeholder={user ? "Confirmar la nueva contraseña del usuario" : "Confirmar la contraseña del usuario"}
                             type="password"
+                        />
+                    </CardInfo>
+                    <CardInfo>
+                        <label>Linea: </label>
+                        <input 
+                            value={line}
+                            onChange={handleInputLine}
+                            placeholder="Linea de producción"
+                        />
+                    </CardInfo>
+                    <CardInfo>
+                        <label>Email: </label>
+                        <input 
+                            value={email}
+                            onChange={handleInputEmail}
+                            placeholder="Correo del usuario"
                         />
                     </CardInfo>
                     <CardInfo>
