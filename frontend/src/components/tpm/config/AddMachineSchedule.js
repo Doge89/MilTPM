@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal';
 import axios from 'axios'
+import querystring from 'querystring'
 
 import { CreateUserForm, CardInfo  } from '../../../styles/tpm'
 import { ButtonPrimary, ModalContainer } from '../../../styles/common'
@@ -25,14 +26,14 @@ Modal.setAppElement('#root')
 
 function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine }){
 
-    const [machine, setMachine] = useState(machines[0])
+    const [machine, setMachine] = useState('0')
     const [day, setDay] = useState(days[0])
     
     const postData = async (data) => {
         const res = await axios({
-            url: `${URL}/machines`,
+            url: `${URL}/tpm/modificar/cronograma/get/`,
             method: 'POST',
-            data
+            data: querystring.stringify(data)
         })
 
         return res.data
@@ -41,13 +42,24 @@ function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine }){
     const handleSelectMachine = e => setMachine(e.target.value)
     const handleSelectDay = e => setDay(e.target.value)
 
+    const getNumberDay = (day) => {
+        switch(day){
+            case 'Lunes': return 0
+            case 'Martes': return 1
+            case 'Miercoles': return 2
+            case 'Jueves': return 3
+            case 'Viernes': return 4
+            case 'Sabado': return 5
+            default: return 6
+        }
+    }
+
     const handleBtn = (e) => {
         e.preventDefault()
         if(machine && day){
-            /* postData({ day, machine }).then(() => {
+            postData({ data:  JSON.stringify({ dia: getNumberDay(day), maquina: machine }) }).then(() => {
                 addMachine(day, machine)
-            }).catch(e => console.log(e)) */
-            addMachine(day, machine)
+            }).catch(e => console.log(e))
         }
     }
 
