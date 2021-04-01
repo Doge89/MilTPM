@@ -75,7 +75,7 @@ function Table({ isHistory }){
 
     useEffect(() => {
         getLine().then(({ linea, Logged }) => {
-            if(!Logged){ window.location.replace('/login') }
+            //if(!Logged){ window.location.replace('/login') }
             context.dispatchLine({ type: 'SET', value: linea })
         }).catch(e => {
             console.log(e)
@@ -87,15 +87,17 @@ function Table({ isHistory }){
             <TableHeader history={isHistory}/>
             <TableBody history={isHistory} />
             {err && <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="2vh auto 0 auto">{message}</Text>}
-            <Container
-                width="100%"
-                alignItems="center"
-                justifyContent="center"
-                flexDirection="column"
-            >
-                <ButtonPrimary width="20vw" height="4vh" onClick={handleBtn}>Registrar</ButtonPrimary>
-                <ButtonPrimary width="20vw" height="4vh" onClick={gotoHistory}>Historial</ButtonPrimary>
-            </Container>
+            {!isHistory && (
+                <Container
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                    flexDirection="column"
+                >
+                    <ButtonPrimary width="20vw" height="4vh" onClick={handleBtn}>Registrar</ButtonPrimary>
+                    <ButtonPrimary width="20vw" height="4vh" onClick={gotoHistory}>Historial</ButtonPrimary>
+                </Container>
+            )}
         </TableComponent>
     )
 }
