@@ -6,7 +6,7 @@ import Table from '../components/mp/history/Table'
 
 function MpHistory(){
 
-    const [data, setData] = useState([{ id: 1, linea: 'MXC001', area: 'Lorem ipsum', nombre: 'Lorem ipsum', validado: 'Lorem ipsum' }])
+    const [data, setData] = useState([])
     const [searched, setSearched] = useState(false)
 
     return(

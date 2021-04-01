@@ -42,6 +42,7 @@ function Searcher({ setData, setSearched }){
             getData().then(({ infMP, Linea }) => {
                 const linea = JSON.parse(Linea).linea
                 const data = JSON.parse(infMP).map( item => {  return { ...item.fields, Id: item.pk, linea } } )
+                console.log(data)
                 setData(data)
             }).catch(e => {
                 console.log(e)
