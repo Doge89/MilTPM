@@ -17,6 +17,7 @@ function Clock(){
         onSwiping: (e) => { 
             console.log(e)
             console.log(side)
+            console.log(window.localStorage.getItem('slidePosition'))
             if(clockSlide.current){
                 if(e.absX > 0){
                     document.getElementById('clock-slide').style.right = `${e.deltaX * -1}px`
@@ -32,12 +33,12 @@ function Clock(){
             const width = window.innerWidth
             console.log(width)
             document.getElementById('clock-slide').style.transform = `translateX(${-1 *(width - e.absX - 150)}px)`
-            clockSlide.current = false
-            side = false
+            window.localStorage.setItem('slidePosition', 'left')
         },
         onSwipedRight: (e) => {
             const width = window.innerWidth
             document.getElementById('clock-slide').style.transform = `translateX(${-1 *(width - e.absX - 150)}px)`
+            window.localStorage.setItem('slidePosition', 'right')
         }
     });
 
@@ -48,8 +49,7 @@ function Clock(){
     const [date, setDate] = useState('')
 
     useEffect(() => {
-        clockSlide.current = true
-        slideAtPosition.current = true
+        window.localStorage.setItem('slidePosition', 'right')
         interval.current = setInterval(() => {
             const date = new Date()
             setDate(`${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`)

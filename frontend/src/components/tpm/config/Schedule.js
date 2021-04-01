@@ -10,7 +10,7 @@ import { days, URL } from '../../../var'
 
 import trash from '../../../assets/img/basura.png'
 
-function Schedule({ machines }){
+function Schedule({ machines, schedule }){
 
     const [modalOpen, setModalOpen] = useState(false)
     const [machinesMonday, setMachinesMonday] = useState([])
@@ -140,8 +140,12 @@ function Schedule({ machines }){
     }
 
     useEffect(() => {
-        
-    }, [machines])
+        for(let i = 0; i < days.length; i++){
+            const newDayValue = [...getMachines(days[i])]
+            newDayValue = schedule.filter(machine => machine.day === i+1)
+            getSetMachines(days[i])(newDayValue)
+        }
+    }, [schedule])
 
     return(
         <Container >

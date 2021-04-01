@@ -15,7 +15,8 @@ function Tpm(){
     const [viewType, setViewType] = useState('panel')
     const [machine, setMachine] = useState({ nombre: 'running_booth' })
     
-    const [machines, setMachines] = useState([{ nombre: 'a', nombre: 'b', nombre: 'c' }])
+    const [machines, setMachines] = useState([])
+    const [schedule, setSchedule] = useState([])
     const [activities, setActivities] = useState([{ nombre: 'Checar tornillos', tipo: 'limpieza', id: 1 }, { nombre: 'Limpieza de equipo', tipo: 'limpieza', id: 2 },
                                     { nombre: 'Checar estado de cables', tipo: 'electrico', id: 3 }, { nombre: 'Checar estado de conectores', tipo: 'electrico', id: 4 }])
     const [history, setHistory] = useState([{ id: 1, fecha: '16-03-2021 16:21:00', tipo: false, maquina: 'runnibg_booth', usuario: 'admin', 
@@ -33,8 +34,10 @@ function Tpm(){
     }
 
     useEffect(() => {
-        getMachines().then(({ maquinas }) =>{
-            const machines = JSON.parse(maquinas).map(item => item.fields)
+        getMachines().then(({ maquinas, cronograma }) =>{
+            const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
+            const schedule = JSON.parse(cronograma).map(item => item.fields)
+            setSchedule(schedule)
             setMachines(machines)
         }).catch(e => {
             console.log(e)
@@ -62,6 +65,7 @@ function Tpm(){
             ):(
                 <Modify 
                     machines={machines}
+                    schedule={schedule}
                 />
             )}
         </MainContainer>

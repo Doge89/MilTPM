@@ -9,7 +9,7 @@ import { Container } from '../../../styles/tpm'
 
 import { modifyViews } from '../../../var'
 
-function Modify({ machines }){
+function Modify({ machines, schedule }){
 
     const [modifyView, setModifyView] = useState(modifyViews[0])
     const [users, setUsers] = useState([{ user: 'Administrador', type: 'admin' }])
@@ -34,6 +34,7 @@ function Modify({ machines }){
             ): modifyView.value === 'schedule' ? (
                 <Schedule 
                     machines={machines}
+                    schedule={schedule}
                 />
             ):(
                 <Ports />
