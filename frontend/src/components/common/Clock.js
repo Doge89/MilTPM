@@ -37,7 +37,7 @@ function Clock(){
         },
         onSwipedRight: (e) => {
             const width = window.innerWidth
-            document.getElementById('clock-slide').style.transform = `translateX(calc(${e.absX}px + ))`
+            document.getElementById('clock-slide').style.transform = `translateX(${-1 *(width - e.absX - 150)}px)`
         }
     });
 

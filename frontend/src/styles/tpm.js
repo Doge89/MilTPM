@@ -130,6 +130,7 @@ export const SelectorItem = styled.div`
     font-weight: bold;
     font-size: 1vw;
     transition: all 0.1s;
+    text-align: center;
 
     &:hover{ font-size: 1.15vw; }
 
