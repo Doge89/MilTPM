@@ -38,11 +38,15 @@ function Router(){
                         <Tpm />
                     </ProviderTPM>
                 </Route>
+                <Route exact path="/mp/historial">
+                    <ProviderMP>
+                        <MpHistory />
+                    </ProviderMP>
+                </Route>
                 <Route exact path="/" >
                     <Redirect to="/login" />
                 </Route>
                 <Route exact path="/login" component={Login} />
-                <Route exact path="/mp/historial" component={MpHistory} />
                 <Route exact path="/andon" component={Andon} />
                 <Route exact path="/layout" component={Layout} />
             </Switch>
