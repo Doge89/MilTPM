@@ -69,9 +69,9 @@ function Schedule({ machines }){
         }
     }
 
-    const addMachine = (day, machine) => {
+    const addMachine = (day, idx) => {
         const newDayValue = [...getMachines(day)]
-        newDayValue.push(machine)
+        newDayValue.push(machines[idx])
         getSetMachines(day)(newDayValue)
         closeModal()
     }
