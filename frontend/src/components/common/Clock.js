@@ -14,31 +14,22 @@ function Clock(){
     const slideAtPosition = useRef(null)
 
     const handlers = useSwipeable({
-        onSwiping: (e) => { 
-            console.log(e)
-            console.log(side)
-            console.log(window.localStorage.getItem('slidePosition'))
-            if(clockSlide.current){
-                if(e.absX > 0){
-                    document.getElementById('clock-slide').style.right = `${e.deltaX * -1}px`
-                }
-            }else{
-                if(e.absX > 0){
-                    document.getElementById('clock-slide').style.left = `-${e.deltaX * -1}px`
-                }
-            }
-        },
+        
         onSwipedLeft: (e) => {
-            console.log(e)
             const width = window.innerWidth
-            console.log(width)
-            document.getElementById('clock-slide').style.transform = `translateX(${-1 *(width - e.absX - 150)}px)`
-            window.localStorage.setItem('slidePosition', 'left')
+            const position = window.localStorage.getItem('slidePosition')
+            if(position === 'right'){
+                document.getElementById('clock-slide').style.transform = `translateX(-${width - (width *0.4)}px)`
+                window.localStorage.setItem('slidePosition', 'left')
+            }
         },
         onSwipedRight: (e) => {
             const width = window.innerWidth
-            document.getElementById('clock-slide').style.transform = `translateX(${-1 *(width - e.absX - 150)}px)`
-            window.localStorage.setItem('slidePosition', 'right')
+            const position = window.localStorage.getItem('slidePosition')
+            if(position === 'left'){
+                document.getElementById('clock-slide').style.transform = `translateX(${width - (width * 0.9)}px)`
+                window.localStorage.setItem('slidePosition', 'right')
+            }
         }
     });
 

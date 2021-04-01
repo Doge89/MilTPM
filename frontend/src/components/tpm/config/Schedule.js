@@ -139,10 +139,16 @@ function Schedule({ machines, schedule }){
         }).catch(e => console.log(e))
     }
 
+    const checkMachineExist = (machine, day) => {
+        let machinesDay = [...getMachines(day)]
+        if(machinesDay.find(machineSchedule => machineSchedule.id === Number(machine + 1))){
+            return false
+        }else{ return true }
+    }
+
     useEffect(() => {
-        console.log(schedule)
         for(let i = 0; i < days.length; i++){
-            const newDayValue = [...getMachines(days[i])]
+            let newDayValue = [...getMachines(days[i])]
             newDayValue = schedule.filter(machine => machine.dia === i).map(machineSchedule => { 
                 return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
             })
@@ -190,6 +196,7 @@ function Schedule({ machines, schedule }){
                 closeModal={closeModal}
                 modalOpen={modalOpen}
                 addMachine={addMachine}
+                checkMachineExist={checkMachineExist}
             />
             <ButtonPrimary width="15vw" height="4vh" onClick={openModal}>Agregar Maquina</ButtonPrimary>
         </Container>
