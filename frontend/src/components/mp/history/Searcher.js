@@ -24,6 +24,7 @@ function Searcher({ setData, setSearched }){
             data: querystring.stringify({ data: JSON.stringify({ fecha: date, linea: line, turno }) })
         })
 
+        console.log(res.data)
         return res.data
     }
 
@@ -40,6 +41,7 @@ function Searcher({ setData, setSearched }){
         if(date !== ''){
             setSearched(true)
             getData().then(({ infMP, Linea }) => {
+                console.log(infMP)
                 const linea = JSON.parse(Linea).linea
                 const data = JSON.parse(infMP).map( item => {  return { ...item.fields, Id: item.pk, linea } } )
                 console.log(data)
