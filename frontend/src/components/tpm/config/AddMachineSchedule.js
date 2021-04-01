@@ -57,7 +57,7 @@ function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine }){
     const handleBtn = (e) => {
         e.preventDefault()
         if(machine && day){
-            postData({ data:  JSON.stringify({ dia: getNumberDay(day), maquina: machine }) }).then(() => {
+            postData({ data:  JSON.stringify({ dia: getNumberDay(day), maquina: Number(machine) + 1 }) }).then(() => {
                 addMachine(day, machine)
             }).catch(e => console.log(e))
         }
