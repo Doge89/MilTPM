@@ -143,7 +143,7 @@ function Schedule({ machines, schedule }){
         console.log(schedule)
         for(let i = 0; i < days.length; i++){
             const newDayValue = [...getMachines(days[i])]
-            newDayValue = schedule.filter(machine => machine.day === i+1)
+            newDayValue = schedule.filter(machine => machine.dia === i)
             getSetMachines(days[i])(newDayValue)
         }
     }, [schedule])
