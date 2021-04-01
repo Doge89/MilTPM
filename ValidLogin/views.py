@@ -5,7 +5,7 @@ from django.http import JsonResponse, HttpResponse
 
 def validation(request):
     if 'Usuario' in request.session and 'Pass' in request.session:
-        return JsonResponse({'Logged':True, 'linea': request.session['Linea']}, status = 200)
+        return JsonResponse({'Logged':True, 'linea': request.session['Linea'], "Usuario": request.session['Usuario']}, status = 200)
     else:
         response = HttpResponse('CSFR', status = 200)
         response.set_cookie(key = 'csrftoken', value = get_token(request), max_age=604800)

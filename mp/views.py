@@ -31,7 +31,7 @@ def post_mp(request):
             print(type(data))
             sesLinea = Linea.objects.get(linea__exact=f"{request.session['Linea']}")
             print(sesLinea)
-            histMP = mp.objects.create(Id = None, linea = sesLinea, fecha = datetime.now().date(), area = data['tipo'], turno = data['turno'], tecnico = data['tecnicoJefe'], superMTTO = data['superMTTO'], superPRDN = data['superPRDN'], nombre = data['reportadoPor'], hora = datetime.now().strftime('%H:%M:%S'), tipoMaquina = data['tipoMaquina'], tagMaquina = data['tagMaquina'], descripcion = data['decripcion'], tipoFalla = data['tipoFalla'], afecta = data['afectaProduccion'], horaInicio=f"{data['iniciadoEn']}:00", horaFinal=f"{data['terminadoEn']}:00", reparacion=data['arregladoPor'], refacciones=data['refacciones'], causa = data['causa'], tiempoMuerto=f"{data['tiempoMuerto']}:00", validado=data['validadoPor'])
+            histMP = mp.objects.create(Id = None, linea = sesLinea, fecha = datetime.now().date(), area = data['tipo'], turno = data['turno'], tecnico = data['tecnicoJefe'], superMTTO = data['superMTTO'], superPRDN = data['superPRDN'], nombre = data['reportadoPor'], hora = datetime.now().strftime('%H:%M:%S'), tipoMaquina = data['tipoMaquina'], tagMaquina = data['tagMaquina'], descripcion = data['decripcion'], tipoFalla = data['tipoFalla'], afecta = data['afectaProduccion'], horaInicio=f"{data['iniciadoEn']}:00", horaFinal=f"{data['terminadoEn']}:00", reparacion=data['arregladoPor'], refacciones=data['refacciones'], causa = data['causa'], tiempoMuerto=f"{data['tiempoMuerto']}:00", validado=data['validadoPor'], tecnicoJefe = data['tecnicoJefe'])
             return HttpResponse(status=201)
         except Exception as e:
             print(e)

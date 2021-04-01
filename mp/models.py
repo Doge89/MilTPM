@@ -10,6 +10,7 @@ class mp(models.Model):
     area = models.CharField(max_length= 30, verbose_name = _('Area'), help_text = _('Area de la produccion'), blank=False)
     turno = models.CharField(max_length=1, verbose_name = _('Turno'), help_text =_('Turno de la produccion'), blank=False)
     tecnico = models.CharField(max_length=50, verbose_name = _('Tecnico'), help_text = _('Tecnico encargado'), blank=False)
+    tecnicoJefe = models.CharField(max_length=50, verbose_name = _('TecnicoJefe'), help_text = _('Tecnico encargado'), blank=False, default='')
     superMTTO = models.CharField(max_length=30, verbose_name = _('SuperMtto'), help_text = _('Supervisor de Mantenimiento'), blank=True, default='')
     superPRDN = models.CharField(max_length=30, verbose_name = _('SuperPrdn'), help_text = _('Supervisor de Produccion'), blank=True, default='')
     nombre = models.CharField(max_length=30, verbose_name = _('Nombre'), help_text = _('Nombre de quien reporto'), blank=True, default='')
