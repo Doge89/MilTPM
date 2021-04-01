@@ -24,7 +24,7 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine, checkMachineExist }){
+function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine, checkMachineExist, getNumberDay }){
 
     const [machine, setMachine] = useState('0')
     const [day, setDay] = useState(days[0])
@@ -41,18 +41,6 @@ function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine, check
 
     const handleSelectMachine = e => setMachine(e.target.value)
     const handleSelectDay = e => setDay(e.target.value)
-
-    const getNumberDay = (day) => {
-        switch(day){
-            case 'Lunes': return 0
-            case 'Martes': return 1
-            case 'Miercoles': return 2
-            case 'Jueves': return 3
-            case 'Viernes': return 4
-            case 'Sabado': return 5
-            default: return 6
-        }
-    }
 
     const handleBtn = (e) => {
         e.preventDefault()
