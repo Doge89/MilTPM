@@ -10,12 +10,12 @@ import { URL } from '../../../var'
  
 const customStyles = {
     content : {
-        top                   : '22.5%',
+        top                   : '15%',
         left                  : '30%',
         right                 : 'auto',
         bottom                : 'auto',
         width                 : '40%',
-        height                : '55%' 
+        height                : '70%' 
     },
     overlay:{
         zIndex                : 2
@@ -54,7 +54,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
         const res = await axios({
             url: `${URL}/tpm/modificar/usuarios/`,
             method: 'POST',
-            data
+            data: querystring.stringify(data)
         })
 
         return res.data
