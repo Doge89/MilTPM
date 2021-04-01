@@ -131,6 +131,22 @@ export const ClockContainer = styled.div`
     }
 `;
 
+export const NavbarMobile = styled.div`
+    display: none;
+    @media ${device.tablet}{
+        width: 60vw;
+        position: absolute;
+        left: 100vw;
+        height: 100vh;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        transition: transform 0.2s linear;
+    }
+`
+
 export const ClockSlide = styled.div`
     display: none;
 
