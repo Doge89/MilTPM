@@ -154,7 +154,7 @@ function TableBody({ history }){
             </TableRow>
             <TableRow>
                 <div className="label">
-                    <span>Reparación realizada por</span>
+                    <span>Reparación realizada</span>
                 </div>
                 <div className="input-container">
                     <input 

@@ -14,7 +14,7 @@ const date = `${twoDigits(new Date().getDate())}/${twoDigits(new Date().getMonth
 
 function TableHeader({ history }){
 
-    const context = useContext(appContext)
+    const context = useContext(appContext) 
 
     const handleSelect = e => context.dispatchTurno({ type: 'SET', value: e.target.value })
 

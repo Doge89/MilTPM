@@ -11,7 +11,7 @@ function Provider({ children }){
     const [ technicianChief, dispatchTechnicianChief ] = useReducer(defaultReducer, '')
     const [ superMTTO, dispatchSuperMTTO ] = useReducer(defaultReducer, '')
     const [ superPRDN, dispatchSuperPRDN ] = useReducer(defaultReducer, '')
-    const [ reportedBy, dispatchReportedBy ] = useReducer(defaultReducer, '')
+    const [ reportedBy, dispatchReportedBy ] = useReducer(defaultReducer, '') 
     const [ machineType, dispatchMachineType ] = useReducer(defaultReducer, '')
     const [ machineTag, dispatchMachineTag ] = useReducer(defaultReducer, '')
     const [ description, dispatchDescription ] = useReducer(defaultReducer, '')
