@@ -27,7 +27,7 @@ function Clock(){
             const width = window.innerWidth
             const position = window.localStorage.getItem('slidePosition')
             if(position === 'left'){
-                document.getElementById('clock-slide').style.transform = `translateX(${width - (width * 0.9)}px)`
+                document.getElementById('clock-slide').style.transform = `translateX(${0}px)`
                 window.localStorage.setItem('slidePosition', 'right')
             }
         }
