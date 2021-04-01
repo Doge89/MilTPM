@@ -160,4 +160,5 @@ export const HistoryTableContainer = styled.div`
     padding: 0 5%; 
     display: flex;
     flex-direction: column;
+    padding-top: 5vh;
 `
