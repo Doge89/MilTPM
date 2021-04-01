@@ -5,6 +5,8 @@ import Searcher from '../components/mp/history/Searcher'
 import Table from '../components/mp/history/Table'
 import TableReport from '../components/mp/table/Table'
 
+import { HistoryTableContainer } from '../styles/mp'
+
 import { appContext } from '../reducers/ProviderMP'
 
 function MpHistory(){
@@ -17,6 +19,7 @@ function MpHistory(){
 
     useEffect(() => {
         if(JSON.stringify(report) !== "{}"){
+            console.log(report)
             context.dispatchType({ type: 'SET', value: report.tipo })
             context.dispatchTechnicianChief({ type: 'SET', value: report.tecnicoJefe })
             context.dispatchSuperMTTO({ type: 'SET', value: report.superMTTO })
@@ -43,7 +46,9 @@ function MpHistory(){
             <Searcher setData={setData} setSearched={setSearched} />
             <Table searched={searched} data={data} setReport={setReport} />
             {JSON.stringify(report) !== "{}" && (
-                <TableReport isHistory />
+                <HistoryTableContainer>
+                    <TableReport isHistory />
+                </HistoryTableContainer>
             )}
         </MainContainer>
     )

@@ -154,3 +154,10 @@ export const SearcherContainer = styled.div`
         justify-content: space-between;
     }
 `
+
+export const HistoryTableContainer = styled.div`
+    width: 90%;
+    padding: 0 5%; 
+    display: flex;
+    flex-direction: column;
+`
