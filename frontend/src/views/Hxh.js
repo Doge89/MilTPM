@@ -13,7 +13,10 @@ function Hxh(){
 
     useEffect(() => {
         document.getElementById('root').style.overflowY = 'auto'
-        if(window.innerWidth <= maxWidth){ document.getElementById('root').style.backgroundColor = 'black' }
+        if(window.innerWidth <= maxWidth){
+            document.getElementById('root').style.backgroundColor = 'black'
+            document.getElementsByTagName('body')[0].style.overflowX = 'hidden'
+        }
     }, [])
 
     return (

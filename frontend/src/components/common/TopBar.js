@@ -29,7 +29,7 @@ function TopBar(){
                     <Image src={TpmImage} width='8vw' onClick={gotoTPM} />
                     <Image src={MpImage} width='8vw' onClick={gotoMP} />
                     <Image src={LayoutImage} width='8vw' onClick={gotoLayout} />
-                    <Image src={MilwaukeeImage} width='15vw' onClick={gotoHXH} />
+                    <Image src={MilwaukeeImage} width='12vw' onClick={gotoHXH} />
                 </div>
             </nav>
         </TopBarContainer>
