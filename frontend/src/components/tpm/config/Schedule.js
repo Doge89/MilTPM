@@ -28,8 +28,7 @@ function Schedule({ machines, schedule }){
     const deleteData = async (machine) => {
         const res = await axios({
             url: `${URL}/tpm/modificar/cronograma/get/?dia=${machine.day}&id=${machine.id}`,
-            method: 'DELETE',
-            data: querystring.stringify(data)
+            method: 'DELETE'
         })
 
         return res.data
