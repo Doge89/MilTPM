@@ -49,17 +49,19 @@ function Tpm(){
             const schedule = JSON.parse(cronograma).map(item => item.fields)
             setSchedule(schedule)
             setMachines(machines)
-        }).catch(e => {
-            console.log(e)
-        })
-        getMachinesDay().then(({ maqdia}) =>{
-            const machines = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
-                return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
+
+            getMachinesDay().then(({ maqdia}) =>{
+                const machines = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
+                    return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
+                })
+                setMchinesDay(machines)
+            }).catch(e => {
+                console.log(e)
             })
-            setMchinesDay(machines)
         }).catch(e => {
             console.log(e)
         })
+       
     }, [])
 
     return(
