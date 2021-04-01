@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import AddMachineSchedule from './AddMachineSchedule'
 
@@ -24,10 +25,11 @@ function Schedule({ machines, schedule }){
     const openModal = () => setModalOpen(true)
     const closeModal = () => setModalOpen(false)
 
-    const deleteData = async (machine) => {
+    const deleteData = async (data) => {
         const res = await axios({
-            url: `${URL}/machines?id=${machine.id}`,
-            method: 'DELETE'
+            url: `${URL}/tpm/modificar/cronograma/get/`,
+            method: 'DELETE',
+            data: querystring.stringify(data)
         })
 
         return res.data
@@ -131,12 +133,10 @@ function Schedule({ machines, schedule }){
 
     const deleteMachine = (day, idx) => {
         const newMachinesDay = [...getMachines(day)]
-        /* deleteData(newMachinesDay[idx]).then(() => {
+        deleteData(newMachinesDay[idx]).then(() => {
             newMachinesDay.splice(idx, 1)
             getSetMachines(day)(newMachinesDay)
-        }).catch(e => console.log(e)) */
-        newMachinesDay.splice(idx, 1)
-        getSetMachines(day)(newMachinesDay)
+        }).catch(e => console.log(e))
     }
 
     useEffect(() => {
