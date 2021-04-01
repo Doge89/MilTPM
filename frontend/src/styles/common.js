@@ -150,7 +150,7 @@ export const ClockSlide = styled.div`
         font-size: 4vw;
         font-family: Arial, Helvetica, sans-serif;
         font-weight: bold;
-        transition: all 0.1s linear;
+        transition: transform 0.2s linear;
     }
 `
 

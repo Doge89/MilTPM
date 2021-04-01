@@ -1,11 +1,45 @@
 import React, { useEffect, useState, useRef } from 'react'
+import { useSwipeable } from 'react-swipeable'
 
 import { ClockContainer, ClockSlide } from '../../styles/common'
 
+const width = window.innerWidth
+
 function Clock(){
+
+    let side = true
 
     const interval = useRef(null)
     const clockSlide = useRef(null)
+    const slideAtPosition = useRef(null)
+
+    const handlers = useSwipeable({
+        onSwiping: (e) => { 
+            console.log(e)
+            console.log(side)
+            if(clockSlide.current){
+                if(e.absX > 0){
+                    document.getElementById('clock-slide').style.right = `${e.deltaX * -1}px`
+                }
+            }else{
+                if(e.absX > 0){
+                    document.getElementById('clock-slide').style.left = `-${e.deltaX * -1}px`
+                }
+            }
+        },
+        onSwipedLeft: (e) => {
+            console.log(e)
+            const width = window.innerWidth
+            console.log(width)
+            document.getElementById('clock-slide').style.transform = `translateX(${-1 *(width - e.absX - 150)}px)`
+            clockSlide.current = false
+            side = false
+        },
+        onSwipedRight: (e) => {
+            const width = window.innerWidth
+            document.getElementById('clock-slide').style.transform = `translateX(calc(${e.absX}px + ))`
+        }
+    });
 
     const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre',
                     'Octubre', 'Noviembre', 'Diciembre']
@@ -13,16 +47,9 @@ function Clock(){
     const [hour, setHour] = useState('')
     const [date, setDate] = useState('')
 
-    const handleTouchMove = (e) => {
-    
-        console.log(window.innerWidth - e.touches[0].pageX)
-        
-        document.getElementById('clock-slide').style.right = `${window.innerWidth - e.touches[0].pageX}px`
-        clockSlide.current.style.right = window.innerWidth - e.touches[0].pageX
-    }
-
     useEffect(() => {
-        
+        clockSlide.current = true
+        slideAtPosition.current = true
         interval.current = setInterval(() => {
             const date = new Date()
             setDate(`${date.getDate()} de ${months[date.getMonth()]} de ${date.getFullYear()}`)
@@ -33,7 +60,7 @@ function Clock(){
 
     return(
         <>
-        <ClockSlide onTouchMove={handleTouchMove} ref={clockSlide} id="clock-slide">
+        <ClockSlide {...handlers} id="clock-slide">
            {'<'} Deslizar
         </ClockSlide>
         <ClockContainer>
