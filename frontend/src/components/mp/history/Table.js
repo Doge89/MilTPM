@@ -1,9 +1,11 @@
 import React from 'react'
 
+import TableItem from './TableItem'
+
 import { Table as TableContainer, PanelTableCell } from '../../../styles/tpm'
 import { Text } from '../../../styles/common'
 
-function Table({ searched, data }){
+function Table({ searched, data, setReport }){
     return(
         searched && (
             <TableContainer width="100%" alignItems="center" tableWidth="80%">
@@ -19,13 +21,12 @@ function Table({ searched, data }){
                             <PanelTableCell className="header" width="20%">Valido</PanelTableCell>
                         </div>
                         {data.map((report, idx) => (
-                            <div className={`table-row ${idx === data.length - 1 ? 'border-none' : ''}`} key={idx}>
-                                <PanelTableCell width="20%" className="clickable">{report.Id}</PanelTableCell>
-                                <PanelTableCell className="border" width="20%">{report.linea}</PanelTableCell>
-                                <PanelTableCell width="20%">{report.area}</PanelTableCell>
-                                <PanelTableCell className="border" width="20%">{report.nombre}</PanelTableCell>
-                                <PanelTableCell width="20%">{report.validado}</PanelTableCell>
-                            </div>
+                            <TableItem 
+                                report={report}
+                                setReport={setReport}
+                                last={idx === data.length - 1}
+                                key={idx}
+                            />
                         ))}
                     </div>
                 )}

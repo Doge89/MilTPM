@@ -6,7 +6,7 @@ import { TableRow } from '../../../styles/mp'
 
 import { appContext } from '../../../reducers/ProviderMP'
 
-function TableBody(){
+function TableBody({ history }){
 
     const context = useContext(appContext)
     
@@ -25,8 +25,12 @@ function TableBody(){
     const handleSelectFailType = e => context.dispatchFailType({ type: 'SET', value: e.target.value })
     const handleSelectMachineType = e => context.dispatchMachineType({ type: 'SET', value: e.target.value })
 
-    const handleButtonAffectedProductionYes = () => context.dispatchProductionAffected({ type: 'SET', value: true })
-    const handleButtonAffectedProductionNo = () => context.dispatchProductionAffected({ type: 'SET', value: false })
+    const handleButtonAffectedProductionYes = () => {
+        if(!history){ context.dispatchProductionAffected({ type: 'SET', value: true }) }
+    }
+    const handleButtonAffectedProductionNo = () => {
+        if(!history){ context.dispatchProductionAffected({ type: 'SET', value: false }) }
+    }
 
     return(
         <>
@@ -38,6 +42,7 @@ function TableBody(){
                     <input 
                         value={context.reportedBy}
                         onChange={handleInputReportedBy}
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -46,7 +51,7 @@ function TableBody(){
                     <span>Tipo de máquina</span>
                 </div>
                 <div className="input-container">
-                    <select value={context.machineType} onChange={handleSelectMachineType}>
+                    <select value={context.machineType} onChange={handleSelectMachineType} disabled={history}>
                         <option>Open Link</option>
                         <option>EOL</option>
                         <option>Grease Dispenser</option>
@@ -61,6 +66,7 @@ function TableBody(){
                     <input 
                         value={context.machineTag}
                         onChange={handleInputMachineTag}
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -72,6 +78,7 @@ function TableBody(){
                     <input 
                         value={context.description}
                         onChange={handleInputDescription}
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -80,7 +87,7 @@ function TableBody(){
                     <span>Tipo de falla</span>
                 </div>
                 <div className="input-container">
-                    <select value={context.failType} onChange={handleSelectFailType}>
+                    <select value={context.failType} onChange={handleSelectFailType} disabled={history}>
                         <option>Eléctrica</option>
                         <option>Electrónica</option>
                         <option>Neumática</option>
@@ -115,6 +122,7 @@ function TableBody(){
                     <input 
                         value={context.technician}
                         onChange={handleInputTechnician}
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -127,6 +135,7 @@ function TableBody(){
                         value={context.startedAt}
                         onChange={handleInputStartedAt}
                         type="time"
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -139,6 +148,7 @@ function TableBody(){
                         value={context.endAt}
                         onChange={handleInputEndAt}
                         type="time"
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -150,6 +160,7 @@ function TableBody(){
                     <input 
                         value={context.fixedBy}
                         onChange={handleInputFixedBy}
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -161,6 +172,7 @@ function TableBody(){
                     <input 
                         value={context.partsUsed}
                         onChange={handleInputPartsUsed}
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -169,7 +181,7 @@ function TableBody(){
                     <span>Causa probable</span>
                 </div>
                 <div className="input-container">
-                    <select value={context.causedBy} onChange={handleInputCausedBy}>
+                    <select value={context.causedBy} onChange={handleInputCausedBy} disabled={history}>
                         <option>Mala calibración</option>
                         <option>Mal ajuste</option>
                         <option>Desajuste</option>
@@ -188,6 +200,7 @@ function TableBody(){
                         value={context.timeout}
                         onChange={handleInputTimeout}
                         type="time"
+                        disabled={history}
                     />
                 </div>
             </TableRow>
@@ -199,6 +212,7 @@ function TableBody(){
                     <input 
                         value={context.validatedBy}
                         onChange={handleInputValidatedBy}
+                        disabled={history}
                     />
                 </div>
             </TableRow>

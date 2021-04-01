@@ -12,7 +12,7 @@ import { ButtonPrimary, Container, Text } from '../../../styles/common'
 import { URL } from '../../../var'
 import { appContext } from '../../../reducers/ProviderMP'
 
-function Table(){
+function Table({ isHistory }){
 
     const history = useHistory()
     const context = useContext(appContext)
@@ -84,8 +84,8 @@ function Table(){
 
     return(
         <TableComponent>
-            <TableHeader />
-            <TableBody />
+            <TableHeader history={isHistory}/>
+            <TableBody history={isHistory} />
             {err && <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="2vh auto 0 auto">{message}</Text>}
             <Container
                 width="100%"
