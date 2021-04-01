@@ -169,7 +169,7 @@ function Schedule({ machines }){
                                     >
                                         <img src={trash} alt="Icono de un bote de basura" className="img-effect" onClick={() => deleteMachine(day, idx)}/>
                                         <div>
-                                            <span>{machine?.nombre}</span>
+                                            <span>{machine}</span>
                                         </div>
                                     </PanelTableCell>
                                 ))}

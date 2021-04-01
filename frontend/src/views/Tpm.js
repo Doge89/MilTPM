@@ -15,7 +15,7 @@ function Tpm(){
     const [viewType, setViewType] = useState('panel')
     const [machine, setMachine] = useState({ nombre: 'running_booth' })
     
-    const [machines, setMachines] = useState([])
+    const [machines, setMachines] = useState([{ nombre: 'a', nombre: 'b', nombre: 'c' }])
     const [activities, setActivities] = useState([{ nombre: 'Checar tornillos', tipo: 'limpieza', id: 1 }, { nombre: 'Limpieza de equipo', tipo: 'limpieza', id: 2 },
                                     { nombre: 'Checar estado de cables', tipo: 'electrico', id: 3 }, { nombre: 'Checar estado de conectores', tipo: 'electrico', id: 4 }])
     const [history, setHistory] = useState([{ id: 1, fecha: '16-03-2021 16:21:00', tipo: false, maquina: 'runnibg_booth', usuario: 'admin', 
@@ -29,7 +29,6 @@ function Tpm(){
             method: 'GET'
         })
 
-        console.log(res.data)
         return res.data
     }
 
@@ -38,7 +37,7 @@ function Tpm(){
             const machines = JSON.parse(maquinas).map(item => item.fields)
             setMachines(machines)
         }).catch(e => {
-
+            console.log(e)
         })
     }, [])
 
