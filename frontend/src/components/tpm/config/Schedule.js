@@ -140,6 +140,7 @@ function Schedule({ machines, schedule }){
     }
 
     useEffect(() => {
+        console.log(schedule)
         for(let i = 0; i < days.length; i++){
             const newDayValue = [...getMachines(days[i])]
             newDayValue = schedule.filter(machine => machine.day === i+1)
