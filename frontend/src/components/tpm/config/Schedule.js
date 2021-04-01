@@ -133,7 +133,7 @@ function Schedule({ machines, schedule }){
 
     const deleteMachine = (day, idx) => {
         const newMachinesDay = [...getMachines(day)]
-        deleteData(newMachinesDay[idx]).then(() => {
+        deleteData({ data: JSON.stringify(newMachinesDay[idx]) }).then(() => {
             newMachinesDay.splice(idx, 1)
             getSetMachines(day)(newMachinesDay)
         }).catch(e => console.log(e))
