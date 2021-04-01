@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import AddMachineSchedule from './AddMachineSchedule'
 
@@ -24,10 +25,11 @@ function Schedule({ machines, schedule }){
     const openModal = () => setModalOpen(true)
     const closeModal = () => setModalOpen(false)
 
-    const deleteData = async (machine) => {
+    const deleteData = async (data) => {
         const res = await axios({
-            url: `${URL}/machines?id=${machine.id}`,
-            method: 'DELETE'
+            url: `${URL}/tpm/modificar/cronograma/get/`,
+            method: 'DELETE',
+            data: querystring.stringify(data)
         })
 
         return res.data
@@ -131,18 +133,22 @@ function Schedule({ machines, schedule }){
 
     const deleteMachine = (day, idx) => {
         const newMachinesDay = [...getMachines(day)]
-        /* deleteData(newMachinesDay[idx]).then(() => {
+        deleteData({ data: JSON.stringify(newMachinesDay[idx]) }).then(() => {
             newMachinesDay.splice(idx, 1)
             getSetMachines(day)(newMachinesDay)
-        }).catch(e => console.log(e)) */
-        newMachinesDay.splice(idx, 1)
-        getSetMachines(day)(newMachinesDay)
+        }).catch(e => console.log(e))
+    }
+
+    const checkMachineExist = (machine, day) => {
+        let machinesDay = [...getMachines(day)]
+        if(machinesDay.find(machineSchedule => machineSchedule.id === Number(machine + 1))){
+            return false
+        }else{ return true }
     }
 
     useEffect(() => {
-        console.log(schedule)
         for(let i = 0; i < days.length; i++){
-            const newDayValue = [...getMachines(days[i])]
+            let newDayValue = [...getMachines(days[i])]
             newDayValue = schedule.filter(machine => machine.dia === i).map(machineSchedule => { 
                 return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
             })
@@ -190,6 +196,7 @@ function Schedule({ machines, schedule }){
                 closeModal={closeModal}
                 modalOpen={modalOpen}
                 addMachine={addMachine}
+                checkMachineExist={checkMachineExist}
             />
             <ButtonPrimary width="15vw" height="4vh" onClick={openModal}>Agregar Maquina</ButtonPrimary>
         </Container>
