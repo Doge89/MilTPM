@@ -14,6 +14,7 @@ function Form({ children, location }){
     const [type, setType] = useState('')
     const [timerRunning, setTimerRunning] = useState(false)
     const [timerPaused, setTimerPaused] = useState(false)
+    const [rerender, setRerender] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
 
     const handleInputPassword = e => setPassword(e.target.value)
@@ -114,11 +115,14 @@ function Form({ children, location }){
                 const date = new Date(andon?.registro)
                 const datePaused = new Date(andon?.pause)
 
+                console.log(date)
+
                 if(!andon.active){ 
                     window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
                     window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
                     window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`) 
                 }else{
+                    console.log(Math.floor((Date.now() - date.getTime()) /1000))
                     window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
                     window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
                     window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
@@ -129,6 +133,9 @@ function Form({ children, location }){
                 window.localStorage.removeItem(`timeBeforeExit${type}`)
                 clearInterval(intervalID)
             }
+
+            console.log('a')
+            setRerender(!rerender)
             
         }).catch(e => console.log(e))
     }, [intervalID])
@@ -154,7 +161,7 @@ function Form({ children, location }){
                     value={descripction}
                     onChange={handleInput}
                 />
-                {React.cloneElement(children, { timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer })}
+                {React.cloneElement(children, { timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer, rerender })}
                 {timerRunning && (
                     <>
                     <label>Ingrese una contraseña</label>

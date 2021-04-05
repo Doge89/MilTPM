@@ -13,6 +13,7 @@ import { ButtonPrimary } from '../../../styles/common'
 import { appContext } from '../../../reducers/ProviderHXH'
 
 import { columns, scheduleA, scheduleB, scheduleC, URL, allDay, maxWidth, andonReason } from '../../../var'
+import { twoDigits } from '../../../scripts'
  
 function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
@@ -112,8 +113,6 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         context.dispatchCantidad({ type: 'SET', value: newCantidad })
         context.dispatchTimeout({ type: 'SET', value: newTimeout })
     }
-
-    const twoDigits = number => number < 10 ? `0${number}` : number
 
     const setAndonInfo = (andonDB) => {
         for(let i = 0; i < andonReason.length; i++){

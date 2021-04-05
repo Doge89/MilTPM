@@ -4,9 +4,7 @@ import { ButtonPrimary } from '../../styles/common'
 
 import { twoDigits } from '../../scripts'
 
-let secondsElapsed = 0
-
-function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer }){
+function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer, rerender }){
 
     const [timer, setTimer] = useState(0)
     
@@ -42,7 +40,7 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
         const timerValue = localStorage.getItem(`timerValue${type}`)
         const timeIsPaused = localStorage.getItem(`timerPaused${type}`)
         const timeBeforeExit = localStorage.getItem(`timeBeforeExit${type}`)
-        console.log(timeIsPaused)
+        console.log('b')
         
         if(!timeIsPaused){ 
             if(timerValue){
@@ -57,7 +55,7 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
 
     useEffect(() => {
         if(type !== ''){ handleTimerLoad() }
-    }, [type])
+    }, [type, rerender])
 
     useEffect(() => {
         return () => {
