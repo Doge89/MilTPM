@@ -17,7 +17,7 @@ function Users({ users, setUsers }){
 
     const [modalOpen ,setModalOpen] = useState(false)
     const [modalOpenDeleteUser ,setModalOpenDeleteUser] = useState(false)
-    const [userID, setUserID] = useState(0)
+    const [userToDelete, setUserToDelete] = useState({})
     const [userToEdit, setUserToEdit] = useState(null)
 
     const getUsers = async () => {
@@ -45,16 +45,16 @@ function Users({ users, setUsers }){
         setUserToEdit(null)
     }
 
-    const openModalDeleteUser = (idx) => {
+    const openModalDeleteUser = (user) => {
         setModalOpenDeleteUser(true)
-        setUserID(idx)
+        setUserToDelete(user)
     }
     const closeModalDeleteUser = () => setModalOpenDeleteUser(false)
 
     const removeUser = () => {
         let newUsers = [...users]
-        deleteUser({ id: JSON.stringify(userID) }).then(() => {
-            newUsers.splice(userID, 1)
+        deleteUser({ id: JSON.stringify(userToDelete.id) }).then(() => {
+            newUsers.splice(userToDelete.idx, 1)
             setUsers(newUsers)
             closeModalDeleteUser()
         }).catch(e => console.log(e))
@@ -92,7 +92,7 @@ function Users({ users, setUsers }){
                                 </div>
                             </PanelTableCell>
                             <PanelTableCell width="33%" className="border-right border-bottom move-left">{user.email}</PanelTableCell>
-                            <PanelTableCell width="33%" className="header clickable move-left" onClick={() => openModalDeleteUser(user.id)}>
+                            <PanelTableCell width="33%" className="header clickable move-left" onClick={() => openModalDeleteUser({...user, idx })}>
                                 <img src={trash} alt="Icono de un bote de basura"/>
                                 <span>Eliminiar Usuario</span>
                             </PanelTableCell>
