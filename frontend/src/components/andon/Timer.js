@@ -46,6 +46,9 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
         if(!timeIsPaused){ 
             if(timerValue){
                 const timeElapsed = Number(timerValue) + Math.round((Date.now() - Number(timeBeforeExit))/1000)
+                console.log(timeBeforeExit)
+                console.log(Date.now())
+                console.log(timeElapsed)
                 setTimer(timeElapsed)
             }
         }else{
