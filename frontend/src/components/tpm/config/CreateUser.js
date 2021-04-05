@@ -32,6 +32,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
     const [message, setMessage] = useState('')
     const [line, setLine] = useState('')
     const [email, setEmail] = useState('')
+    const [id, setId] = useState('')
     const [typeUser, setTypeUser] = useState('admin')
     const [err, setErr] = useState(false)
 
@@ -88,7 +89,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
         e.preventDefault()
         if(checkData()){
             if(userToEdit){
-                updateData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })})
+                updateData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email, id })})
                 .then(() => {
                     updateUser({...userToEdit, user, linea: line, email})
                     closeModal()
@@ -109,6 +110,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
             setTypeUser(userToEdit.type)
             setEmail(userToEdit.email)
             setLine(userToEdit.linea)
+            setId(userToEdit.id)
         }
         return () => {
             setUser('')
