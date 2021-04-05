@@ -119,8 +119,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     const setAndonInfo = (andon) =>{
         for(let i = 0; i < andon.length; i++){
             const date = new Date(andon[i].registro)
-            window.localStorage.setItem(`timerValue${andon[i].estado}`, Math.floor(date.getTime() /1000))
-            window.localStorage.setItem(`timeBeforeExit${andon[i].estado}`, Date.now())
+            window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor(date.getTime() /1000))
+            window.localStorage.setItem(`timeBeforeExit${andon[i].estatus}`, Date.now())
         }
     }
 
