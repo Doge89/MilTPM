@@ -12,7 +12,7 @@ import { ButtonPrimary } from '../../../styles/common'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-import { columns, scheduleA, scheduleB, scheduleC, URL, allDay, maxWidth } from '../../../var'
+import { columns, scheduleA, scheduleB, scheduleC, URL, allDay, maxWidth, andonReason } from '../../../var'
  
 function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
@@ -45,7 +45,6 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             method: 'GET'
         })
 
-        console.log(res.data)
         return res.data
     }
 
@@ -63,7 +62,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         const data = {
             data: prepareData()
         }
-        console.log(data)
+        
         postData(data).then(() => {
             window.location.reload()
         }).catch(e => console.log(e))
@@ -116,36 +115,29 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     const twoDigits = number => number < 10 ? `0${number}` : number
 
-    const clearLocalStorage = () => {
-        window.localStorage.removeItem('timerValuemantenimiento')
-        window.localStorage.removeItem('timerValuemateriales')
-        window.localStorage.removeItem('timerValueproduccion')
-        window.localStorage.removeItem('timerValueingenieria')
-        window.localStorage.removeItem('timerValuecalidad')
-        window.localStorage.removeItem('timerValuecambio')
-        window.localStorage.removeItem('timeBeforeExitmantenimiento')
-        window.localStorage.removeItem('timeBeforeExitmateriales')
-        window.localStorage.removeItem('timeBeforeExitproduccion')
-        window.localStorage.removeItem('timeBeforeExitingenieria')
-        window.localStorage.removeItem('timeBeforeExitcalidad')
-        window.localStorage.removeItem('timeBeforeExitcambio')
-    }
-
-    const setAndonInfo = (andon) => {
-        if(andon.length === 0){ clearLocalStorage() }
-        for(let i = 0; i < andon.length; i++){
+    const setAndonInfo = (andonDB) => {
+        for(let i = 0; i < andonReason.length; i++){
             const date = new Date(andon[i].registro)
             const datePaused = new Date(andon[i].pause)
 
-            if(!andon[i].active){ 
-                window.localStorage.setItem(`timerPaused${andon[i].estatus}`, true)
-                window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
-                window.localStorage.removeItem(`timeBeforeExit${andon[i].estatus}`) 
+            const andon = andonDB.find(item => item.estatus === andonReason[i])
+
+            if(andon){
+                if(!andon.active){ 
+                    window.localStorage.setItem(`timerPaused${andon.estatus}`, true)
+                    window.localStorage.setItem(`timerValue${andon.estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
+                    window.localStorage.removeItem(`timeBeforeExit${andon.estatus}`) 
+                }else{
+                    window.localStorage.setItem(`timerValue${andon.estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
+                    window.localStorage.setItem(`timeBeforeExit${andon.estatus}`, Date.now())
+                    window.localStorage.removeItem(`timerPaused${andon.estatus}`)
+                }
             }else{
-                window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
-                window.localStorage.setItem(`timeBeforeExit${andon[i].estatus}`, Date.now())
-                window.localStorage.removeItem(`timerPaused${andon[i].estatus}`)
+                window.localStorage.setItem(`timerPaused${andonReason[i]}`, true)
+                window.localStorage.setItem(`timerValue${andonReason[i]}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
+                window.localStorage.removeItem(`timeBeforeExit${andonReason[i]}`)
             }
+            
         }
         setRerender(!rerender)
     }
@@ -161,7 +153,6 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                 const dataInfo = JSON.parse(InfGen)
                 const data = JSON.parse(InfProd).map(row => row.fields)
                 const andon = JSON.parse(Andon).map(row => row.fields)
-                console.log(andon)
                 setDataFetched(data)
                 setInfoTable(data)
                 setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
