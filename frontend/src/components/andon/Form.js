@@ -103,8 +103,12 @@ function Form({ children, location }){
     }
 
     useEffect(() => {
+        console.log(intervalID)
         getData().then(({ Andon }) => {
-            const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.status === type)
+            const query = new URLSearchParams(location.search)
+            const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
+
+            console.log(andon)
 
             if(andon){
                 const date = new Date(andon?.registro)
@@ -123,10 +127,11 @@ function Form({ children, location }){
                 window.localStorage.removeItem(`timerPaused${type}`)
                 window.localStorage.removeItem(`timerValue${type}`)
                 window.localStorage.removeItem(`timeBeforeExit${type}`)
+                clearInterval(intervalID)
             }
             
         }).catch(e => console.log(e))
-    }, [type])
+    }, [intervalID])
 
     useEffect(() => {
 
