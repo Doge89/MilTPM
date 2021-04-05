@@ -26,7 +26,6 @@ function Users({ users, setUsers }){
             mehotd: 'GET'
         })
 
-        console.log(res.data)
         return res.data
     }
 
@@ -83,8 +82,6 @@ function Users({ users, setUsers }){
     useEffect(() => {
         getUsers().then(({ usuarios }) => {
             const { id, username, email, linea } = usuarios
-
-            console.log(id)
 
             let newUsers = []
             for(let i = 0; i < id.length; i++){

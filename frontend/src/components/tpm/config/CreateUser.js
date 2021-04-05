@@ -96,10 +96,17 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                 }).catch(e => console.log(e))
             }else{
                 postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })})
-                .then(({ usuario }) => {
+                .then(({ usuario, Error }) => {
+                    if(Error){
+                        setErr(true)
+                        return setMessage(Error)
+                    }
                     addUser({ id: usuario.id, email: usuario.email, linea: usuario.linea, username: usuario.username })
                     closeModal()    
-                }).catch(e => console.log(e))
+                }).catch(e => {
+                    setErr(true)
+                    setMessage('No se ha podido crear el usuario debido a un error en el servidor.')
+                })
             }
         }
     }
