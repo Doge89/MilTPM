@@ -87,7 +87,7 @@ function Users({ users, setUsers }){
             let newUsers = []
             for(let i = 0; i < id.length; i++){
                 let user = { id: id[i], username: username[i], email: email[i], linea: linea[i] }
-                newUsers.poush(user)
+                newUsers.push(user)
             }
             setUsers(users)
         }).catch(e=> console.log())
