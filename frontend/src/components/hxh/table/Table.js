@@ -117,12 +117,12 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     const setAndonInfo = (andonDB) => {
         for(let i = 0; i < andonReason.length; i++){
-            const date = new Date(andon[i].registro)
-            const datePaused = new Date(andon[i].pause)
-
             const andon = andonDB.find(item => item.estatus === andonReason[i])
 
             if(andon){
+                const date = new Date(andon.registro)
+                const datePaused = new Date(andon.pause)
+
                 if(!andon.active){ 
                     window.localStorage.setItem(`timerPaused${andon.estatus}`, true)
                     window.localStorage.setItem(`timerValue${andon.estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
@@ -133,8 +133,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                     window.localStorage.removeItem(`timerPaused${andon.estatus}`)
                 }
             }else{
-                window.localStorage.setItem(`timerPaused${andonReason[i]}`, true)
-                window.localStorage.setItem(`timerValue${andonReason[i]}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
+                window.localStorage.removeItem(`timerPaused${andonReason[i]}`)
+                window.localStorage.removeItem(`timerValue${andonReason[i]}`)
                 window.localStorage.removeItem(`timeBeforeExit${andonReason[i]}`)
             }
             
