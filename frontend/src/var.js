@@ -53,3 +53,5 @@ export const modifyViews = [{ nombre: 'Usuarios', value: 'user' }, { nombre: 'Cr
 export const days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 
 export const maxWidth = 768
+
+export const andonReason = ['materiales', 'mantenimiento', 'produccion', 'ingenieria', 'calidad', 'cambio']

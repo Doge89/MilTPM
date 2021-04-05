@@ -20,6 +20,15 @@ function Form({ children, location }){
 
     const handleInput = e => setDescription(e.target.value)
 
+    const getData = async () => {
+        const res = await axios({
+            url: `${URL}/hxh/get/`,
+            method: 'GET'
+        })
+
+        return res.data
+    }
+
     const fetchStartTimer = async () => {
         const res = await axios({
             url: `${URL}/andon/start/`,
@@ -92,6 +101,25 @@ function Form({ children, location }){
             console.log(data)
         }).catch(e => console.log(e))
     }
+
+    useEffect(() => {
+        getData().then(({ Andon }) => {
+            const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.status === type)
+
+            const date = new Date(andon?.registro)
+            const datePaused = new Date(andon?.pause)
+
+            if(!andon.active){ 
+                window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
+                window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
+                window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`) 
+            }else{
+                window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
+                window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
+                window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
+            }
+        }).catch(e => console.log(e))
+    }, [type])
 
     useEffect(() => {
 
