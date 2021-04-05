@@ -131,20 +131,19 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         window.localStorage.removeItem('timeBeforeExitcambio')
     }
 
-    const setAndonInfo = (andon) =>{
-        if(andon.length === 0){ return clearLocalStorage() }
+    const setAndonInfo = (andon) => {
+        if(andon.length === 0){ clearLocalStorage() }
         for(let i = 0; i < andon.length; i++){
             const date = new Date(andon[i].registro)
-            window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor(date.getTime() /1000))
+            window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
             window.localStorage.setItem(`timeBeforeExit${andon[i].estatus}`, Date.now())
         }
+        setRerender(!rerender)
     }
 
     useEffect(() => {
         const date = new Date()
-        console.log(window.innerWidth)
         if(window.innerWidth <= maxWidth){
-            console.log(document.getElementById(`${date.getHours()}:00:00`))
             document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
         }
         if(!hxhHistory){
@@ -235,7 +234,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                         Historial de Tablero H/H
                     </ButtonPrimary>
                 </Row>
-                <Icons />
+                <Icons rerender={rerender}/>
                 </>
             )}
             

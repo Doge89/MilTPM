@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import Icon from '../../common/Icon'
 import { IconsContainer } from '../../../styles/hxh'
 
-function Icons(){
+function Icons({ rerender }){
 
     const [materials, setMaterials] = useState(false)
     const [maintenance, setMaintenance] = useState(false)
@@ -26,13 +26,24 @@ function Icons(){
         const timerChange = localStorage.getItem('timerValuecambio')
 
         if(timerMaterials){ setMaterials(true) }
-        if(timerMaintenance){ setMaintenance(true) }
-        if(timerProduction){ setProduction(true) }
-        if(timerEngineery){ setEngineery(true) }
-        if(timerQuality){ setQuality(true) }
-        if(timerChange){ setChange(true) }
+        else{ setMaterials(false) }
 
-    }, [])
+        if(timerMaintenance){ setMaintenance(true) }
+        else{ setMaintenance(false) }
+
+        if(timerProduction){ setProduction(true) }
+        else{ setProduction(false) }
+
+        if(timerEngineery){ setEngineery(true) }
+        else{ setEngineery(false) }
+
+        if(timerQuality){ setQuality(true) }
+        else{ setQuality(false) }
+        
+        if(timerChange){ setChange(true) }
+        else{ setChange(false) }
+
+    }, [rerender])
 
     return(
         <IconsContainer>
