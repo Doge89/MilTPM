@@ -45,7 +45,7 @@ function TopBar(){
             <nav>
                 <Clock id="clock-desktop"/>
                 <SlideMenu />
-                <Image src={MilwaukeeImage} width='8vw' onClick={gotoTPM} id="logo-mobile"/>
+                <Image src={MilwaukeeImage} width='8vw' onClick={gotoHXH} id="logo-mobile"/>
                 <div className="row">
                     <Image src={TpmImage} width='8vw' onClick={gotoTPM} />
                     <Image src={MpImage} width='8vw' onClick={gotoMP} />

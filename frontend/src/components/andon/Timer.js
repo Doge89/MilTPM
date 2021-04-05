@@ -42,6 +42,7 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
         const timerValue = localStorage.getItem(`timerValue${type}`)
         const timeIsPaused = localStorage.getItem(`timerPaused${type}`)
         const timeBeforeExit = localStorage.getItem(`timeBeforeExit${type}`)
+        console.log(timeIsPaused)
         
         if(!timeIsPaused){ 
             if(timerValue){
