@@ -101,10 +101,10 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
 
     useEffect(() => {
         if(userToEdit){
-            setUser(userToEdit.user)
+            setUser(userToEdit.username)
             setTypeUser(userToEdit.type)
             setEmail(userToEdit.email)
-            setLine(userToEdit.line)
+            setLine(userToEdit.linea)
         }
         return () => {
             setUser('')
@@ -163,13 +163,13 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
                             placeholder="Correo del usuario"
                         />
                     </CardInfo>
-                    <CardInfo>
+                    {/* <CardInfo>
                         <label>Tipo de usuario: </label>
                         <select value={typeUser} onChange={handleSelect}>
                             <option value="admin">Administrador</option>
                             <option value="user">Usuario</option>
                         </select>
-                    </CardInfo>
+                    </CardInfo> */}
                     <ButtonPrimary width="15vw" height="4vh" onClick={handleBtn}>{userToEdit ? 'Actualizar Usuario' : 'Crear Usuario'}</ButtonPrimary>
                     {err && <Text color="red">{message}</Text>}
                 </CreateUserForm>

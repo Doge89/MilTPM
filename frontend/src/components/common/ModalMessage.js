@@ -11,6 +11,8 @@ const customStyles = {
         bottom                : 'auto',
         width                 : '40%',
         height                : '20%'
+    },overlay:{
+        zIndex                : 3
     }
 };
 

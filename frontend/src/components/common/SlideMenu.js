@@ -13,7 +13,7 @@ function SlideMenu() {
             const position = window.localStorage.getItem('slidePosition')
             if(position === 'right'){
                 document.getElementById('clock-slide').style.transform = `translateX(-${width - (width *0.4)}px)`
-                document.getElementById('navbar-mobile').style.transform = `translateX(-${width - (width *0.4)}px)`
+                document.getElementById('navbar-mobile').style.width = '60vw'
                 window.localStorage.setItem('slidePosition', 'left')
             }
         },
@@ -21,7 +21,7 @@ function SlideMenu() {
             const position = window.localStorage.getItem('slidePosition')
             if(position === 'left'){
                 document.getElementById('clock-slide').style.transform = `translateX(${0}px)`
-                document.getElementById('navbar-mobile').style.transform = `translateX(${0}px)`
+                document.getElementById('navbar-mobile').style.width = '0'
                 window.localStorage.setItem('slidePosition', 'right')
             }
         }

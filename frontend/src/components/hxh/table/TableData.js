@@ -22,45 +22,49 @@ function TableData({ width, height, subtitlesCentered, subtitles, title, info, i
             width={width}
             height={height}
             flexDirection="row"
+            className="table-row-data"
         >
-            {title === "Hora" ? (
-                <TableDataHour 
-                    info={{ start: info.start, end: info.end }}
-                    getWidthCell={getWidthCell}
-                    idx={idx}
-                    history={history}
-                />
-            ): title === "Producción" ? (
-                <TableDataProduction 
-                    getWidthCell={getWidthCell}
-                    idx={idx}
-                    history={history}
-                />
-            ) : title === "FTQ" ? (
-                <TableDataFTQ 
-                    getWidthCell={getWidthCell} 
-                    idx={idx}
-                    history={history}
-                />
-            ) : title === "Status" ? (
-                <TableDataStatus 
-                    getWidthCell={getWidthCell} 
-                    idx={idx}
-                    history={history}
-                />
-            ) : title === "Comentarios" ? (
-                <TableDataComentarios 
-                    getWidthCell={getWidthCell} 
-                    idx={idx}
-                    history={history}
-                />
-            ) : (
-                <TableDataContramedida 
-                    getWidthCell={getWidthCell} 
-                    idx={idx}
-                    history={history}
-                />
-            ) }
+            <h1>{title}</h1>
+            <div className="data-container">
+                {title === "Hora" ? (
+                    <TableDataHour 
+                        info={{ start: info.start, end: info.end }}
+                        getWidthCell={getWidthCell}
+                        idx={idx}
+                        history={history}
+                    />
+                ): title === "Producción" ? (
+                    <TableDataProduction 
+                        getWidthCell={getWidthCell}
+                        idx={idx}
+                        history={history}
+                    />
+                ) : title === "FTQ" ? (
+                    <TableDataFTQ 
+                        getWidthCell={getWidthCell} 
+                        idx={idx}
+                        history={history}
+                    />
+                ) : title === "Status" ? (
+                    <TableDataStatus 
+                        getWidthCell={getWidthCell} 
+                        idx={idx}
+                        history={history}
+                    />
+                ) : title === "Comentarios" ? (
+                    <TableDataComentarios 
+                        getWidthCell={getWidthCell} 
+                        idx={idx}
+                        history={history}
+                    />
+                ) : (
+                    <TableDataContramedida 
+                        getWidthCell={getWidthCell} 
+                        idx={idx}
+                        history={history}
+                    />
+                )}
+            </div>
         </Container>
     )
 }

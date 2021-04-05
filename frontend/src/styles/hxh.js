@@ -30,8 +30,10 @@ export const InfoContainer = styled.div`
 
                 label{
                     color: white;
-                    font-size: 3vw;
+                    font-size: 3.5vw;
                     width: 40vw;
+                    text-align: end;
+                    margin-right: 5vw;
                 }
 
                 input{
@@ -54,7 +56,16 @@ export const TableContainer = styled.div`
     height: fit-content;
 
     @media ${device.tablet} {
-        background-color: rgba(0, 0, 0, 0.5)
+        width: 85vw;
+        margin: 5vh auto 0 auto;
+        background-color: rgba(100, 100, 100, 0.5);
+        border-top-left-radius: 5vw;
+        border-top-right-radius: 5vw;
+        padding-top: 2vh;
+
+        #table-header{
+            display: none;
+        }
     }
 `;
 
@@ -69,6 +80,28 @@ export const Cell = styled.div`
     width: ${props => props.width};
 
     &.no-border-left{ border-left: 0 }
+
+    @media ${device.tablet} {
+        p{
+            color: white;
+            font-size: 4vw;
+        }
+
+        .slash{
+            display: none;
+        }
+
+        .second-input{
+            display: none;
+        }
+
+        input, textarea{
+            color: white;
+            font-size: 4vw;
+            background-color: transparent;
+            padding: 0.5vh 2vw;
+        }
+    }
 `;
 
 export const Row = styled.div`
@@ -81,6 +114,68 @@ export const Row = styled.div`
     border-right: 1px solid rgb(83, 83, 83);
     border-bottom: ${props => props.borderBottom};
     padding: ${props => props.padding || '0'};
+
+    .data-container{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+
+        .table-title-data{
+            display: none;
+        }
+
+        .table-data-container{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+    }
+
+    h1{
+        display: none;
+    }
+
+    @media ${device.tablet} {
+        flex-direction: column;
+        border: 0;
+
+        .table-row-data{
+            width: 90%;
+            border-bottom: 1px solid rgba(150, 150, 150, 150);
+            flex-direction: column;
+            height: fit-content;
+            align-items: flex-start;
+            padding-bottom: 2vh;
+
+            h1{
+                display: block;
+                color: white;
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: bold;
+                font-size: 7vw;
+            }            
+
+            div{
+                border: 0
+            }
+        }
+
+        .data-container{
+            flex-direction: column;
+
+            .table-title-data{
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                align-items: center;
+                margin-bottom: 2vh;
+            }            
+        }
+    }
 `;
 
 

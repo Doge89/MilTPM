@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import Input from '../../common/Input'
 
 import { Cell } from '../../../styles/hxh'
+import { Text } from '../../../styles/common'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
@@ -26,41 +27,70 @@ function TableDataHour({ info, getWidthCell, idx, history }){
 
     return(
         <>
-        <Cell
-            width={getWidthCell()}
-            borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
-            className="no-border-left"
-        >
-            <p>{info.start}</p>
-        </Cell>
-        <Cell
-            width={getWidthCell()}
-            borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
-        >
-            <p>{info.end}</p>
-        </Cell>
-        <Cell
-            width={getWidthCell()}
-            borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
-        >
-            <Input 
-                width="80%"
-                woLabel
-                inputClassName="border-bottom text-align"
-                value={context.plan[idx] || ''}
-                onChange={handleInput}
-                type="number"
-                disabled={history}
-            />
-            <p>/</p>
-            <Input 
-                width="80%"
-                woLabel
-                inputClassName="border-bottom text-align"
-                value={getCurrentPlan()}
-                disabled
-            />
-        </Cell>
+        <div className="table-title-data">
+            <Text
+                width={getWidthCell()}
+                color="rgb(150, 150, 150)"
+                size="5vw"
+                align="center"
+            >
+                Inicio
+            </Text>
+            <Text
+                width={getWidthCell()}
+                color="rgb(150, 150, 150)"
+                size="5vw"
+                align="center"
+            >
+                Fin
+            </Text>
+            <Text
+                width={getWidthCell()}
+                color="rgb(150, 150, 150)"
+                size="5vw"
+                align="center"
+            >
+                Plan
+            </Text>
+        </div>
+        <div className="table-data-container">
+            <Cell
+                width={getWidthCell()}
+                borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+                className="no-border-left"
+            >
+                <p>{info.start}</p>
+            </Cell>
+            <Cell
+                width={getWidthCell()}
+                borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+            >
+                <p>{info.end}</p>
+            </Cell>
+            <Cell
+                width={getWidthCell()}
+                borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+            >
+                <Input 
+                    width="80%"
+                    woLabel
+                    inputClassName="border-bottom text-align"
+                    value={context.plan[idx] || ''}
+                    onChange={handleInput}
+                    type="number"
+                    disabled={history}
+                />
+                <p className="slash">/</p>
+                <Input 
+                    width="80%"
+                    woLabel
+                    inputClassName="border-bottom text-align"
+                    value={getCurrentPlan()}
+                    disabled
+                    className="second-input"
+                />
+            </Cell>
+        </div>
         </>
     )
 }
