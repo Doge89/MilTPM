@@ -24,7 +24,7 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-function CreateUser({ modalOpen, closeModal, userToEdit, addUser }){
+function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
 
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
@@ -62,8 +62,8 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser }){
 
     const updateData = async (data) => {
         const res = await axios({
-            url: `${URL}/users`,
-            method: 'PUT',
+            url: `${URL}/tpm/modificar/usuarios/modify/`,
+            method: 'POST',
             data: querystring.stringify(data)
         })
 
@@ -72,7 +72,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser }){
 
     const checkData = () =>{
         setErr(false)
-        if(!user || !password || !line || !email){
+        if(!user || (JSON.stringify(userToEdit) === "{}" && !password) || !line || !email){
             setErr(true)
             setMessage('No puede dejar campos en blanco')
             return false
@@ -88,8 +88,10 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser }){
         e.preventDefault()
         if(checkData()){
             if(userToEdit){
-                updateData({ user, password, typeUser }).then(() => {
-
+                updateData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })})
+                .then(() => {
+                    updateUser({...userToEdit, user, linea: line, email})
+                    closeModal()
                 }).catch(e => console.log(e))
             }else{
                 postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })})
@@ -122,7 +124,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser }){
         >
             <ModalContainer>
                 <CreateUserForm>
-                    <h1>Crear Usuario</h1>
+                    <h1>{JSON.stringify(userToEdit) === "{}" ? 'Crear Usuario' : 'Actualizar Usuario'}</h1>
                     <CardInfo>
                         <label>Usuario: </label>
                         <input 
