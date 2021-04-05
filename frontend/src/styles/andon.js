@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { device } from './device'
+
 const red = "rgb(254, 13, 46)"
 
 export const FormContainer = styled.div`
@@ -11,7 +13,7 @@ export const FormContainer = styled.div`
 
     h1{
         font-size: 1.5vw;
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: Arial, Helvetica, sans-serif; 
         color: rgb(80, 80, 80);
     }
 
@@ -88,5 +90,41 @@ export const FormContainer = styled.div`
             }
         }
         
+    }
+
+    @media ${device.tablet} {
+        justify-content: flex-start;
+
+        h1{
+            font-size: 5vw;
+            text-align: center;
+            width: 80%;
+            color: rgb(150, 150, 150)
+        }
+
+        form{
+            width: 80%;
+            
+            label, span{
+                font-size: 4vw;
+                color: rgb(150, 150, 150)
+            }
+
+            textarea{
+                height: 25vh;
+                font-size: 4vw;
+                padding: 1vh 2vw;
+                margin: 2vh 0;
+                background-color: transparent;
+                color: white;
+            }
+
+            button{
+                font-size: 4vw;
+                width: 100%;
+                margin-bottom: 2vh;
+                height: 5vh;
+            }
+        }
     }
 `;

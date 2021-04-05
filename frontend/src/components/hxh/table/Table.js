@@ -135,9 +135,17 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         if(andon.length === 0){ clearLocalStorage() }
         for(let i = 0; i < andon.length; i++){
             const date = new Date(andon[i].registro)
-            window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
-            window.localStorage.setItem(`timeBeforeExit${andon[i].estatus}`, Date.now())
-            if(!andon[i].active){ window.localStorage.setItem(`timerPaused${andon[i].estatus}`) }
+            const datePaused = new Date(andon[i].pause)
+
+            if(!andon[i].active){ 
+                window.localStorage.setItem(`timerPaused${andon[i].estatus}`, true)
+                window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
+                window.localStorage.removeItem(`timeBeforeExit${andon[i].estatus}`) 
+            }else{
+                window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
+                window.localStorage.setItem(`timeBeforeExit${andon[i].estatus}`, Date.now())
+                window.localStorage.removeItem(`timerPaused${andon[i].estatus}`)
+            }
         }
         setRerender(!rerender)
     }
