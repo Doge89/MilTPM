@@ -104,7 +104,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                     addUser({ id: usuario.id, email: usuario.email, linea: usuario.linea, username: usuario.username })
                     closeModal()    
                 }).catch(e => {
-                    console.log(e.response.message)
+                    console.log(e.response?.message)
                     setErr(true)
                     setMessage('No se ha podido crear el usuario debido a un error en el servidor.')
                 })
