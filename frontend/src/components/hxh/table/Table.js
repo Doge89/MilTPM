@@ -116,7 +116,23 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     const twoDigits = number => number < 10 ? `0${number}` : number
 
+    const clearLocalStorage = () => {
+        window.localStorage.removeItem('timerValuemantenimiento')
+        window.localStorage.removeItem('timerValuemateriales')
+        window.localStorage.removeItem('timerValueproduccion')
+        window.localStorage.removeItem('timerValueingenieria')
+        window.localStorage.removeItem('timerValuecalidad')
+        window.localStorage.removeItem('timerValuecambio')
+        window.localStorage.removeItem('timeBeforeExitmantenimiento')
+        window.localStorage.removeItem('timeBeforeExitmateriales')
+        window.localStorage.removeItem('timeBeforeExitproduccion')
+        window.localStorage.removeItem('timeBeforeExitingenieria')
+        window.localStorage.removeItem('timeBeforeExitcalidad')
+        window.localStorage.removeItem('timeBeforeExitcambio')
+    }
+
     const setAndonInfo = (andon) =>{
+        if(andon.length === 0){ return clearLocalStorage() }
         for(let i = 0; i < andon.length; i++){
             const date = new Date(andon[i].registro)
             window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor(date.getTime() /1000))
