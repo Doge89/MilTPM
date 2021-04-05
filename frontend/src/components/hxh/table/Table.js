@@ -137,6 +137,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             const date = new Date(andon[i].registro)
             window.localStorage.setItem(`timerValue${andon[i].estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
             window.localStorage.setItem(`timeBeforeExit${andon[i].estatus}`, Date.now())
+            if(!andon[i].active){ window.localStorage.setItem(`timerPaused${andon[i].estatus}`) }
         }
         setRerender(!rerender)
     }
