@@ -75,7 +75,6 @@ function Users({ users, setUsers }){
     useEffect(() => {
         getUsers().then(({ usuarios }) => {
             const users = JSON.parse(usuarios).map(user => { return { ...user.fields, id: user.pk } })
-            console.log(users)
             setUsers(users)
         }).catch(e=> console.log())
     }, [])
