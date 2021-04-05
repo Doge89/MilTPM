@@ -32,7 +32,7 @@ function Users({ users, setUsers }){
     const deleteUser = async (data) => {
         const res = await axios({
             url: `${URL}/tpm/modificar/usuarios/del/`,
-            mehotd: 'POST',
+            method: 'POST',
             data: querystring.stringify(data)
         })
 
