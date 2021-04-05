@@ -454,4 +454,10 @@ export const CreateUserForm = styled.form`
         margin-top: -1vw;
         margin-bottom: 1vw;
     }
+
+    #message-err{
+        width: 100%;
+        text-align: center;
+        margin-top: 2vh;
+    }
 `;
