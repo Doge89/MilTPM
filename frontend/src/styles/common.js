@@ -128,25 +128,40 @@ export const ClockContainer = styled.div`
 
     @media ${device.tablet}{
         &#clock-desktop{ display: none; }
+
+        h1{
+            font-size: 8vw;
+        }
+
+        h2{
+            font-size: 4vw;
+        }
     }
 `;
 
 export const NavbarMobile = styled.div`
     display: none;
+
     @media ${device.tablet}{
-        width: 60vw;
+        width: 0;
         position: absolute;
-        left: 100vw;
-        height: 90vh;
         background-color: white;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-        transition: transform 0.2s linear;
+        transition: width 0.2s linear;
         background-color: black;
         top: 0;
-        padding: 5vh 0;
+        right: 0;
+        overflow-x: hidden;
+
+        #navbar-content{
+            width: 60vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
     }
 `
 
@@ -271,6 +286,7 @@ export const Text = styled.span`
     font-size: ${props => props.size || '1vw'};
     color: ${props => props.color};
     font-weight: ${props => props.weight || 'normal'};
+    text-align: ${props => props.align || 'start'};
 `
 export const Next = styled.span`
     background-color: ${red};

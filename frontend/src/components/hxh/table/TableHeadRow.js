@@ -13,6 +13,7 @@ function TableHeadRow({ columns }){
             className="border-right border-left"
             borderLeft="1px solid white"
             borderRight="1px solid white"
+            id="table-header"
         >
             {columns.map((column, idx) => (
                 <TableHeader 

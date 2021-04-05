@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import CreateUser from './CreateUser'
 import ModalMessage from '../../common/ModalMessage'
@@ -28,6 +29,16 @@ function Users({ users, setUsers }){
         return res.data
     }
 
+    const deleteUser = async (data) => {
+        const res = await axios({
+            url: `${URL}/tpm/modificar/usuarios/del/`,
+            mehotd: 'POST',
+            data: querystring.stringify(data)
+        })
+
+        return res.data
+    }
+
     const openModal = () => setModalOpen(true)
     const closeModal = () => {
         setModalOpen(false)
@@ -42,9 +53,12 @@ function Users({ users, setUsers }){
 
     const removeUser = () => {
         let newUsers = [...users]
-        newUsers.splice(userID, 1)
-        setUsers(newUsers)
-        closeModalDeleteUser()
+        deleteUser({ id: JSON.stringify(userID) }).then(() => {
+            newUsers.splice(userID, 1)
+            setUsers(newUsers)
+            closeModalDeleteUser()
+        }).catch(e => console.log(e))
+        
     }
 
     const editUser = (user) => {
@@ -54,7 +68,7 @@ function Users({ users, setUsers }){
 
     useEffect(() => {
         getUsers().then(({ usuarios }) => {
-            const users = JSON.parse(usuarios).map(user => user.fields)
+            const users = JSON.parse(usuarios).map(user => { return { ...user.fields, id: user.pk } })
             console.log(users)
             setUsers(users)
         }).catch(e=> console.log())
@@ -78,7 +92,7 @@ function Users({ users, setUsers }){
                                 </div>
                             </PanelTableCell>
                             <PanelTableCell width="33%" className="border-right border-bottom move-left">{user.email}</PanelTableCell>
-                            <PanelTableCell width="33%" className="header clickable move-left" onClick={() => openModalDeleteUser(idx)}>
+                            <PanelTableCell width="33%" className="header clickable move-left" onClick={() => openModalDeleteUser(user.id)}>
                                 <img src={trash} alt="Icono de un bote de basura"/>
                                 <span>Eliminiar Usuario</span>
                             </PanelTableCell>

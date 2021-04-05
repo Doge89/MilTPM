@@ -12,8 +12,8 @@ import { ButtonPrimary } from '../../../styles/common'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-import { columns, scheduleA, scheduleB, scheduleC, URL, allDay } from '../../../var'
-
+import { columns, scheduleA, scheduleB, scheduleC, URL, allDay, maxWidth } from '../../../var'
+ 
 function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     let timeout
@@ -114,8 +114,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         context.dispatchTimeout({ type: 'SET', value: newTimeout })
     }
 
+    const twoDigits = number => number < 10 ? `0${number}` : number
+
     useEffect(() => {
-        
+        const date = new Date()
+        console.log(window.innerWidth)
+        if(window.innerWidth <= maxWidth){
+            console.log(document.getElementById(`${date.getHours()}:00:00`))
+            document.getElementById(twoDigits(date.getHours()))?.scrollIntoView({ behavior: 'smooth' })
+        }
         if(!hxhHistory){
             checkHour()
             getData().then(({ InfProd, InfGen, Linea }) => {

@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import Input from '../../common/Input'
 
 import { Cell } from '../../../styles/hxh'
+import { Text } from '../../../styles/common'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
@@ -70,55 +71,85 @@ function TableDataProduction({ getWidthCell, idx, history }){
 
     return(
         <>
-        <Cell
-            width={getWidthCell()}
-            borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
-        >
-            <Input 
-                width="80%"
-                woLabel
-                inputClassName="border-bottom text-align"
-                onChange={handleInputActual}
-                value={context.actual[idx] || ''}
-                type="number"
-                disabled={history}
-            />
-            <p>/</p>
-            <Input 
-                width="80%"
-                woLabel
-                inputClassName="border-bottom text-align"
-                disabled
-                value={getCurrentActual()}
-            />
-        </Cell>
-        <Cell
-            width={getWidthCell()}
-            borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
-        >
-            <Input 
-                width="80%"
-                woLabel
-                inputClassName="border-bottom text-align"
-                value={diferencia}
-                onChange={handleInputDifference}
-                type="number"
-                disabled={history}
-            />
-        </Cell>
-        <Cell
-            width={getWidthCell()}
-            borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
-        >
-            <Input 
-                width="90%"
-                woLabel
-                inputClassName="border-bottom text-align"
-                textarea
-                disabled
-                value={timeoutHxh}
-            />
-        </Cell>
+        <div className="table-title-data">
+            <Text
+                width={getWidthCell()}
+                color="rgb(150, 150, 150)"
+                size="5vw"
+                align="center"
+            >
+                Actual
+            </Text>
+            <Text
+                width={getWidthCell()}
+                color="rgb(150, 150, 150)"
+                size="5vw"
+                align="center"
+            >
+                Diferencia
+            </Text>
+            <Text
+                width={getWidthCell()}
+                color="rgb(150, 150, 150)"
+                size="5vw"
+                align="center"
+            >
+                Tiempo Muerto
+            </Text>
+        </div>
+        <div className="table-data-container">
+            <Cell
+                width={getWidthCell()}
+                borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+            >
+                <Input 
+                    width="80%"
+                    woLabel
+                    inputClassName="border-bottom text-align"
+                    onChange={handleInputActual}
+                    value={context.actual[idx] || ''}
+                    type="number"
+                    disabled={history}
+                />
+                <p className="slash">/</p>
+                <Input 
+                    width="80%"
+                    woLabel
+                    inputClassName="border-bottom text-align"
+                    disabled
+                    value={getCurrentActual()}
+                    className="second-input"
+                />
+            </Cell>
+            <Cell
+                width={getWidthCell()}
+                borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+            >
+                <Input 
+                    width="80%"
+                    woLabel
+                    inputClassName="border-bottom text-align"
+                    value={diferencia}
+                    onChange={handleInputDifference}
+                    type="number"
+                    disabled={history}
+                />
+            </Cell>
+            <Cell
+                width={getWidthCell()}
+                borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+            >
+                <Input 
+                    width="90%"
+                    woLabel
+                    inputClassName="border-bottom text-align"
+                    
+                    disabled
+                    value={timeoutHxh}
+                />
+            </Cell>
+        </div>
+        
         </>
     )
 }
