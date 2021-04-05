@@ -30,6 +30,16 @@ function Form({ children, location }){
         return res.data
     }
 
+    const fetchPauseTimer = async () => {
+        const res = await axios({
+            url: `${URL}/andon/pause/`,
+            method: 'POST',
+            data: querystring.stringify({ razon: type })
+        })
+
+        return res.data
+    }
+
     const finishTimer = async (data) => {
         const res = await axios({
             url: `${URL}/andon/finish/`,
@@ -42,13 +52,16 @@ function Form({ children, location }){
 
     const pauseTimer = (e) => {
         e.preventDefault()
-        if(timerPaused){
-            setTimerPaused(false)
-            localStorage.removeItem(`timerPaused${type}`) 
-        }else{
-            setTimerPaused(true)
-            localStorage.setItem(`timerPaused${type}`, true)
-        }
+        fetchPauseTimer().then(() => {
+            if(timerPaused){
+                setTimerPaused(false)
+                localStorage.removeItem(`timerPaused${type}`) 
+            }else{
+                setTimerPaused(true)
+                localStorage.setItem(`timerPaused${type}`, true)
+            }
+        }).catch(e => console.log(e))
+        
     }
     
     const removeInfoTimer = () => {
