@@ -62,6 +62,7 @@ function Icon({ name, label, margin, onClick, active }){
             bgColor={active ? getColor() : 'green'}
             padding="1vh 1vw"
             borderRadius="0.5vw"
+            className="icon"
         >
             <Image 
                 width="5vw"

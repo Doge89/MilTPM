@@ -26,6 +26,7 @@ function Users({ users, setUsers }){
             mehotd: 'GET'
         })
 
+        console.log(res.data)
         return res.data
     }
 
@@ -80,9 +81,12 @@ function Users({ users, setUsers }){
     }
 
     useEffect(() => {
-        getUsers().then(({ usuarios }) => {
-            const users = JSON.parse(usuarios).map(user => { return { ...user.fields, id: user.pk } })
-            console.log(users)
+        getUsers().then(({ id, username, email, linea }) => {
+            let newUsers = []
+            for(let i = 0; i < id.length; i++){
+                let user = { id: id[i], username: username[i], email: email[i], linea: linea[i] }
+                newUsers.poush(user)
+            }
             setUsers(users)
         }).catch(e=> console.log())
     }, [])
