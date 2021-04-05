@@ -67,6 +67,14 @@ function Users({ users, setUsers }){
         setUsers(newUsers)
     }
 
+    const updateUser = newUser => {
+        console.log(newUser)
+        let newUsers = [...users]
+        const idx = newUsers.findIndex(user => user.id === newUser.id)
+        newUsers.splice(idx, 1, newUser)
+        setUsers(newUsers)
+    }
+
     const editUser = (user) => {
         setUserToEdit(user)
         openModal()
@@ -110,6 +118,7 @@ function Users({ users, setUsers }){
                 closeModal={closeModal}
                 userToEdit={userToEdit}
                 addUser={addUser}
+                updateUser={updateUser}
             />
             <ModalMessage 
                 title="Eliminar Usuario"
