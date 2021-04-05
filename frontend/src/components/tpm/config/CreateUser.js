@@ -94,6 +94,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser }){
             }else{
                 postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })})
                 .then(({ usuario }) => {
+                    console.log(usuario)
                     console.log(JSON.parse(usuario))
                     const user = JSON.parse(usuario)
                     addUser({ id: user.id, email: user.email, linea: user.linea, username: user.username })
