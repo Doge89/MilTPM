@@ -106,18 +106,25 @@ function Form({ children, location }){
         getData().then(({ Andon }) => {
             const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.status === type)
 
-            const date = new Date(andon?.registro)
-            const datePaused = new Date(andon?.pause)
+            if(andon){
+                const date = new Date(andon?.registro)
+                const datePaused = new Date(andon?.pause)
 
-            if(!andon.active){ 
-                window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
-                window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
-                window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`) 
+                if(!andon.active){ 
+                    window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
+                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
+                    window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`) 
+                }else{
+                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
+                    window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
+                    window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
+                }
             }else{
-                window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
-                window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
-                window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
+                window.localStorage.removeItem(`timerPaused${type}`)
+                window.localStorage.removeItem(`timerValue${type}`)
+                window.localStorage.removeItem(`timeBeforeExit${type}`)
             }
+            
         }).catch(e => console.log(e))
     }, [type])
 
