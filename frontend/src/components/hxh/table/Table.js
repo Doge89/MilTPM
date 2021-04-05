@@ -121,7 +121,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         console.log(window.innerWidth)
         if(window.innerWidth <= maxWidth){
             console.log(document.getElementById(`${date.getHours()}:00:00`))
-            document.getElementById(twoDigits(date.getHours()))?.scrollIntoView({ behavior: 'smooth' })
+            document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
         }
         if(!hxhHistory){
             checkHour()

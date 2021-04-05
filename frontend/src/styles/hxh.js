@@ -175,6 +175,17 @@ export const Row = styled.div`
                 margin-bottom: 2vh;
             }            
         }
+
+        button{
+            width: 70vw;
+            height: 5vh;
+            font-size: 4vw;
+            margin: 2vh 0;
+        }
+    
+        button:first-child{
+            margin-top: 5vh;
+        }
     }
 `;
 
@@ -192,6 +203,28 @@ export const IconsContainer = styled.div`
         width: 100%;
         margin-bottom: 1vw;
         justify-content: center;
+    }
+
+    @media ${device.tablet} {
+        .row{
+            flex-direction: column;
+
+            div{
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 2vh;
+                height: 5vh;
+                
+                span{
+                    font-size: 4vw;
+                    margin-left: 2vw;
+                }
+
+                img{
+                    width: 10vw
+                }
+            }
+        }
     }
 `;
 
