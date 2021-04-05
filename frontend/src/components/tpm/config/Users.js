@@ -68,7 +68,6 @@ function Users({ users, setUsers }){
     }
 
     const updateUser = newUser => {
-        console.log(newUser)
         let newUsers = [...users]
         const idx = newUsers.findIndex(user => user.id === newUser.id)
         newUsers.splice(idx, 1, newUser)
@@ -83,6 +82,7 @@ function Users({ users, setUsers }){
     useEffect(() => {
         getUsers().then(({ usuarios }) => {
             const users = JSON.parse(usuarios).map(user => { return { ...user.fields, id: user.pk } })
+            console.log(users)
             setUsers(users)
         }).catch(e=> console.log())
     }, [])
