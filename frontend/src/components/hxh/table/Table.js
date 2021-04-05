@@ -116,6 +116,14 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     const twoDigits = number => number < 10 ? `0${number}` : number
 
+    const setAndonInfo = (andon) =>{
+        for(let i = 0; i < andon.length; i++){
+            const date = new Date(andon[i].registro)
+            window.localStorage.setItem(`timerValue${andon[i].estado}`, Math.floor(date.getTime() /1000))
+            window.localStorage.setItem(`timeBeforeExit${andon[i].estado}`, Date.now())
+        }
+    }
+
     useEffect(() => {
         const date = new Date()
         console.log(window.innerWidth)
@@ -125,12 +133,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         }
         if(!hxhHistory){
             checkHour()
-            getData().then(({ InfProd, InfGen, Linea }) => {
+            getData().then(({ InfProd, InfGen, Linea, Andon }) => {
                 const dataInfo = JSON.parse(InfGen)
                 const data = JSON.parse(InfProd).map(row => row.fields)
+                const andon = JSON.parse(Andon)
+                console.log(andon)
                 setDataFetched(data)
                 setInfoTable(data)
                 setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
+                setAndonInfo(andon)
             }).catch(e => console.log(e))
         }
         return () => { clearTimeout(timeout) }
