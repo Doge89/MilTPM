@@ -446,4 +446,12 @@ export const CreateUserForm = styled.form`
         color: ${red};
         margin-bottom: 2vh;
     }
+
+    span{
+        width: 100%;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1vw;
+        margin-top: -1vw;
+        margin-bottom: 1vw;
+    }
 `;

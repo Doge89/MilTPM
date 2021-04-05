@@ -105,6 +105,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
     }
 
     useEffect(() => {
+        console.log(userToEdit)
         if(userToEdit){
             setUser(userToEdit.username)
             setTypeUser(userToEdit.type)
@@ -126,7 +127,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
         >
             <ModalContainer>
                 <CreateUserForm>
-                    <h1>{JSON.stringify(userToEdit) === "{}" ? 'Crear Usuario' : 'Actualizar Usuario'}</h1>
+                    <h1>{!userToEdit ? 'Crear Usuario' : 'Actualizar Usuario'}</h1>
                     <CardInfo>
                         <label>Usuario: </label>
                         <input 
@@ -140,19 +141,21 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                         <input 
                             value={password}
                             onChange={handleInpuPassword}
-                            placeholder={user? "Nueva contraseña del usuario" : "Contraseña del usuario"}
+                            placeholder={userToEdit? "Nueva contraseña del usuario" : "Contraseña del usuario"}
                             type="password"
                         />
                     </CardInfo>
+                    {userToEdit && <span>*Opcional.</span>}
                     <CardInfo>
                         <label>Confirmar contraseña: </label>
                         <input 
                             value={confirmPassword}
                             onChange={handleInpuConfirmPassword}
-                            placeholder={user ? "Confirmar la nueva contraseña del usuario" : "Confirmar la contraseña del usuario"}
+                            placeholder={userToEdit ? "Confirmar la nueva contraseña del usuario" : "Confirmar la contraseña del usuario"}
                             type="password"
                         />
                     </CardInfo>
+                    {userToEdit && <span>*Opcional.</span>}
                     <CardInfo>
                         <label>Linea: </label>
                         <input 
