@@ -24,7 +24,7 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-function CreateUser({ modalOpen, closeModal, userToEdit }){
+function CreateUser({ modalOpen, closeModal, userToEdit, addUser }){
 
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
@@ -88,12 +88,15 @@ function CreateUser({ modalOpen, closeModal, userToEdit }){
         e.preventDefault()
         if(checkData()){
             if(userToEdit){
-                /* updateData({ user, password, typeUser }).then(() => {
+                updateData({ user, password, typeUser }).then(() => {
 
-                }).catch(e => console.log(e)) */
+                }).catch(e => console.log(e))
             }else{
-                postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })}).then(() => {
-
+                postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })})
+                .then(({ usuario }) => {
+                    console.log(usuario)
+                    addUser(usuario)
+                    closeModal()    
                 }).catch(e => console.log(e))
             }
         }

@@ -61,6 +61,12 @@ function Users({ users, setUsers }){
         
     }
 
+    const addUser = user => {
+        let newUsers = [...users]
+        newUsers.push(user)
+        setUsers(newUsers)
+    }
+
     const editUser = (user) => {
         setUserToEdit(user)
         openModal()
@@ -104,6 +110,7 @@ function Users({ users, setUsers }){
                 modalOpen={modalOpen}
                 closeModal={closeModal}
                 userToEdit={userToEdit}
+                addUser={addUser}
             />
             <ModalMessage 
                 title="Eliminar Usuario"
