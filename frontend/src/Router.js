@@ -16,7 +16,7 @@ import ProviderMP from './reducers/ProviderMP'
 
 function Router(){
     return(
-        <BrowserRouter>
+        <BrowserRouter forceRefresh>
             <Switch>
                 <Route exact path="/hxh" >
                     <ProviderHXH>
