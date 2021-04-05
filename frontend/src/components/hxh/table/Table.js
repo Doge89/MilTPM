@@ -136,7 +136,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             getData().then(({ InfProd, InfGen, Linea, Andon }) => {
                 const dataInfo = JSON.parse(InfGen)
                 const data = JSON.parse(InfProd).map(row => row.fields)
-                const andon = JSON.parse(Andon)
+                const andon = JSON.parse(Andon).map(row => row.fields)
                 console.log(andon)
                 setDataFetched(data)
                 setInfoTable(data)
