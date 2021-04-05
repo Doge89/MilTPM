@@ -91,7 +91,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
             if(userToEdit){
                 updateData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email, id })})
                 .then(() => {
-                    updateUser({...userToEdit, user, linea: line, email})
+                    updateUser({...userToEdit, username: user, linea: line, email})
                     closeModal()
                 }).catch(e => console.log(e))
             }else{
