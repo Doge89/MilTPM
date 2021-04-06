@@ -30,6 +30,7 @@ function HistorySearch({ setHistory, machines, notFound }){
         e.preventDefault()
         setErr(false)
         getCard().then(({ card, usuario, mensaje }) => {
+            console.log(mensaje)
             if(mensaje){
                 setErr(true)
                 setMessage(mensaje)
