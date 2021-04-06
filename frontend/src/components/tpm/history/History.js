@@ -18,7 +18,7 @@ function History({ machines, setMachine, machine, history }){
         const res = await axios({
             url : `${URL}/tpm/historial/`,
             method: 'POST',
-            data: querystring.stringify({ maquina: machine })
+            data: querystring.stringify({ maquina: machine.nombre })
         })
 
         return res.data
@@ -32,6 +32,7 @@ function History({ machines, setMachine, machine, history }){
     useEffect(() => {
         getHistory().then(({ hist }) => {
             const history = JSON.parse(hist).map(item => item.fields)
+            console.log(history)
         }).catch(e => console.log(e))
     }, [])
 
