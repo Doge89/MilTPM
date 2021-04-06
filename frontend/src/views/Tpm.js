@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import MainContainer from '../components/common/MainContainer'
 import TopBar from '../components/tpm/TopBar'
@@ -13,13 +14,12 @@ import { URL } from '../var'
 function Tpm(){
 
     const [viewType, setViewType] = useState('panel')
-    const [machine, setMachine] = useState({ nombre: 'running_booth' })
+    const [machine, setMachine] = useState({})
     
     const [machines, setMachines] = useState([])
     const [schedule, setSchedule] = useState([])
     const [machinesDay, setMachinesDay] = useState([])
-    const [activities, setActivities] = useState([{ nombre: 'Checar tornillos', tipo: 'limpieza', id: 1 }, { nombre: 'Limpieza de equipo', tipo: 'limpieza', id: 2 },
-                                    { nombre: 'Checar estado de cables', tipo: 'electrico', id: 3 }, { nombre: 'Checar estado de conectores', tipo: 'electrico', id: 4 }])
+    const [activities, setActivities] = useState([])
     const [history, setHistory] = useState([{ id: 1, fecha: '16-03-2021 16:21:00', tipo: false, maquina: 'runnibg_booth', usuario: 'admin', 
                                         area: 'ensamblado', localizacion: 'Linea 4', descripcion: 'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
                                         propuesta: 'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
@@ -34,7 +34,17 @@ function Tpm(){
         return res.data
     }
 
-    const getMachinesDay = async () => {
+    const getActivities = async (machine) => {
+        const res = await axios({
+            url: `${URL}/tpm/modificar/cronograma/get/`,
+            method: 'POST',
+            data: querystring({ id: machine.id })
+        })
+
+        return res.data
+    }
+
+    const getMachinesDay = async () => { 
         const res = await axios({
             url: `${URL}/tpm/get/`,
             method: 'GET'
@@ -44,6 +54,17 @@ function Tpm(){
     }
 
     useEffect(() => {
+        if(JSON.stringify(machine) !== '{}'){
+            getActivities().then(({ actividades }) => {
+                const activities = JSON.parse(actividades).map(item => { return { ...item.fields, id: item.pk } })
+                setActivities(activities)
+            }).catch(e => console.log(e))
+        }
+    }, [machine])
+
+    useEffect(() => {
+        document.getElementById('root').style.overflowY = 'auto'
+
         getMachines().then(({ maquinas, cronograma }) =>{
             const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
             const schedule = JSON.parse(cronograma).map(item => item.fields)

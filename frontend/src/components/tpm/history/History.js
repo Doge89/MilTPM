@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import querystring from 'querystring'
 
 import MachineSelector from '../Selector'
 import TableHistory from './HistoryTable'
@@ -12,10 +14,26 @@ function History({ machines, setMachine, machine, history }){
     const [cardInfo, setCardInfo] = useState({})
     const [card, setCard] = useState(false)
 
+    const getHistory = async () => {
+        const res = await axios({
+            url : `${URL}/tpm/historial/`,
+            method: 'POST',
+            data: querystring.stringify({ maquina: machine })
+        })
+
+        return res.data
+    }
+
     const showCard = (idx) => {
         setCard(true)
         setCardInfo(history[idx])
     }
+
+    useEffect(() => {
+        getHistory().then(({ hist }) => {
+            const history = JSON.parse(hist).map(item => item.fields)
+        }).catch(e => console.log(e))
+    }, [])
 
     return(
         <Container>

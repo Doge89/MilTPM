@@ -60,38 +60,43 @@ function Panel({ setMachine, machines, machine, activities }){
                 machineSelected={machine}
                 title="Selecciona la Máquina"
             />
-            <SatusContainer>
-                <div>
-                    <span>Estado general: </span>
-                    <Status />
-                </div>
-                <div>
-                    <span>{machine.nombre}</span>
-                </div>
-            </SatusContainer>
-            <PanelTable 
-                machine={machine}
-                activities={activities}
-                card={card}
-            />
-            <ButtonPrimary width="20vw" height="4vh" onClick={showCard}>Validar información</ButtonPrimary>
-            {card && (
-                <Card 
-                    info={{
-                        tipo: cardType,
-                        maquina: machine.nombre,
-                        usuario: 'admin',
-                        area: 'Ensamble',
-                        localizacion: 'linea 4',
-                        descripcion: description.split(',').map(item => (
-                            <>
-                                {item}
-                                <br/>
-                            </>
-                        ))
-                    }}
+            {JSON.stringify(machine) !== "{}" && (
+                <>
+                <SatusContainer>
+                    <div>
+                        <span>Estado general: </span>
+                        <Status />
+                    </div>
+                    <div>
+                        <span>{machine.nombre}</span>
+                    </div>
+                </SatusContainer>
+                <PanelTable 
+                    machine={machine}
+                    activities={activities}
+                    card={card}
                 />
+                <ButtonPrimary width="20vw" height="4vh" onClick={showCard}>Validar información</ButtonPrimary>
+                {card && (
+                    <Card 
+                        info={{
+                            tipo: cardType,
+                            maquina: machine.nombre,
+                            usuario: 'admin',
+                            area: 'Ensamble',
+                            localizacion: 'linea 4',
+                            descripcion: description.split(',').map(item => (
+                                <>
+                                    {item}
+                                    <br/>
+                                </>
+                            ))
+                        }}
+                    />
+                )}
+                </>
             )}
+            
         </Container>
     )
 }
