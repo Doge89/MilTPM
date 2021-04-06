@@ -14,8 +14,8 @@ import { URL } from '../var'
 function Tpm(){
 
     const [viewType, setViewType] = useState('panel')
+    const [line, setLine] = useState('')
     const [machine, setMachine] = useState({})
-    
     const [machines, setMachines] = useState([])
     const [schedule, setSchedule] = useState([])
     const [machinesDay, setMachinesDay] = useState([])
@@ -62,11 +62,12 @@ function Tpm(){
     useEffect(() => {
         document.getElementById('root').style.overflowY = 'auto'
 
-        getMachines().then(({ maquinas, cronograma }) =>{
+        getMachines().then(({ maquinas, cronograma, linea }) =>{
             const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
             const schedule = JSON.parse(cronograma).map(item => item.fields)
             setSchedule(schedule)
             setMachines(machines)
+            setLine(linea)
 
             getMachinesDay().then(({ maqdia}) =>{
 
@@ -87,7 +88,7 @@ function Tpm(){
     return(
         <MainContainer>
             <TopBar setViewType={setViewType} viewType={viewType}/>
-            <Info />
+            <Info line={line}/>
             {viewType === 'panel' ? (
                 <Panel 
                     machines={machinesDay}

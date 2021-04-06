@@ -42,7 +42,7 @@ function History({ machines, setMachine, machine, history, setHistory }){
             console.log('a')
             getHistory().then(({ hist, usuario }) => {
                 console.log(usuario)
-                const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario } })
+                const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario, maquina: machine.nombre } })
                 setHistory(history)
             }).catch(e => console.log(e))
         }
