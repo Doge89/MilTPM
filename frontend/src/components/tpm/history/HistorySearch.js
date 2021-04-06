@@ -29,7 +29,7 @@ function HistorySearch({ setHistory, machines }){
         getCard().then(({ card, usuario }) => {
             console.log(card)
             const machine = machines.find(machine => machine.id === card.maquina)
-            setHistory([{...card, fecha: getDate, id, usuario, maquina: machine }])
+            setHistory([{...card, fecha: getDate(card.fecha), id, usuario, maquina: machine.nombre }])
         }).catch(e => console.log(e))
     }
 
