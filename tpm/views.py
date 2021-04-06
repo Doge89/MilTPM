@@ -2,7 +2,7 @@ import ast, json
 from datetime import datetime
 from django.core import serializers
 from django.shortcuts import render
-from usuarios.models import Usuarios
+from usuarios.models import Usuarios, Linea
 from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
 from django.forms import model_to_dict
@@ -25,40 +25,43 @@ def _get_panel_inf(request):
             dia = datetime.now().weekday()
             cronAct = Cronograma.objects.filter(dia__exact=dia)
             serializedCronAct = serializers.serialize('json', list(cronAct))
-            print(dia)
-            return JsonResponse({'maqdia': serializedCronAct}, status=200)
+            estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
+            serializedEstados = serializers.serialize('json', list(estados))
+            print(serializedEstados)
+            return JsonResponse({'maqdia': serializedCronAct, "tarjetas": serializedEstados}, status=200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
         except Cronograma.DoesNotExist:
             print("No hay maquinas programadas para hoy")
+            return JsonResponse({'mensaje': "No existen maquinas programadas para hoy"},status=200)
     return HttpResponse(status=405)
 
 #POSTEA LA INFORMACION SOLICITADA
-@require_http_methods(['POST', 'GET'])
+@require_http_methods(['POST'])
+@csrf_exempt
 def _post_tpm_inf(request):
     if request.method == 'POST':
-        try:
-            data = request.POST.get('data')
-            data = ast.literal_eval(data)
-            print(data)
-            maquina = Maquina.objects.get(nombre__exact=data['maquina'])
-            for i in range(len(data['nombre'])):
-                actividad = Actividades.objects.create(Id = None, nombre = data['nombre'][i], maquinas = maquina,tipo=data['tipo'][i], status=data['status'][i], registro=datetime.now())
-            tarjeta = Tarjetas.objects.create()
-            return HttpResponse(status=201)
-        except Exception as e:
-            print(e)
-            return HttpResponse(status=500)     
+        data = request.POST.get('data')
+        print(data)
+        data = ast.literal_eval(data)
+        print(data)
+        maquina = Maquina.objects.get(nombre__exact=data['categoria'])
+        linea = Linea.objects.get(linea__exact=f"{request.session['Linea']}")
+        user = Usuarios.objects.get(username__exact=f"{request.session['Usuario']}")
+        tarjeta = Tarjetas.objects.create(Id=None, maquina=maquina, descripcion=data['descripcion'], usuario = user, area='ensamble', categoria=data['categoria'], localizacion=linea, tipo=data['tipo'], fecha=datetime.now())
+        return HttpResponse(status=201)     
     return HttpResponse(status=405)
 
 @require_http_methods(['POST'])
+@csrf_exempt
 def _get_act_machine(request):
     if request.method == 'POST':
         try:
             data = request.POST.get('id')
-            actividades = Actividades.objects.filter(maquina_id__exact=data)
+            actividades = Actividades.objects.filter(maquinas_id__exact=data)
             serializedAct = serializers.serialize('json', list(actividades))
+            print(serializedAct)
             return JsonResponse({'actividades': serializedAct}, status = 200)
         except Exception as e:
             print(e)
@@ -77,7 +80,7 @@ def cronograma(request):
             serializedCronograma = serializers.serialize('json', list(cronograma))
             print(serializedMaquinas)
             print(serializedCronograma)
-            return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma}, status = 200)
+            return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": request.session['Linea'], "usuario": request.session['Usuario']}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -196,10 +199,12 @@ def _modify_user(request):
 def _machine_history(request):
     if request.method == 'POST':
         try:
-            machine = request.POST.get('machine')
+            machine = request.POST.get('maquina')
+            user = Usuarios.objects.get(username__exact=f"{request.session['Usuario']}")
             hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", maquina_id__nombre__exact=f"{machine}")
             serializedTarj = serializers.serialize('json', list(hisTarj))
-            return JsonResponse({'hist': serializedTarj}, status = 200)
+            print(serializedTarj)
+            return JsonResponse({'hist': serializedTarj, 'Usuario': user.username}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -226,4 +231,38 @@ def _get_machine_card(request):
             return HttpResponse(status = 204)
     return HttpResponse(status =405)
 
-#POST PANEL
+@require_http_methods(['POST'])
+@csrf_exempt
+def _get_machine_card_by_id(request):
+    if request.method == 'POST':
+        try:
+            Id = request.POST.get('id')
+            Tarj = Tarjetas.objects.get(Id__exact=Id)
+            serializedTarj = model_to_dict(Tarj)
+            
+            return JsonResponse({'card': serializedTarj, "usuario": request.session['Usuario']}, status = 200)
+        except Tarjetas.DoesNotExist:
+            print("No existe la Tarjeta")
+            return JsonResponse({'mensaje': "No existen registros"},status = 200)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)
+    return HttpResponse(status = 405)
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def _modify_card(request):
+    if request.method == 'POST':
+        try:
+            data = request.POST.get('data')
+            print(data)
+            data = ast.literal_eval(data)
+            tarjeta = Tarjetas.objects.get(pk=data['id'])
+            tarjeta.propuesta = data['propuesta']
+            tarjeta.implementada = data['implementada']
+            tarjeta.save()
+            return HttpResponse(status=202)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)
+    return HttpResponse(status=405)
