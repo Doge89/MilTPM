@@ -36,7 +36,7 @@ function Tpm(){
 
     const getActivities = async (machine) => {
         const res = await axios({
-            url: `${URL}/tpm/modificar/cronograma/get/`,
+            url: `${URL}/tpm/maquina/`,
             method: 'POST',
             data: querystring({ id: machine.id })
         })
