@@ -19,7 +19,7 @@ function Card({ info, edit, history, line }){
 
     const updateData = async (data) => {
         const res = await axios({
-            url: `${URL}/tpm/historial/modificar`,
+            url: `${URL}/tpm/historial/modificar/`,
             method: 'POST',
             data: querystring.stringify(data)
         })
