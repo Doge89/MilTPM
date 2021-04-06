@@ -56,6 +56,7 @@ function Tpm(){
     useEffect(() => {
         if(JSON.stringify(machine) !== '{}'){
             getActivities().then(({ actividades }) => {
+                console.log(actividades)
                 const activities = JSON.parse(actividades).map(item => { return { ...item.fields, id: item.pk } })
                 setActivities(activities)
             }).catch(e => console.log(e))
