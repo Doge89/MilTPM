@@ -101,6 +101,7 @@ function Tpm(){
                     setMachine={setMachine}
                     machine={machine}
                     history={history}
+                    setHistory={setHistory}
                 />
             ):(
                 <Modify 

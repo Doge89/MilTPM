@@ -11,7 +11,7 @@ import { Container } from '../../../styles/tpm'
 
 import { URL } from '../../../var'
 
-function History({ machines, setMachine, machine, history }){
+function History({ machines, setMachine, machine, history, setHistory }){
 
     const [cardInfo, setCardInfo] = useState({})
     const [card, setCard] = useState(false)
@@ -36,7 +36,7 @@ function History({ machines, setMachine, machine, history }){
             console.log('a')
             getHistory().then(({ hist }) => {
                 const history = JSON.parse(hist).map(item => item.fields)
-                console.log(history)
+                setHistory(history)
             }).catch(e => console.log(e))
         }
     }, [machine])
