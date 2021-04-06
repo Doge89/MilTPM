@@ -44,7 +44,7 @@ export const InfoContainer = styled.div`
         align-items: center;
         justify-content: center;
         color: ${gray};
-        width: 10vw;
+        width: 17vw;
         padding: 1vw 0;
         font-size: 1.5vw;
         font-family: Arial, Helvetica, sans-serif;
