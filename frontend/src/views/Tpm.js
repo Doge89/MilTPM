@@ -38,7 +38,7 @@ function Tpm(){
         const res = await axios({
             url: `${URL}/tpm/maquina/`,
             method: 'POST',
-            data: querystring({ id: machine.id }),
+            data: querystring.stringify({ id: machine.id }),
         })
 
         return res.data
@@ -55,7 +55,7 @@ function Tpm(){
 
     useEffect(() => {
         if(JSON.stringify(machine) !== '{}'){
-            getActivities().then(({ actividades }) => {
+            getActivities(machine).then(({ actividades }) => {
                 console.log(actividades)
                 const activities = JSON.parse(actividades).map(item => { return { ...item.fields, id: item.pk } })
                 setActivities(activities)
