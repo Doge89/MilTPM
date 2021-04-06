@@ -9,6 +9,8 @@ import Card from '../Card'
 
 import { Container } from '../../../styles/tpm'
 
+import { URL } from '../../../var'
+
 function History({ machines, setMachine, machine, history }){
 
     const [cardInfo, setCardInfo] = useState({})
