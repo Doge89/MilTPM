@@ -54,10 +54,13 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
                 setHistory={setHistory}
                 machines={machines}
             />
-            <TableHistory 
-                history={history}
-                showCard={showCard} 
-            />
+            {history.length !== 0 && (
+                <TableHistory 
+                    history={history}
+                    showCard={showCard} 
+                />
+            )}
+            
             {card && (
                 <Card info={cardInfo} history edit line={line}/>
             )}
