@@ -38,7 +38,7 @@ function Tpm(){
         const res = await axios({
             url: `${URL}/tpm/maquina/`,
             method: 'POST',
-            data: querystring({ id: machine.id })
+            data: querystring({ id: machine.id }),
         })
 
         return res.data
