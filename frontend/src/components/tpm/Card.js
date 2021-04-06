@@ -30,7 +30,6 @@ function Card({ info, edit, history, line }){
     const handleBtn = () => {
         console.log(info)
         updateData({ data: JSON.stringify({propuesta: proposed, implementada: implemented, id: info.id }) }).then(() => {
-
         }).catch(e => console.log(e))
     }
 
@@ -40,7 +39,9 @@ function Card({ info, edit, history, line }){
 
     useEffect(() => {
         if(info.implementada){ setImplemented(info.implementada) }
+        else{ setImplemented('') }
         if(info.propuesta){ setProposed(info.propuesta) }
+        else{ setProposed('') }
     }, [info])
 
     return(
