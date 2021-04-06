@@ -12,7 +12,7 @@ import { Container } from '../../../styles/tpm'
 import { URL } from '../../../var'
 import { twoDigits } from '../../../scripts'
 
-function History({ machines, setMachine, machine, history, setHistory }){
+function History({ machines, setMachine, machine, history, setHistory, line }){
 
     const [cardInfo, setCardInfo] = useState({})
     const [card, setCard] = useState(false)
@@ -62,7 +62,7 @@ function History({ machines, setMachine, machine, history, setHistory }){
                 showCard={showCard} 
             />
             {card && (
-                <Card info={cardInfo} history edit/>
+                <Card info={cardInfo} history edit line={line}/>
             )}
         </Container>
     )

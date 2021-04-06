@@ -103,6 +103,7 @@ function Tpm(){
                     machine={machine}
                     history={history}
                     setHistory={setHistory}
+                    line={line}
                 />
             ):(
                 <Modify 
