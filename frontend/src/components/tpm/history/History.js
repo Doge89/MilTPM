@@ -33,6 +33,7 @@ function History({ machines, setMachine, machine, history }){
 
     useEffect(() => {
         if(JSON.stringify(machine !== "{}")){
+            console.log('a')
             getHistory().then(({ hist }) => {
                 const history = JSON.parse(hist).map(item => item.fields)
                 console.log(history)

@@ -51,9 +51,8 @@ function Tpm(){
     }
 
     useEffect(() => {
-        if(JSON.stringify(machine) !== '{}'){
+        if(JSON.stringify(machine) !== '{}' && viewType === 'panel'){
             getActivities(machine).then(({ actividades }) => {
-                console.log(actividades)
                 const activities = JSON.parse(actividades).map(item => { return { ...item.fields, id: item.pk } })
                 setActivities(activities)
             }).catch(e => console.log(e))
