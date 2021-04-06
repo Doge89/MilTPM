@@ -18,7 +18,7 @@ function History({ machines, setMachine, machine, history }){
         const res = await axios({
             url : `${URL}/tpm/historial/`,
             method: 'POST',
-            data: querystring.stringify({ maquina: machine.id })
+            data: querystring.stringify({ maquina: machine.nombre })
         })
 
         return res.data
