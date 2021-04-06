@@ -29,7 +29,7 @@ function Card({ info, edit, history, line }){
 
     const handleBtn = () => {
         console.log(info)
-        updateData({ data: {proposed, implemented, id: info.id } }).then(() => {
+        updateData({ data: {propuesta: proposed, implementada: implemented, id: info.id } }).then(() => {
 
         }).catch(e => console.log(e))
     }
