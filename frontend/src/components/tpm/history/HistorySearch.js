@@ -52,7 +52,7 @@ function HistorySearch({ setHistory, machines, notFound }){
             />
             <ButtonSecondary height="4vh" width="8vw" className="size-effect" onClick={handleBtn}>Buscar</ButtonSecondary>
         </HistorySearchContainer>
-        {err && <Text size="1.5vw" color="rgb(254, 13, 46)" margin="2vh 0">{message}</Text>}
+        {err && <Text size="1.5vw" color="rgb(254, 13, 46)" margin="0 0 2vh 0">{message}</Text>}
         </>
     )
 }

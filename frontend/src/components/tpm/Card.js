@@ -42,7 +42,7 @@ function Card({ info, edit, history, line }){
     }, [info])
 
     return(
-        <CardComponent bgColor={info?.tipo ? 'green' : 'yellow'} ref={ref}>
+        <CardComponent bgColor={info?.tipo ? 'green' : 'yellow'} ref={ref} id="card">
             <div className="card">
                 <h1>{info?.tipo ? 'TARJETA CONFORME' : 'TARJETA NO CONFORME'}</h1>
                 <div className="content">

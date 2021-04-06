@@ -13,7 +13,7 @@ import { appContext } from '../../../reducers/ProviderTPM'
 
 import { URL } from '../../../var'
 
-function Panel({ setMachine, machines, machine, activities }){
+function Panel({ setMachine, machines, machine, activities, state }){
 
     const context = useContext(appContext)
 
@@ -71,7 +71,7 @@ function Panel({ setMachine, machines, machine, activities }){
                 <SatusContainer>
                     <div>
                         <span>Estado general: </span>
-                        <Status />
+                        <Status color={state}/>
                     </div>
                     <div>
                         <span>{machine.nombre}</span>

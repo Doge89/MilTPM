@@ -16,6 +16,7 @@ function Tpm(){
     const [viewType, setViewType] = useState('panel')
     const [line, setLine] = useState('')
     const [user, setUser] = useState('')
+    const [state, setState] = useState('red')
     const [machine, setMachine] = useState({})
     const [machines, setMachines] = useState([])
     const [schedule, setSchedule] = useState([])
@@ -60,16 +61,34 @@ function Tpm(){
         }
     }, [machine])
 
+    const setGeneralState = (cards) => {
+        console.log(cards)
+        if(cards.length === 0){ setState('red') }
+        else{
+            let ctrl = true
+            for(let i = 0; i < cards.length; i++){
+                if(!cards[i].tipo){ ctrl = false }
+            }
+            if(ctrl){ setState('green') }
+            else{ setState('yellow') }
+        }
+
+
+    }
+
     useEffect(() => {
         document.getElementById('root').style.overflowY = 'auto'
 
-        getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
+        getMachines().then(({ maquinas, cronograma, linea, usuario, tarjetas }) =>{
             const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
             const schedule = JSON.parse(cronograma).map(item => item.fields)
+            const cards = JSON.parse(tarjetas).map(item => item.fields)
+            
             setSchedule(schedule)
             setMachines(machines)
             setLine(linea)
             setUser(usuario)
+            setGeneralState(cards)
             
             getMachinesDay().then(({ maqdia}) =>{
 
@@ -97,6 +116,7 @@ function Tpm(){
                     setMachine={setMachine}
                     machine={machine}
                     activities={activities}
+                    state={state}
                 />
             ):viewType === 'history' ? (
                 <History 

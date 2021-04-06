@@ -35,6 +35,7 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
     const showCard = (idx) => {
         setCard(true)
         setCardInfo(history[idx])
+        document.getElementById('card').scrollIntoView({ behavior: 'smooth' })
     }
 
     useEffect(() => {
