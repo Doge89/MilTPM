@@ -11,7 +11,7 @@ function HistoryTable({ history, showCard }){
     return(
         <Table alignItems="center">
             <div className="table">
-                <div className="table-row">
+                <div className="table-row border-none">
                     <PanelTableCell width="25%" className="header">ID</PanelTableCell>
                     <PanelTableCell width="25%" className="header border">Registro</PanelTableCell>
                     <PanelTableCell width="25%" className="header border-right">Usuario</PanelTableCell>
