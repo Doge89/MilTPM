@@ -12,10 +12,10 @@ function HistoryTable({ history, showCard }){
         <Table alignItems="center">
             <div className="table">
                 <div className="table-row border-none">
-                    <PanelTableCell width="25%" className="header">ID</PanelTableCell>
-                    <PanelTableCell width="25%" className="header border">Registro</PanelTableCell>
-                    <PanelTableCell width="25%" className="header border-right">Usuario</PanelTableCell>
-                    <PanelTableCell width="25%" className="header">Tarjeta</PanelTableCell>
+                    <PanelTableCell width="25%" className={`header ${history.length === 0 ? '' : 'border-bottom'}`}>ID</PanelTableCell>
+                    <PanelTableCell width="25%" className={`header border ${history.length === 0 ? '' : 'border-bottom'}`}>Registro</PanelTableCell>
+                    <PanelTableCell width="25%" className={`header border-right ${history.length === 0 ? '' : 'border-bottom'}`}>Usuario</PanelTableCell>
+                    <PanelTableCell width="25%" className={`header ${history.length === 0 ? '' : 'border-bottom'}`}>Tarjeta</PanelTableCell>
                 </div>
                 {history.map((his, idx) => (
                     <HistoryTableRow 
