@@ -55,7 +55,7 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
                 machineSelected={machine}
                 title="Selecciona la Máquina"
             />
-            <HistorySearch />
+            <HistorySearch setHistory={setHistory}/>
             <TableHistory 
                 history={history}
                 showCard={showCard} 
