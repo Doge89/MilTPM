@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
+import axios from 'axios'
+import querystring from 'querystring'
 
 import MachineSelector from '../Selector'
 import PanelTable from './PanelTable'
 import Card from '../Card'
-import axios from 'axios'
 
 import { Container, SatusContainer, Status } from '../../../styles/tpm'
 import { ButtonPrimary } from '../../../styles/common'
@@ -22,32 +23,37 @@ function Panel({ setMachine, machines, machine, activities }){
 
     const postData = async (data) => {
         const res = await axios({
-            url: `${URL}/tpm`,
+            url: `${URL}/tpm/post/`,
             method: 'POST',
-            data
+            data: querystring.stringify(data)
         })
 
         return res.data
     }
 
-    const postInfo = () => {
-        postData({ status: context.status }).then((data) => {
-
-        }).catch(e => {
-            console.log(e)
-        })
-    }
-
-    const showCard = () => {
-        setCard(!card)
-        let cardType = true
+    const getDescription = () => {
         let description = ''
+        let cardType = true
         for(let i = 0; i < context.status.length; i++){
             if(!context.status[i].status){
                 cardType = false
                 description += `${context.status[i].activityName},`
             }
         }
+        return { description, cardType }
+    }
+
+    const postInfo = () => {
+        const {description, cardType} = getDescription()
+        postData({ data: { descripcion: description, categoria: machine.nombre, tipo: cardType } }).then((data) => {
+            showCard(description, cardType)
+        }).catch(e => {
+            console.log(e)
+        })
+    }
+
+    const showCard = (description, cardType) => {
+        setCard(!card)
         setDescription(description)
         setCardType(cardType)
     }
@@ -76,7 +82,7 @@ function Panel({ setMachine, machines, machine, activities }){
                     activities={activities}
                     card={card}
                 />
-                <ButtonPrimary width="20vw" height="4vh" onClick={showCard}>Validar información</ButtonPrimary>
+                <ButtonPrimary width="20vw" height="4vh" onClick={postInfo}>Validar información</ButtonPrimary>
                 {card && (
                     <Card 
                         info={{
