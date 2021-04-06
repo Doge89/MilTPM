@@ -143,9 +143,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     useEffect(() => {
         const date = new Date()
-        if(window.innerWidth <= maxWidth){
-            document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
-        }
+       
         if(!hxhHistory){
             checkHour()
             getData().then(({ InfProd, InfGen, Linea, Andon }) => {
@@ -156,6 +154,11 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                 setInfoTable(data)
                 setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
                 setAndonInfo(andon)
+                if(window.innerWidth <= maxWidth){
+                    setTimeout(() => {
+                        document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
+                    }, 1000);
+                }
             }).catch(e => console.log(e))
         }
         return () => { clearTimeout(timeout) }

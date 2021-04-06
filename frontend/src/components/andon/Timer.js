@@ -38,16 +38,10 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
 
     const handleTimerLoad = () => {
         const timerValue = localStorage.getItem(`timerValue${type}`)
-        const timeIsPaused = localStorage.getItem(`timerPaused${type}`)
-        const timeBeforeExit = localStorage.getItem(`timeBeforeExit${type}`)
-        console.log('b')
+        /* const timeIsPaused = localStorage.getItem(`timerPaused${type}`)
+        const timeBeforeExit = localStorage.getItem(`timeBeforeExit${type}`) */
         
-        if(!timeIsPaused){ 
-            if(timerValue){
-                const timeElapsed = Number(timerValue) + Math.round((Date.now() - Number(timeBeforeExit))/1000)
-                setTimer(timeElapsed)
-            }
-        }else{
+        if(timerValue){
             const timeElapsed = Number(timerValue)
             setTimer(timeElapsed)
         }

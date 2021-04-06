@@ -43,8 +43,6 @@ function Icons({ rerender }){
         if(timerChange){ setChange(true) }
         else{ setChange(false) }
 
-        console.log('a')
-
     }, [rerender])
 
     return(
