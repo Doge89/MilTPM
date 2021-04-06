@@ -3,14 +3,16 @@ import axios from 'axios'
 import querystring from 'querystring'
 
 import { HistorySearchContainer } from '../../../styles/tpm'
-import { ButtonSecondary } from '../../../styles/common'
+import { ButtonSecondary, Text } from '../../../styles/common'
 
 import { URL } from '../../../var'
 import { getDate } from '../../../scripts'
 
-function HistorySearch({ setHistory, machines }){
+function HistorySearch({ setHistory, machines, notFound }){
 
     const [id, setId] = useState('')
+    const [message, setMessage] = useState('')
+    const [err, setErr] = useState(false)
 
     const getCard = async () => {
         const res = await axios({
@@ -26,14 +28,20 @@ function HistorySearch({ setHistory, machines }){
 
     const handleBtn = (e) => {
         e.preventDefault()
-        getCard().then(({ card, usuario }) => {
-            console.log(card)
+        setErr(false)
+        getCard().then(({ card, usuario, mensaje }) => {
+            if(mensaje){
+                setErr(true)
+                setMessage(mensaje)
+                return notFound()
+            }
             const machine = machines.find(machine => machine.id === card.maquina)
             setHistory([{...card, fecha: getDate(card.fecha), id, usuario, maquina: machine.nombre }])
         }).catch(e => console.log(e))
     }
 
     return(
+        <>
         <HistorySearchContainer>
             <input 
                 value={id}
@@ -43,6 +51,8 @@ function HistorySearch({ setHistory, machines }){
             />
             <ButtonSecondary height="4vh" width="8vw" className="size-effect" onClick={handleBtn}>Buscar</ButtonSecondary>
         </HistorySearchContainer>
+        {err && <Text size="1.5vw" color="rgb(254, 13, 46)" margin="2vh 0">{message}</Text>}
+        </>
     )
 }
 

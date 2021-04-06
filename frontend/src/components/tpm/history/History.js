@@ -27,6 +27,11 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
         return res.data
     }
 
+    const notFound = () => {
+        setCard(false)
+        setHistory([])
+    }
+
     const showCard = (idx) => {
         setCard(true)
         setCardInfo(history[idx])
@@ -53,6 +58,7 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
             <HistorySearch 
                 setHistory={setHistory}
                 machines={machines}
+                notFound={notFound}
             />
             {history.length !== 0 && (
                 <TableHistory 
