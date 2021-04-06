@@ -70,6 +70,7 @@ function Form({ children, location }){
                 setTimerPaused(true)
                 localStorage.setItem(`timerPaused${type}`, true)
             }
+            //window.location.reload()
         }).catch(e => console.log(e))
         
     }
@@ -104,7 +105,6 @@ function Form({ children, location }){
     }
 
     useEffect(() => {
-        console.log(intervalID)
         getData().then(({ Andon }) => {
             const query = new URLSearchParams(location.search)
             const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
@@ -113,19 +113,48 @@ function Form({ children, location }){
 
             if(andon){
                 const date = new Date(andon?.registro)
-                const datePaused = new Date(andon?.pause)
+                const periodPaused = andon.pause.split('/')
 
-                console.log(date)
+                console.log(andon.registro)
+
+                let totalTime = 0
+                let lastPausedTime = 0
+
+                if(andon.active){ totalTime = Date.now() - date.getTime() }
+            
+                for(let i = 0; i < periodPaused.length; i++){
+                    const period = periodPaused[i]
+                    console.log(period)
+
+                    const startedAt = new Date(period.split('\n')[0])
+                    const endAt = new Date(period.split('\n')[1])
+
+                    
+                    if(andon.active){
+                        if(!isNaN(startedAt.getTime()) && !isNaN(endAt.getTime())){ 
+                            totalTime -= endAt.getTime() - startedAt.getTime() 
+                        }
+                    }else{
+                        if(!isNaN(startedAt.getTime())){ 
+                            if(totalTime === 0){ totalTime += startedAt.getTime() - date.getTime() }
+                            else{ totalTime += startedAt.getTime() - lastPausedTime }
+                            lastPausedTime = endAt.getTime()
+                        } 
+                    }
+                    
+                }
 
                 if(!andon.active){ 
                     window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
-                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((datePaused.getTime() - date.getTime()) /1000))
-                    window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`) 
+                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
+                    window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`)
+                    clearInterval(intervalID) 
+                    setTimerPaused(true)
                 }else{
-                    console.log(Math.floor((Date.now() - date.getTime()) /1000))
-                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor((Date.now() - date.getTime()) /1000))
+                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
                     window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
                     window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
+                    setTimerPaused(false)
                 }
             }else{
                 window.localStorage.removeItem(`timerPaused${type}`)
@@ -143,6 +172,9 @@ function Form({ children, location }){
     useEffect(() => {
 
         const query = new URLSearchParams(location.search)
+        
+        if(!query.get('tipo')){ window.location.replace('/hxh') }
+
         setType(query.get('tipo'))
 
         const timerIsPaused = localStorage.getItem(`timerPaused${query.get('tipo')}`)
