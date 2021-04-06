@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
+import querystring from 'querystring'
 
 import { Card as CardComponent, CardInfo } from '../../styles/tpm'
 import { ButtonPrimary, Container } from '../../styles/common'
@@ -18,18 +19,19 @@ function Card({ info, edit, history, line }){
 
     const updateData = async (data) => {
         const res = await axios({
-            url: `${URL}/tpm`,
-            method: 'PUT',
-            data
+            url: `${URL}/tpm/historial/modificar`,
+            method: 'POST',
+            data: querystring.stringify(data)
         })
 
         return res.data
     }
 
     const handleBtn = () => {
-        /* updateData({ proposed, implemented }).then(() => {
+        console.log(info)
+        updateData({ data: {propuesta: proposed, implementada: implemented, id: info.id } }).then(() => {
 
-        }).catch(e => console.log(e)) */
+        }).catch(e => console.log(e))
     }
 
     useEffect(() => {
