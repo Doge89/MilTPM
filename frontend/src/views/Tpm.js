@@ -17,12 +17,14 @@ function Tpm(){
     const [line, setLine] = useState('')
     const [user, setUser] = useState('')
     const [state, setState] = useState('red')
+    const [machineState, setMachineState] = useState('')
     const [machine, setMachine] = useState({})
     const [machines, setMachines] = useState([])
     const [schedule, setSchedule] = useState([])
     const [machinesDay, setMachinesDay] = useState([])
     const [activities, setActivities] = useState([])
     const [history, setHistory] = useState([])
+    const [cards, setCards] = useState([])
 
     const getMachines = async () => {
         const res = await axios({
@@ -52,17 +54,30 @@ function Tpm(){
         return res.data
     }
 
+    const setCurrentMachineState = (cards) => {
+        if(cards.length === 0){ setState('red') }
+        else{
+            let ctrl = true
+            for(let i = 0; i < cards.length; i++){
+                if(!cards[i].tipo){ ctrl = false }
+            }
+            if(ctrl){ setMachineState('green') }
+            else{ setMachineState('yellow') }
+        }
+    }
+
     useEffect(() => {
         if(JSON.stringify(machine) !== '{}' && viewType === 'panel'){
             getActivities(machine).then(({ actividades }) => {
                 const activities = JSON.parse(actividades).map(item => { return { ...item.fields, id: item.pk } })
                 setActivities(activities)
+                setCurrentMachineState(cards.filter(item => item.maquina === machine.id))
+
             }).catch(e => console.log(e))
         }
     }, [machine])
 
     const setGeneralState = (cards) => {
-        console.log(cards)
         if(cards.length === 0){ setState('red') }
         else{
             let ctrl = true
@@ -72,24 +87,19 @@ function Tpm(){
             if(ctrl){ setState('green') }
             else{ setState('yellow') }
         }
-
-
     }
 
     useEffect(() => {
         document.getElementById('root').style.overflowY = 'auto'
 
         getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
-            
             const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
             const schedule = JSON.parse(cronograma).map(item => item.fields)
-            
             
             setSchedule(schedule)
             setMachines(machines)
             setLine(linea)
             setUser(usuario)
-            
             
             getMachinesDay().then(({ maqdia, tarjetas}) =>{
                 console.log(tarjetas)
@@ -98,6 +108,7 @@ function Tpm(){
                     return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
                 })
                 
+                setCards(cards)
                 setGeneralState(cards)
                 setMachinesDay(newMachinesDay)
 
