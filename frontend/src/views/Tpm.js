@@ -79,23 +79,26 @@ function Tpm(){
     useEffect(() => {
         document.getElementById('root').style.overflowY = 'auto'
 
-        getMachines().then(({ maquinas, cronograma, linea, usuario, tarjetas }) =>{
-            console.log(tarjetas)
+        getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
+            
             const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
             const schedule = JSON.parse(cronograma).map(item => item.fields)
-            const cards = JSON.parse(tarjetas).map(item => item.fields)
+            
             
             setSchedule(schedule)
             setMachines(machines)
             setLine(linea)
             setUser(usuario)
-            setGeneralState(cards)
             
-            getMachinesDay().then(({ maqdia}) =>{
-
+            
+            getMachinesDay().then(({ maqdia, tarjetas}) =>{
+                console.log(tarjetas)
+                const cards = JSON.parse(tarjetas).map(item => item.fields)
                 const newMachinesDay = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
                     return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
                 })
+                
+                setGeneralState(cards)
                 setMachinesDay(newMachinesDay)
 
             }).catch(e => {
