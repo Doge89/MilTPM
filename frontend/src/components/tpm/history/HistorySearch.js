@@ -24,7 +24,8 @@ function HistorySearch({ setHistory, machines }){
 
     const handleInput = e => setId(e.target.value)
 
-    const handleBtn = () => {
+    const handleBtn = (e) => {
+        e.preventDefault()
         getCard().then(({ card, usuario }) => {
             console.log(card)
             const machine = machines.find(machine => machine.id === card.maquina)
