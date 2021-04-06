@@ -44,7 +44,7 @@ function Form({ children, location }){
         const res = await axios({
             url: `${URL}/andon/pause/`,
             method: 'POST',
-            data: querystring.stringify({ razon: type })
+            data: querystring.stringify({ razon: type, clave: password })
         })
 
         return res.data
