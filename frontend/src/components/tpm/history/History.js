@@ -41,6 +41,7 @@ function History({ machines, setMachine, machine, history, setHistory }){
         if(JSON.stringify(machine !== "{}")){
             console.log('a')
             getHistory().then(({ hist, usuario }) => {
+                console.log(usuario)
                 const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario } })
                 setHistory(history)
             }).catch(e => console.log(e))
