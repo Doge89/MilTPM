@@ -6,8 +6,9 @@ import { HistorySearchContainer } from '../../../styles/tpm'
 import { ButtonSecondary } from '../../../styles/common'
 
 import { URL } from '../../../var'
+import { getDate } from '../../../scripts'
 
-function HistorySearch({ setHistory }){
+function HistorySearch({ setHistory, machines }){
 
     const [id, setId] = useState('')
 
@@ -24,9 +25,10 @@ function HistorySearch({ setHistory }){
     const handleInput = e => setId(e.target.value)
 
     const handleBtn = () => {
-        getCard().then(({ card }) => {
+        getCard().then(({ card, usuario }) => {
             console.log(card)
-            setHistory([card])
+            const machine = machines.find(machine => machine.id === card.maquina)
+            setHistory([{...card, fecha: getDate, id, usuario, maquina: machine }])
         }).catch(e => console.log(e))
     }
 

@@ -411,7 +411,7 @@ export const CardInfo = styled.div`
     }
 `;
 
-export const HistorySearchContainer = styled.div`
+export const HistorySearchContainer = styled.form`
     display: flex;
     flex-direction: row;
     align-items: center;
