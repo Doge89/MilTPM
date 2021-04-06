@@ -132,6 +132,7 @@ function Tpm(){
                     machine={machine}
                     activities={activities}
                     state={state}
+                    machineState={machineState}
                 />
             ):viewType === 'history' ? (
                 <History 
