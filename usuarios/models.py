@@ -6,7 +6,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 # Create your models here.
-
 class UsuariosManager(BaseUserManager):
 
     def create_user(self, username, email, password=None, linea = None):
@@ -45,6 +44,8 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     linea = models.CharField(max_length=50, unique=True, blank=False)
 
+    clave = models.CharField(max_length=50, blank=False, default=None, unique=True)
+
     is_active = models.BooleanField(default=True)
 
     is_staff = models.BooleanField(default=False)
@@ -55,12 +56,12 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD='username'
 
-    REQUIRED_FIELDS = ['email', 'linea']
+    REQUIRED_FIELDS = ['email', 'linea', 'clave']
 
     objects = UsuariosManager()
 
     def __unicode__(self):
-        return "{} {} \n".format(self.username, self.password)
+        return "%s %s %s %s" % (self.id, self.username, self.email, self.linea)
 
     def __repr__(self):
         return self.__unicode__()
@@ -106,7 +107,9 @@ class Andon(models.Model):
     Id = models.AutoField(primary_key=True)
     estatus = models.CharField(max_length=20, blank=True, default='', help_text=_('Estatus'), verbose_name=_('Estado'))
     linea = models.ForeignKey(Linea, on_delete=models.CASCADE, related_name='Estados', default=None)
-
+    registro = models.DateTimeField(verbose_name = _('Registro'), auto_now_add=False, help_text=_('Inicio del andon'), default=None)
+    pause = models.CharField(verbose_name = _('Pause'), help_text=_('Hora de pausa'), max_length=1500, default='', blank=True)
+    active = models.BooleanField(verbose_name=_('Active'), help_text=_('Esta pausado?'), default=True)
     class Meta:
         db_table = 'Andon'
         managed = True

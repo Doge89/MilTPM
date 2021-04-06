@@ -2,7 +2,7 @@ import ast, json, time
 from itertools import chain
 from datetime import datetime
 from .models import infoGeneral, infoProduccion
-from usuarios.models import Usuarios, Linea
+from usuarios.models import Usuarios, Linea, Andon
 from django.shortcuts import render
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, JsonResponse
@@ -23,8 +23,9 @@ def index(request):
 def get(request):
     if request.method == 'GET':
         try:
-            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{request.session['Linea']}", fecha__exact=datetime.date(datetime.now()))) == 0:
-                linUser = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
+            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"MXC001", fecha__exact=datetime.date(datetime.now()))) == 0:
+                #MODIFICAR
+                linUser = Linea.objects.get(usuario_id__username__exact=f"admin")
                 dataInfGeneral = infoGeneral.objects.create(Id = None, linea = linUser, consola = '', job='', mod='')
                 general = infoGeneral.objects.last()
                 print("NO EXISTEN REGISTROS")
@@ -36,18 +37,31 @@ def get(request):
                         datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'00:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general, fecha=datetime.date(datetime.now()))
                     else:
                         datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'{x+1}:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general, fecha=datetime.date(datetime.now()))
-            datosInfProd = _get_objects(Linea = request.session['Linea'])
+            #MODIFICAR
+            datosInfProd = _get_objects(Linea = "MXC001")
             serializedInfProd = serializers.serialize('json', list(datosInfProd))
-            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last() 
-            datLinea = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
+            #MODIFICAR
+            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"MXC001").last() 
+            datLinea = Linea.objects.get(usuario_id__username__exact=f"admin")
             datInfGen = model_to_dict(datInfGen)
+
             serializedInfGen = json.dumps(datInfGen)
             datLinea = model_to_dict(datLinea)
             serializedLinea = json.dumps(datLinea)
             print(serializedInfProd)
             print(serializedInfGen)
             print(serializedLinea)
-            return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea}, status = 200)
+
+            try:
+                andon = Andon.objects.filter(linea_id__linea__exact=f"MXC001")
+                serializedAndon = serializers.serialize('json', list(andon))
+            except Exception as e:
+                print(e)
+                return HttpResponse(status=500)
+            except Andon.DoesNotExist:
+                print("NO EXISTEN REGISTROS EN LA LINEA")
+                return HttpResponse(status=200)
+            return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea, 'Andon': serializedAndon}, status = 200)
         except Exception as e:
             print(e)
         #return HttpResponse(status=200)

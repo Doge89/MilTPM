@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 class mp(models.Model):
     Id = models.AutoField(primary_key=True)
-    linea = models.ForeignKey(Linea, on_delete=models.PROTECT)
+    linea = models.ForeignKey(Linea, on_delete=models.CASCADE)
     fecha = models.DateField(verbose_name = _('Fecha'), auto_now=False, help_text = _('Fecha de registro del MP'))
     area = models.CharField(max_length= 30, verbose_name = _('Area'), help_text = _('Area de la produccion'), blank=False)
     turno = models.CharField(max_length=1, verbose_name = _('Turno'), help_text =_('Turno de la produccion'), blank=False)
