@@ -45,7 +45,7 @@ function Panel({ setMachine, machines, machine, activities }){
 
     const postInfo = () => {
         const {description, cardType} = getDescription()
-        postData({ data: { descripcion: description, categoria: machine.nombre } }).then((data) => {
+        postData({ data: { descripcion: description, categoria: machine.nombre, tipo: cardType } }).then((data) => {
             showCard(description, cardType)
         }).catch(e => {
             console.log(e)
