@@ -3,7 +3,7 @@ import axios from 'axios'
 import querystring from 'querystring'
 
 import { FormContainer } from '../../styles/andon'
-import { ButtonPrimary, ButtonSecondary } from '../../styles/common'
+import { ButtonPrimary, ButtonSecondary, Text } from '../../styles/common'
 
 import { URL } from '../../var'
 
@@ -12,9 +12,11 @@ function Form({ children, location }){
     const [descripction, setDescription] = useState('')
     const [password, setPassword] = useState('')
     const [type, setType] = useState('')
+    const [message, setMessage] = useState('')
     const [timerRunning, setTimerRunning] = useState(false)
     const [timerPaused, setTimerPaused] = useState(false)
     const [rerender, setRerender] = useState(false)
+    const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
 
     const handleInputPassword = e => setPassword(e.target.value)
@@ -62,6 +64,7 @@ function Form({ children, location }){
 
     const pauseTimer = (e) => {
         e.preventDefault()
+        setErr(false)
         fetchPauseTimer().then(() => {
             if(timerPaused){
                 setTimerPaused(false)
@@ -70,8 +73,11 @@ function Form({ children, location }){
                 setTimerPaused(true)
                 localStorage.setItem(`timerPaused${type}`, true)
             }
-            //window.location.reload()
-        }).catch(e => console.log(e))
+        }).catch(e => {
+            setErr(true)
+            if(e.response.status === 401){ return setMessage('La clave es incorrecta.') }
+            setMessage(`No se ha podido ${timerPaused ? 'despausar' : 'pausar'} el cronometro debido a un error en el servidor.`)
+        })
         
     }
     
@@ -84,12 +90,15 @@ function Form({ children, location }){
     }
 
     const endTimer = () => {
+        setErr(false)
         finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)) }).then((data) => {
             console.log(data)
             removeInfoTimer()
             window.location.reload()
         }).catch(e => {
-            console.log(e)
+            setErr(true)
+            if(e.response.status === 401){ return setMessage('La clave es incorrecta.') }
+            setMessage(`No se ha podido ${timerPaused ? 'despausar' : 'pausar'} el cronometro debido a un error en el servidor.`)
         })
     }
 
@@ -223,6 +232,7 @@ function Form({ children, location }){
                     </>
                 )}
             </form>
+            {err && <Text size="1.5vw" color="rgb(254, 13, 46)">{message}</Text>}
         </FormContainer>
     )
 }
