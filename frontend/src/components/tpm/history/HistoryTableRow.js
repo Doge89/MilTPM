@@ -24,8 +24,8 @@ function HistoryTableRow({ length, idx, handleItem, his }){
                 </div>
             </PanelTableCell>
             <PanelTableCell width="25%" className="border">{his.fecha}</PanelTableCell>
-            <PanelTableCell width="25%">{his.usuario}</PanelTableCell>
-            <PanelTableCell width="25%" className="border">{his.tipo ? 'Conforme' : 'No conforme'}</PanelTableCell>
+            <PanelTableCell width="25%" className="border-right">{his.usuario}</PanelTableCell>
+            <PanelTableCell width="25%" >{his.tipo ? 'Conforme' : 'No conforme'}</PanelTableCell>
         </div>
     )
 }
