@@ -35,7 +35,7 @@ def _get_panel_inf(request):
     return HttpResponse(status=405)
 
 #POSTEA LA INFORMACION SOLICITADA
-@require_http_methods(['POST'])
+@require_http_methods(['POST', 'GET'])
 def _post_tpm_inf(request):
     if request.method == 'POST':
         try:
@@ -45,6 +45,21 @@ def _post_tpm_inf(request):
             maquina = Maquina.objects.get(nombre__exact=data['maquina'])
             for i in range(len(data['nombre'])):
                 actividad = Actividades.objects.create(Id = None, nombre = data['nombre'][i], maquinas = maquina,tipo=data['tipo'][i], status=data['status'][i], registro=datetime.now())
+            tarjeta = Tarjetas.objects.create()
+            return HttpResponse(status=201)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)     
+    return HttpResponse(status=405)
+
+@require_http_methods(['POST'])
+def _get_act_machine(request):
+    if request.method == 'POST':
+        try:
+            data = request.POST.get('id')
+            actividades = Actividades.objects.filter(maquina_id__exact=data)
+            serializedAct = serializers.serialize('json', list(actividades))
+            return JsonResponse({'actividades': serializedAct}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -208,6 +223,7 @@ def _get_machine_card(request):
             print(e)
         except Tarjetas.DoesNotExist:
             print("No existe la tarjetas de la maquina")
+            return HttpResponse(status = 204)
     return HttpResponse(status =405)
 
 #POST PANEL
