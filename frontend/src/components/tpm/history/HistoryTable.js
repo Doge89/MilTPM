@@ -12,11 +12,10 @@ function HistoryTable({ history, showCard }){
         <Table alignItems="center">
             <div className="table">
                 <div className="table-row">
-                    <PanelTableCell width="20%" className="header">ID</PanelTableCell>
-                    <PanelTableCell width="20%" className="header border">Registro</PanelTableCell>
-                    <PanelTableCell width="20%" className="header">Usuario</PanelTableCell>
-                    <PanelTableCell width="20%" className="header border">Tarjeta</PanelTableCell>
-                    <PanelTableCell width="20%" className="header">Máquina</PanelTableCell>
+                    <PanelTableCell width="25%" className="header">ID</PanelTableCell>
+                    <PanelTableCell width="25%" className="header border">Registro</PanelTableCell>
+                    <PanelTableCell width="25%" className="header">Usuario</PanelTableCell>
+                    <PanelTableCell width="25%" className="header border">Tarjeta</PanelTableCell>
                 </div>
                 {history.map((his, idx) => (
                     <HistoryTableRow 

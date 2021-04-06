@@ -10,6 +10,7 @@ import Card from '../Card'
 import { Container } from '../../../styles/tpm'
 
 import { URL } from '../../../var'
+import { twoDigits } from '../../../scripts'
 
 function History({ machines, setMachine, machine, history, setHistory }){
 
@@ -31,11 +32,16 @@ function History({ machines, setMachine, machine, history, setHistory }){
         setCardInfo(history[idx])
     }
 
+    const getDate = (date) => {
+        const newDate = new Date(date)
+        return `${newDate.getDate()}/${newDate.getMonth() + 1}/${newDate.getFullYear()} ${twoDigits(newDate.getHours())}:${twoDigits(newDate.getMinutes())}`
+    }
+
     useEffect(() => {
         if(JSON.stringify(machine !== "{}")){
             console.log('a')
-            getHistory().then(({ hist }) => {
-                const history = JSON.parse(hist).map(item => item.fields)
+            getHistory().then(({ hist, usuario }) => {
+                const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario } })
                 setHistory(history)
             }).catch(e => console.log(e))
         }
