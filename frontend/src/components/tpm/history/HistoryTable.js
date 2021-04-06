@@ -14,8 +14,8 @@ function HistoryTable({ history, showCard }){
                 <div className="table-row">
                     <PanelTableCell width="25%" className="header">ID</PanelTableCell>
                     <PanelTableCell width="25%" className="header border">Registro</PanelTableCell>
-                    <PanelTableCell width="25%" className="header">Usuario</PanelTableCell>
-                    <PanelTableCell width="25%" className="header border">Tarjeta</PanelTableCell>
+                    <PanelTableCell width="25%" className="header border-right">Usuario</PanelTableCell>
+                    <PanelTableCell width="25%" className="header">Tarjeta</PanelTableCell>
                 </div>
                 {history.map((his, idx) => (
                     <HistoryTableRow 

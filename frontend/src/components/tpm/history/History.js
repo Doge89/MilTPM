@@ -12,7 +12,7 @@ import { Container } from '../../../styles/tpm'
 import { URL } from '../../../var'
 import { twoDigits } from '../../../scripts'
 
-function History({ machines, setMachine, machine, history, setHistory }){
+function History({ machines, setMachine, machine, history, setHistory, line }){
 
     const [cardInfo, setCardInfo] = useState({})
     const [card, setCard] = useState(false)
@@ -41,7 +41,8 @@ function History({ machines, setMachine, machine, history, setHistory }){
         if(JSON.stringify(machine !== "{}")){
             console.log('a')
             getHistory().then(({ hist, usuario }) => {
-                const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario } })
+                console.log(usuario)
+                const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario, maquina: machine.nombre } })
                 setHistory(history)
             }).catch(e => console.log(e))
         }
@@ -61,7 +62,7 @@ function History({ machines, setMachine, machine, history, setHistory }){
                 showCard={showCard} 
             />
             {card && (
-                <Card info={cardInfo} history edit/>
+                <Card info={cardInfo} history edit line={line}/>
             )}
         </Container>
     )

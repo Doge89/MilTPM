@@ -6,7 +6,7 @@ import { ButtonPrimary, Container } from '../../styles/common'
 
 import { URL } from '../../var'
 
-function Card({ info, edit, history }){
+function Card({ info, edit, history, line }){
 
     const ref = useRef(null)
 
@@ -60,7 +60,7 @@ function Card({ info, edit, history }){
                     </CardInfo>
                     <CardInfo>
                         <span>Localización: </span>
-                        <div>{info?.localizacion}</div>
+                        <div>{line || info?.localizacion}</div>
                     </CardInfo>
                     {!info.tipo && (
                         <>
