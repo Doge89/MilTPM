@@ -30,11 +30,13 @@ function History({ machines, setMachine, machine, history }){
     }
 
     useEffect(() => {
-        getHistory().then(({ hist }) => {
-            const history = JSON.parse(hist).map(item => item.fields)
-            console.log(history)
-        }).catch(e => console.log(e))
-    }, [])
+        if(JSON.stringify(machine !== "{}")){
+            getHistory().then(({ hist }) => {
+                const history = JSON.parse(hist).map(item => item.fields)
+                console.log(history)
+            }).catch(e => console.log(e))
+        }
+    }, [machine])
 
     return(
         <Container>
