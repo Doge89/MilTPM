@@ -17,16 +17,15 @@ function HistoryTableRow({ length, idx, handleItem, his }){
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
         >
-            <PanelTableCell width="20%" className={hover ? 'hover' : ''} >
+            <PanelTableCell width="25%" className={hover ? 'hover' : ''} >
                 <img src={pencil} alt="Icono de un lapiz" className="img-effect" onClick={() => handleItem(idx)}/>
                 <div>
                     <span>{his.id}</span>
                 </div>
             </PanelTableCell>
-            <PanelTableCell width="20%" className="border">{his.fecha}</PanelTableCell>
-            <PanelTableCell width="20%">{his.usuario}</PanelTableCell>
-            <PanelTableCell width="20%" className="border">{his.tipo ? 'Conforme' : 'No conforme'}</PanelTableCell>
-            <PanelTableCell width="20%">{his.maquina}</PanelTableCell>
+            <PanelTableCell width="25%" className="border">{his.fecha}</PanelTableCell>
+            <PanelTableCell width="25%">{his.usuario}</PanelTableCell>
+            <PanelTableCell width="25%" className="border">{his.tipo ? 'Conforme' : 'No conforme'}</PanelTableCell>
         </div>
     )
 }
