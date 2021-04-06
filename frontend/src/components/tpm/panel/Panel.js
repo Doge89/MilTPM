@@ -33,27 +33,27 @@ function Panel({ setMachine, machines, machine, activities }){
 
     const getDescription = () => {
         let description = ''
+        let cardType = true
         for(let i = 0; i < context.status.length; i++){
             if(!context.status[i].status){
                 cardType = false
                 description += `${context.status[i].activityName},`
             }
         }
-        return description
+        return { description, cardType }
     }
 
     const postInfo = () => {
-        const description = getDescription()
+        const {description, cardType} = getDescription()
         postData({ data: { descripcion: description, categoria: machine.nombre } }).then((data) => {
-            showCard(description)
+            showCard(description, cardType)
         }).catch(e => {
             console.log(e)
         })
     }
 
-    const showCard = (description) => {
+    const showCard = (description, cardType) => {
         setCard(!card)
-        let cardType = true
         setDescription(description)
         setCardType(cardType)
     }
