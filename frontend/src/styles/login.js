@@ -104,6 +104,11 @@ export const FormContainer = styled.form`
             font-size: 5vw;
         }
 
+        span{
+            margin: 2vh 0;
+            font-size: 5vw;
+        }
+
         h1{
             font-size: 12vw;
             width: 60vw;

@@ -62,27 +62,15 @@ function Form(){
 
     const resize = () => {
         if(window.screen.width > maxWidth){ setisMobile(false) }
-        else{ setisMobile(true) }
-    }
-
-    const seeInputUser = () => {
-        if(window.innerWidth <= maxWidth){
-            document.getElementById('user').scrollIntoView({ behavior: 'smooth' })
-        }
+        else{ setisMobile(true); console.log('a') }
     }
 
     const handleOpenKeyboard = () => {
-        if(window.innerWidth <= maxWidth){
-            console.log('a')
-            setKeyboeardOpen(true)
-        }
+        if(window.innerWidth <= maxWidth){ setKeyboeardOpen(true) }
     }
 
     const handleCloseKeyboard = () => {
-        if(window.innerWidth <= maxWidth){
-            console.log('a')
-            setKeyboeardOpen(false)
-        }
+        if(window.innerWidth <= maxWidth){ setKeyboeardOpen(false) }
     }
 
     useEffect(() => {
@@ -99,7 +87,7 @@ function Form(){
     }, [])
 
     return(
-        <FormContainer padding='5% 0 10% 0'> 
+        <FormContainer padding={keyboeardOpen ? '5% 0 50vh 0' : '5% 0 10% 0'}> 
             <div id="logo-mobile">
                 <img src={logo} />
             </div>
@@ -128,7 +116,7 @@ function Form(){
             </div>  
             <CSRFToken />
             <button onClick={handleBtn}>Ingresar</button>
-            {err && <span color="white" size="1.5vw">{message}</span>}
+            {err && <span color="white" >{message}</span>}
         </FormContainer>
     )
 }
