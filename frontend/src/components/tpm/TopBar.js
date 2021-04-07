@@ -14,7 +14,7 @@ function TopBar({ setViewType, viewType }){
     const logout = async () => {
         const res = await axios({
             url: `${URL}/login/validate/logout/`,
-            method: 'POST'
+            method: 'GET'
         })
 
         return res.data
