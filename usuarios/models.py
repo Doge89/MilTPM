@@ -8,18 +8,18 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 # Create your models here.
 class UsuariosManager(BaseUserManager):
 
-    def create_user(self, username, email, password=None, linea = None):
+    def create_user(self, username, email, password=None, linea = None, clave = None):
 
         if username is None:
             raise TypeError("Los usuarios deben tener un nombre de Usuario")
 
-        user = self.model(username = username, email = self.normalize_email(email), linea = linea)
+        user = self.model(username = username, email = self.normalize_email(email), linea = linea, clave = clave)
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, username, email, password, linea):
+    def create_superuser(self, username, email, password, linea, clave):
 
         if password is None:
             raise TypeError("Superusuarios deben tener una contrasena")
@@ -27,7 +27,10 @@ class UsuariosManager(BaseUserManager):
         if linea is None:
             raise TypeError("Superusuarios deben de tener una linea")
 
-        user = self.create_user(username, email, password, linea)
+        if clave is None:
+            raise TypeError("Superusuarios deben de tener una clave")
+
+        user = self.create_user(username, email, password, linea, clave)
         user.is_superuser = True
         user.is_staff = True
         user.save()
