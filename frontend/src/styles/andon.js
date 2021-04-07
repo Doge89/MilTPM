@@ -5,11 +5,13 @@ import { device } from './device'
 const red = "rgb(254, 13, 46)"
 
 export const FormContainer = styled.div`
-    display: flex;
+    display: flex; 
     height: 84%;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    background-color: rgb(0,0,0);
+    
 
     h1{
         font-size: 1.5vw;
@@ -111,7 +113,7 @@ export const FormContainer = styled.div`
             }
 
             textarea{
-                height: 25vh;
+                height: 20vh;
                 font-size: 4vw;
                 padding: 1vh 2vw;
                 margin: 2vh 0;
@@ -124,6 +126,12 @@ export const FormContainer = styled.div`
                 width: 100%;
                 margin-bottom: 2vh;
                 height: 5vh;
+            }
+
+            input{
+                font-size: 4vw;
+                margin: 2vh 0;
+                padding: 0.5vh 3vw;
             }
         }
     }

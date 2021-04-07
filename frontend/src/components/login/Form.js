@@ -15,6 +15,7 @@ function Form(){
 
     const [err, setErr] = useState(false)
     const [isMobile, setisMobile] = useState(false)
+    const [keyboeardOpen, setKeyboeardOpen] = useState(false)
     const [message, setMessage] = useState('')
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('') 
@@ -36,13 +37,12 @@ function Form(){
         return res.data
     }
 
-    const isLogged = async (data) => {
+    const isLogged = async () => {
         const res = await axios({
             url : `${URL}/login/validate/`,
             method: 'GET',
         })
 
-        console.log(res.data)
         return res.data
     }
 
@@ -62,7 +62,15 @@ function Form(){
 
     const resize = () => {
         if(window.screen.width > maxWidth){ setisMobile(false) }
-        else{ setisMobile(true) }
+        else{ setisMobile(true); console.log('a') }
+    }
+
+    const handleOpenKeyboard = () => {
+        if(window.innerWidth <= maxWidth){ setKeyboeardOpen(true) }
+    }
+
+    const handleCloseKeyboard = () => {
+        if(window.innerWidth <= maxWidth){ setKeyboeardOpen(false) }
     }
 
     useEffect(() => {
@@ -71,6 +79,7 @@ function Form(){
         isLogged().then((data) => {
             if(data.Logged){ window.location.replace('/hxh') }
         }).catch(e => console.log(e))
+        
 
         return () => {
             window.removeEventListener('resize', resize)
@@ -78,7 +87,7 @@ function Form(){
     }, [])
 
     return(
-        <FormContainer> 
+        <FormContainer padding={keyboeardOpen ? '5% 0 50vh 0' : '5% 0 10% 0'}> 
             <div id="logo-mobile">
                 <img src={logo} />
             </div>
@@ -90,6 +99,8 @@ function Form(){
                     value={user}
                     onChange={handleInputUser}
                     id="user"
+                    onFocus={handleOpenKeyboard}
+                    onBlur={handleCloseKeyboard}
                 />
             </div>
             <div>
@@ -99,11 +110,13 @@ function Form(){
                     onChange={handleInputPass}
                     id="password"
                     type="password"
+                    onFocus={handleOpenKeyboard}
+                    onBlur={handleCloseKeyboard}
                 />
             </div>  
             <CSRFToken />
             <button onClick={handleBtn}>Ingresar</button>
-            {err && <span color="white" size="1.5vw">{message}</span>}
+            {err && <span color="white" >{message}</span>}
         </FormContainer>
     )
 }

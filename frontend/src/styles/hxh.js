@@ -41,7 +41,7 @@ export const InfoContainer = styled.div`
                     font-size: 3.5vw;
                     color: white;
                     border-bottom: 1px solid white;
-                    padding: 1vh 2vw;
+                    padding: 2.5vw 2vw;
                     outline: none;
                 }
             }

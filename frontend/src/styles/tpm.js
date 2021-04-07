@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { device } from './device'
+
 const red = "rgb(254, 13, 46)"
 const gray = "rgb(80, 80, 80)"
 
@@ -13,9 +15,15 @@ export const TopBar = styled.ul`
     list-style: none;
     justify-content: space-between;
     height: 4vh;
+
+    @media ${device.tablet} {
+        flex-wrap: wrap;   
+        height: fit-content;
+    }
+    
 `;
 
-export const TopBarItem = styled.ul`
+export const TopBarItem = styled.li`
     color: white;
     font-family: Arial, Helvetica, sans-serif;
     font-size: ${props => props.hover ? '1.4vw' : '1.2vw'};
@@ -26,6 +34,14 @@ export const TopBarItem = styled.ul`
     text-align: center;
 
     &:hover { font-size: 1.4vw }
+
+    @media ${device.tablet} {
+        font-size: 5vw;
+        width: 40%;
+        margin: 2vw 0;
+
+        &:hover{ font-size: 5vw }
+    }
 `;
 
 
@@ -49,6 +65,17 @@ export const InfoContainer = styled.div`
         font-size: 1.5vw;
         font-family: Arial, Helvetica, sans-serif;
     }
+
+    @media ${device.tablet} {
+        width: 100%;
+        padding: 0;
+        
+        div{
+            min-width: 30vw;
+            font-size: 5vw;
+        }
+
+    }
 `;
 
 export const Container = styled.div`
@@ -62,6 +89,12 @@ export const Container = styled.div`
         font-size: 1.5vw;
         font-family: Arial, Helvetica, sans-serif;
         color: ${gray};
+    }
+
+    @media ${device.tablet} {
+        
+        h1{ font-size: 5vw; }
+
     }
 `;
 
@@ -80,7 +113,7 @@ export const SatusContainer = styled.div`
         align-items: center;
 
         span {
-            font-family:Arial, Helvetica, sans-serif;
+            font-family:Arial, Helvetica, sans-serif; 
             font-size: 1.2vw;
             color: ${gray};
             font-weight: bold;
@@ -114,6 +147,12 @@ export const SelectorContainer = styled.div`
         flex-direction: row;
         align-items: center;
         flex-wrap: wrap;
+    }
+
+    @media ${device.tablet} {
+        
+        h1{ font-size: 5vw; }
+
     }
 `;
 

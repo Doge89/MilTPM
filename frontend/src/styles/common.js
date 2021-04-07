@@ -174,7 +174,7 @@ export const ClockSlide = styled.div`
         top: 5vh;
         right: 0;
         background-color: white;
-        height: 5vh;
+        height: 10vw;
         width: 40vw;
         border-bottom-left-radius: 5vh;
         border-top-left-radius: 5vh;
