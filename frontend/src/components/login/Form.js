@@ -15,6 +15,7 @@ function Form(){
 
     const [err, setErr] = useState(false)
     const [isMobile, setisMobile] = useState(false)
+    const [keyboeardOpen, setKeyboeardOpen] = useState(false)
     const [message, setMessage] = useState('')
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('') 
@@ -36,13 +37,12 @@ function Form(){
         return res.data
     }
 
-    const isLogged = async (data) => {
+    const isLogged = async () => {
         const res = await axios({
             url : `${URL}/login/validate/`,
             method: 'GET',
         })
 
-        console.log(res.data)
         return res.data
     }
 
@@ -65,12 +65,33 @@ function Form(){
         else{ setisMobile(true) }
     }
 
+    const seeInputUser = () => {
+        if(window.innerWidth <= maxWidth){
+            document.getElementById('user').scrollIntoView({ behavior: 'smooth' })
+        }
+    }
+
+    const handleOpenKeyboard = () => {
+        if(window.innerWidth <= maxWidth){
+            console.log('a')
+            setKeyboeardOpen(true)
+        }
+    }
+
+    const handleCloseKeyboard = () => {
+        if(window.innerWidth <= maxWidth){
+            console.log('a')
+            setKeyboeardOpen(false)
+        }
+    }
+
     useEffect(() => {
         resize()
         window.addEventListener('resize', resize)
         isLogged().then((data) => {
             if(data.Logged){ window.location.replace('/hxh') }
         }).catch(e => console.log(e))
+        
 
         return () => {
             window.removeEventListener('resize', resize)
@@ -78,7 +99,7 @@ function Form(){
     }, [])
 
     return(
-        <FormContainer> 
+        <FormContainer padding='5% 0 10% 0'> 
             <div id="logo-mobile">
                 <img src={logo} />
             </div>
@@ -90,6 +111,8 @@ function Form(){
                     value={user}
                     onChange={handleInputUser}
                     id="user"
+                    onFocus={handleOpenKeyboard}
+                    onBlur={handleCloseKeyboard}
                 />
             </div>
             <div>
@@ -99,6 +122,8 @@ function Form(){
                     onChange={handleInputPass}
                     id="password"
                     type="password"
+                    onFocus={handleOpenKeyboard}
+                    onBlur={handleCloseKeyboard}
                 />
             </div>  
             <CSRFToken />

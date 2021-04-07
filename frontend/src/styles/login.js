@@ -72,7 +72,7 @@ export const FormContainer = styled.form`
         backdrop-filter: blur(0);
         align-items: flex-start;
         width: 90%;
-        padding: 0 5%;
+        padding: ${props => props.padding};
         min-height: 90%;
         padding-bottom: 10%;
 
@@ -84,7 +84,7 @@ export const FormContainer = styled.form`
 
             input{
                 width: 60vw;
-                height: 4vh;
+                height: 10vw;
                 background-color: transparent;
                 color: white;
                 border: 2px solid white;
