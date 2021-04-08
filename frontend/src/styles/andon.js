@@ -96,7 +96,7 @@ export const FormContainer = styled.div`
 
     @media ${device.tablet} {
         justify-content: flex-start;
-        background-color: rgb(0,0,0, 0.5);
+        background-color: rgb(0,0,0);
 
         h1{
             font-size: 5vw;
