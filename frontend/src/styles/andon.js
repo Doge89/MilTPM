@@ -11,8 +11,6 @@ export const FormContainer = styled.div`
     justify-content: center;
     flex-direction: column;
     
-    
-
     h1{
         font-size: 1.5vw;
         font-family: Arial, Helvetica, sans-serif; 
