@@ -74,3 +74,31 @@ class Actividades(models.Model):
 
     def __repr__(self):
         return self.__unicode__()
+
+class sel_com(models.Model):
+    Id = models.AutoField(primary_key=True)
+    com = models.CharField(max_length=10, help_text=_('Puerto COM'), verbose_name=_('COM'), blank=True, default='')
+
+    class Meta:
+        db_table = 'sel_com'
+        managed = True
+        verbose_name = 'selCom'
+        verbose_name_plural = 'selComs'
+
+class com(models.Model):
+    Id = models.AutoField(primary_key=True)
+    com = models.ForeignKey(sel_com, on_delete=models.CASCADE, related_name='selCom')
+    user = models.ForeignKey(Usuarios, on_delete=models.CASCADE, related_name='userCom')
+    registro = models.DateTimeField(verbose_name=_('Fecha'), auto_now_add=False, help_text=_('Cambio de COM'))
+    
+    class Meta:
+        db_table = 'comhist'
+        managed = True
+        verbose_name = 'Com'
+        verbose_name_plural = 'Puertos'
+
+    def __unicode__(self):
+        return "%s %s" % (self.com, self.registro)
+
+    def __repr__(self):
+        return self.__unicode__()

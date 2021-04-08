@@ -20,7 +20,7 @@ class UsuariosManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, email, password, linea, clave):
-
+        #print(clave)
         if password is None:
             raise TypeError("Superusuarios deben tener una contrasena")
 

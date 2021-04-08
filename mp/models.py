@@ -35,7 +35,7 @@ class mp(models.Model):
         verbose_name_plural = 'Mps'
 
     def __unicode__(self):
-        return " %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" % (self.Id, self.linea, self.fecha, self.area, self.turno, self.tecnico, self.superMTTO, self.superPRDN, self.nombre, self.hora, self.tipoMaquina, self.tagMaquina, self.descripcion, self.tipoFalla, self.afecta, self.horaInicio, self.horaFinal, self.reparacion, self.refacciones, self.causa, self.tiempoMuerto, self.validado)
+        return " %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s" % (self.Id, self.linea, self.fecha, self.area, self.turno, self.tecnico,self.tecnicoJefe ,self.superMTTO, self.superPRDN, self.nombre, self.hora, self.tipoMaquina, self.tagMaquina, self.descripcion, self.tipoFalla, self.afecta, self.horaInicio, self.horaFinal, self.reparacion, self.refacciones, self.causa, self.tiempoMuerto, self.validado)
 
     def __repr__(self):
         return self.__unicode__()

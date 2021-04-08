@@ -2,15 +2,15 @@ import ast, json
 from datetime import datetime
 from django.core import serializers
 from django.shortcuts import render
+from django.forms import model_to_dict
 from usuarios.models import Usuarios, Linea
-from django.forms import model_to_dict
 from django.http import HttpResponse, JsonResponse
-from django.forms import model_to_dict
+from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from django.views.decorators.http import require_http_methods
-from .models import Cronograma, Tarjetas, Maquina, Actividades
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from .models import Cronograma, Tarjetas, Maquina, Actividades, sel_com, com
 # Create your views here.
-
+hasher = PBKDF2PasswordHasher()
 #INDICE 
 def index(request):
     if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
@@ -25,7 +25,7 @@ def _get_panel_inf(request):
             dia = datetime.now().weekday()
             cronAct = Cronograma.objects.filter(dia__exact=dia)
             serializedCronAct = serializers.serialize('json', list(cronAct))
-            estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
+            estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"MXC001", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
             serializedEstados = serializers.serialize('json', list(estados))
             print(serializedEstados)
             return JsonResponse({'maqdia': serializedCronAct, "tarjetas": serializedEstados}, status=200)
@@ -47,8 +47,8 @@ def _post_tpm_inf(request):
         data = ast.literal_eval(data)
         print(data)
         maquina = Maquina.objects.get(nombre__exact=data['categoria'])
-        linea = Linea.objects.get(linea__exact=f"{request.session['Linea']}")
-        user = Usuarios.objects.get(username__exact=f"{request.session['Usuario']}")
+        linea = Linea.objects.get(linea__exact=f"MXC001")
+        user = Usuarios.objects.get(username__exact=f"admin")
         tarjeta = Tarjetas.objects.create(Id=None, maquina=maquina, descripcion=data['descripcion'], usuario = user, area='ensamble', categoria=data['categoria'], localizacion=linea, tipo=data['tipo'], fecha=datetime.now())
         return HttpResponse(status=201)     
     return HttpResponse(status=405)
@@ -80,7 +80,7 @@ def cronograma(request):
             serializedCronograma = serializers.serialize('json', list(cronograma))
             print(serializedMaquinas)
             print(serializedCronograma)
-            return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": request.session['Linea'], "usuario": request.session['Usuario']}, status = 200)
+            return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": "MXC001", "usuario": "admin"}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -131,8 +131,8 @@ def usuarios(request):
                 "username": [i.username for i in usuarios],
                 "email": [i.email for i in usuarios],
                 "linea": [i.linea for i in usuarios],
+                "clave": [i.clave for i in usuarios]
             } 
-                
             print(serializedUsuarios)
             return JsonResponse({'usuarios': serializedUsuarios}, status=200)
         except Exception as e:
@@ -143,7 +143,7 @@ def usuarios(request):
             data = request.POST.get('data')
             print(data)
             data = ast.literal_eval(data)
-            user = Usuarios.objects.create_superuser(username=data['user'], email=data['email'], password=data['password'], linea=data['linea'])
+            user = Usuarios.objects.create_superuser(username=data['user'], email=data['email'], password=data['password'], linea=data['linea'], clave = data['clave'])
             serialized = {
                 "id": user.id,
                 "username": user.username,
@@ -183,7 +183,8 @@ def _modify_user(request):
             print(data)
             user = Usuarios.objects.get(pk=data['id'])
             user.username = data['user']
-            user.password = data['password']
+            password = hasher.encode(data['password'], hasher.salt())
+            user.password = password
             user.linea = data['linea']
             user.email = data['email']
             user.save()
@@ -193,6 +194,22 @@ def _modify_user(request):
             print(e)
     return HttpResponse(status = 405)
 
+@require_http_methods(['POST', 'GET'])
+@csrf_exempt
+def _select_com(request):
+    if request.method == 'GET':
+        pass
+    else:
+        try:
+            data = request.POST.get('com')
+            com = sel_com.objects.get(pk=1)
+            com.com = data
+            com.save()
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)
+    return HttpResponse(status=405)
+
 #HISTORIAL
 @require_http_methods(['POST'])
 @csrf_exempt
@@ -200,8 +217,8 @@ def _machine_history(request):
     if request.method == 'POST':
         try:
             machine = request.POST.get('maquina')
-            user = Usuarios.objects.get(username__exact=f"{request.session['Usuario']}")
-            hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", maquina_id__nombre__exact=f"{machine}")
+            user = Usuarios.objects.get(username__exact=f"admin")
+            hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"MXC001", maquina_id__nombre__exact=f"{machine}")
             serializedTarj = serializers.serialize('json', list(hisTarj))
             print(serializedTarj)
             return JsonResponse({'hist': serializedTarj, 'Usuario': user.username}, status = 200)
@@ -240,7 +257,7 @@ def _get_machine_card_by_id(request):
             Tarj = Tarjetas.objects.get(Id__exact=Id)
             serializedTarj = model_to_dict(Tarj)
             
-            return JsonResponse({'card': serializedTarj, "usuario": request.session['Usuario']}, status = 200)
+            return JsonResponse({'card': serializedTarj, "usuario": "admin"}, status = 200)
         except Tarjetas.DoesNotExist:
             print("No existe la Tarjeta")
             return JsonResponse({'mensaje': "No existen registros"},status = 200)

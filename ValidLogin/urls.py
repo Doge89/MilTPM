@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.validation),
-    path('logout/', views.loggout)
+    path('logout/', views.loggout),
+    path('token/', views._token_validation)
 ]

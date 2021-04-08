@@ -16,8 +16,8 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = os.path.join(BASE_DIR, 'frontend\\build')
 
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'frontend\\build')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -126,7 +126,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'USER': 'root',
         'PASSWORD': '',
-        'NAME': 'pruebas_mw_3',
+        'NAME': 'pruebas_mw_4',
     }
 }
 
