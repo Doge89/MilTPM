@@ -8,11 +8,11 @@ import { Text } from '../../../styles/common'
 function Table({ searched, data, setReport }){
     return(
         searched && (
-            <TableContainer width="100%" alignItems="center" tableWidth="80%">
+            <TableContainer width="100%" alignItems="center" tableWidth="80%" mp>
                 {data.length === 0 ? (
-                    <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="0 auto">No se ha encontrado ningún reporte que coincida con la busqueda</Text>
+                    <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="0 auto" className="error">No se ha encontrado ningún reporte que coincida con la busqueda</Text>
                 ):(
-                    <div className="table">
+                    <div className="table table-desktop">
                         <div className="table-row">
                             <PanelTableCell className="header" width="20%">ID</PanelTableCell>
                             <PanelTableCell className="header border" width="20%">Línea</PanelTableCell>

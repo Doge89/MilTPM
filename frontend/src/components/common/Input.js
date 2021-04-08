@@ -16,6 +16,7 @@ function Input({ label, value, setValue, type, id, className, width, woLabel, in
             width={width}
             flexDirection={flexDirection}
             margin={margin}
+            className="input"
         >
             {!woLabel && (
                 <Label 

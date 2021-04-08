@@ -13,7 +13,7 @@ import { appContext } from '../../../reducers/ProviderTPM'
 
 import { URL } from '../../../var'
 
-function Panel({ setMachine, machines, machine, activities, state, machineState }){
+function Panel({ setMachine, machines, machine, activities, state, machineState, line, user }){
 
     const context = useContext(appContext)
 
@@ -70,11 +70,11 @@ function Panel({ setMachine, machines, machine, activities, state, machineState 
                 <>
                 <SatusContainer>
                     <div>
-                        <span>Estado general: </span>
+                        <span>Estado general </span>
                         <Status color={state}/>
                     </div>
                     <div>
-                        <span>{machine.nombre}</span>
+                        <span>{machine.nombre} </span>
                         <Status color={machineState}/>
                     </div>
                 </SatusContainer>
@@ -89,14 +89,14 @@ function Panel({ setMachine, machines, machine, activities, state, machineState 
                         info={{
                             tipo: cardType,
                             maquina: machine.nombre,
-                            usuario: 'admin',
+                            usuario: user,
                             area: 'Ensamble',
-                            localizacion: 'linea 4',
-                            descripcion: description.split(',').map(item => (
-                                <>
+                            localizacion: line,
+                            descripcion: description.split(',').map((item, idx) => (
+                                <React.Fragment key={idx}>
                                     {item}
                                     <br/>
-                                </>
+                                </React.Fragment>
                             ))
                         }}
                     />

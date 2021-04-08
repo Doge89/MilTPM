@@ -9,6 +9,8 @@ import { HistoryTableContainer } from '../styles/mp'
 
 import { appContext } from '../reducers/ProviderMP'
 
+import { maxWidth } from '../var'
+
 function MpHistory(){
 
     const context = useContext(appContext)
@@ -18,6 +20,8 @@ function MpHistory(){
     const [searched, setSearched] = useState(false)
 
     useEffect(() => {
+        document.getElementById('root').style.overflowY = 'auto'
+        if(window.innerWidth < maxWidth){ document.getElementById('root').style.backgroundColor = 'black' }
         if(JSON.stringify(report) !== "{}"){
             console.log(report)
             context.dispatchType({ type: 'SET', value: report.area })

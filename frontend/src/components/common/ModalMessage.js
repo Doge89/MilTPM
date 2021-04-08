@@ -2,15 +2,17 @@ import React from 'react'
 import Modal from 'react-modal';
 
 import { ButtonPrimary, Text, Title, ButtonSecondary, Container, ModalContainer } from '../../styles/common'
+
+import { maxWidth } from '../../var'
  
 const customStyles = {
     content : {
-        top                   : '40%',
-        left                  : '30%',
+        top                   : window.innerWidth <= maxWidth ? '30%' : '40%',
+        left                  : window.innerWidth <= maxWidth ? '10%' : '30%',
         right                 : 'auto',
         bottom                : 'auto',
-        width                 : '40%',
-        height                : '20%'
+        width                 : window.innerWidth <= maxWidth ? '70%' : '40%',
+        height                : window.innerWidth <= maxWidth ? '30%' : '20%'
     },overlay:{
         zIndex                : 3
     }
@@ -39,7 +41,8 @@ function ModalMessage({ title, text, success, cancel, modalOpen, closeModal }){
                         flexDirection="row"
                         alignItems="center"
                         justifyContent="space-between"
-                >
+                        id="btn-modal-container"
+                    >
                     <ButtonSecondary width="10vw" height="4vh" onClick={cancel}>Cancelar</ButtonSecondary>
                     <ButtonPrimary width="10vw" height="4vh" onClick={success}>Aceptar</ButtonPrimary>
                 </Container>

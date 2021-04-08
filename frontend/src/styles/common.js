@@ -91,6 +91,7 @@ export const Input = styled.input`
         border-bottom: 1px solid rgb(83, 83, 83);
     }
     &.text-align{ text-align: center; }
+
 `;
 
 export const Label = styled.label`
@@ -153,6 +154,7 @@ export const NavbarMobile = styled.div`
         top: 0;
         right: 0;
         overflow-x: hidden;
+        z-index: 3;
 
         #navbar-content{
             width: 60vw;
@@ -251,6 +253,13 @@ export const ButtonPrimary = styled.button`
         transition: all 0.1s;
         font-size: 1.2vw;
     }
+
+    @media ${device.tablet} {
+        font-size: 4vw;
+        width: 85vw;
+        height: 12vw;
+        margin-bottom: 4vh;
+    }
 `
 
 export const ButtonSecondary = styled.button`
@@ -273,8 +282,14 @@ export const ButtonSecondary = styled.button`
         &.size-effect{
             transition: all 0.1s;
             font-size: 1.2vw;
-        }
-        
+        }  
+    }
+
+    @media ${device.tablet} {
+        font-size: 4vw;
+        width: 85vw;
+        height: 12vw;
+        margin-bottom: 4vh;
     }
 `
 
@@ -308,6 +323,23 @@ export const ModalContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    @media ${device.tablet}{
+        span{
+            font-size: 4vw;
+            text-align: center;
+            margin: 2vh 0;
+        }
+
+        div{
+            width: 100%;
+            justify-content: space-around;
+            button{
+                width: 40%;
+                margin: 0;
+            }  
+        }
+    }
 `;
 
 export const RadioButtonContainer = styled.div`
@@ -340,5 +372,24 @@ export const RadioButtonContainer = styled.div`
         font-size: 1vw;
         color: ${props => props.color || 'black'};
         margin-left: 1vw;
+    }
+
+    @media ${device.tablet}{
+        .radio-button{
+            width: 5vw;
+            height: 5vw;
+            border-radius: 5vw;
+            
+            div{
+                width: 4.5vw;
+                height: 4.5vw;
+                border-radius: 4.5vw;
+            }
+        }
+
+        span{
+            color: white;
+            font-size: 4vw;
+        }
     }
 `;

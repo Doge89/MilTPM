@@ -6,16 +6,16 @@ import querystring from 'querystring'
 import { CreateUserForm, CardInfo  } from '../../../styles/tpm'
 import { ButtonPrimary, Text, ModalContainer } from '../../../styles/common'
 
-import { URL } from '../../../var'
+import { URL, maxWidth } from '../../../var'
  
 const customStyles = {
     content : {
-        top                   : '15%',
-        left                  : '30%',
+        top                   :  window.innerWidth <= maxWidth ? '5%' : '15%',
+        left                  :  window.innerWidth <= maxWidth ? '10%' : '30%',
         right                 : 'auto',
         bottom                : 'auto',
-        width                 : '40%',
-        height                : '70%' 
+        width                 :  window.innerWidth <= maxWidth ? '70%' : '40%',
+        height                :  window.innerWidth <= maxWidth ? '85%' : '70%' 
     },
     overlay:{
         zIndex                : 2
@@ -33,6 +33,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
     const [line, setLine] = useState('')
     const [email, setEmail] = useState('')
     const [id, setId] = useState('')
+    const [clave, setClave] = useState('')
     const [typeUser, setTypeUser] = useState('admin')
     const [err, setErr] = useState(false)
 
@@ -40,6 +41,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
     const handleInpuPassword = e => setPassword(e.target.value)
     const handleInputLine = e => setLine(e.target.value)
     const handleInputEmail = e => setEmail(e.target.value)
+    const handleInputClave = e => setClave(e.target.value)
     const handleInpuConfirmPassword = e => setConfirmPassword(e.target.value)
     const handleSelect = e => setTypeUser(e.target.value)
 
@@ -95,13 +97,13 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                     closeModal()
                 }).catch(e => console.log(e))
             }else{
-                postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email })})
+                postData({data: JSON.stringify({ user, password, tipoUsuario: typeUser, linea: line, email, clave })})
                 .then(({ usuario, Error }) => {
                     if(Error){
                         setErr(true)
                         return setMessage(Error)
                     }
-                    addUser({ id: usuario.id, email: usuario.email, linea: usuario.linea, username: usuario.username })
+                    addUser({ id: usuario.id, email: usuario.email, linea: usuario.linea, username: usuario.username, clave })
                     closeModal()    
                 }).catch(e => {
                     console.log(e.response?.message)
@@ -113,13 +115,13 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
     }
 
     useEffect(() => {
-        console.log(userToEdit)
         if(userToEdit){
             setUser(userToEdit.username)
             setTypeUser(userToEdit.type)
             setEmail(userToEdit.email)
             setLine(userToEdit.linea)
             setId(userToEdit.id)
+            setClave(userToEdit.clave)
         }
         return () => {
             setUser('')
@@ -144,7 +146,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                             placeholder="Nombre de usuario"
                         />
                     </CardInfo>
-                    <CardInfo>
+                    <CardInfo className="margin-none">
                         <label>Contraseña: </label>
                         <input 
                             value={password}
@@ -154,7 +156,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                         />
                     </CardInfo>
                     {userToEdit && <span>*Opcional.</span>}
-                    <CardInfo>
+                    <CardInfo className="margin-none"> 
                         <label>Confirmar contraseña: </label>
                         <input 
                             value={confirmPassword}
@@ -170,6 +172,14 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                             value={line}
                             onChange={handleInputLine}
                             placeholder="Linea de producción"
+                        />
+                    </CardInfo>
+                    <CardInfo>
+                        <label>Clave: </label>
+                        <input 
+                            value={clave}
+                            onChange={handleInputClave}
+                            placeholder="Clave de usuario"
                         />
                     </CardInfo>
                     <CardInfo>

@@ -33,7 +33,7 @@ function HistorySearch({ setHistory, machines, notFound }){
             console.log(mensaje)
             if(mensaje){
                 setErr(true)
-                setMessage(mensaje)
+                setMessage(mensaje) 
                 return notFound()
             }
             const machine = machines.find(machine => machine.id === card.maquina)

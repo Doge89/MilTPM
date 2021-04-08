@@ -1,23 +1,28 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
 
 import { SearcherContainer } from '../../../styles/mp'
 import { CardInfo } from '../../../styles/tpm'
 
+import { appContext } from '../../../reducers/ProviderMP'
+
 import { URL } from '../../../var'
 
 function Searcher({ setData, setSearched }){
+
+    const context = useContext(appContext)
 
     const [line, setLine] = useState('MXC001')
     const [turno, setTurno] = useState('A')
     const [date, setDate] = useState('')
 
-    const handleSelectLine = e => setLine(e.target.value)
+    const handleSelectLine = e => console.log(e.target.value)
     const handleSelectTurno = e => setTurno(e.target.value)
     const handleInputDate = e => setDate(e.target.value)
 
     const getData = async () => {
+        console.log(line)
         const res = await axios({
             url: `${URL}/mp/historial/get/`,
             method: 'POST',
@@ -38,13 +43,12 @@ function Searcher({ setData, setSearched }){
     }
 
     useEffect(() => {
-        if(date !== ''){
+        if(date && line && turno && date !== '' && line !== '' && turno !== ''){
             getData().then(({ infMP, Linea }) => {
                 setSearched(true)
-                console.log(infMP)
+                context.dispatchLine({ type: 'SET', value: line })
                 const linea = JSON.parse(Linea).linea
                 const data = JSON.parse(infMP).map( item => {  return { ...item.fields, Id: item.pk, linea } } )
-                console.log(data)
                 setData(data)
             }).catch(e => {
                 console.log(e)
@@ -55,7 +59,8 @@ function Searcher({ setData, setSearched }){
     useEffect(() => {
         getLine().then(({ linea, Logged }) => {
             //if(!Logged){ window.location.replace('/login') }
-            setLine(linea)
+            //console.log(linea)
+            //setLine(linea)
         }).catch(e => {
             console.log(e)
         })
@@ -68,12 +73,12 @@ function Searcher({ setData, setSearched }){
                 <CardInfo widthLabel="28vw" width="25vw">
                     <label>Seleccione una línea:</label>
                     <select value={line} onChange={handleSelectLine}>
-                        <option value="MXC001">MXC001</option>
-                        <option value="MXC002">MXC002</option>
-                        <option value="MXC003">MXC003</option>
-                        <option value="MXC004">MXC004</option>
-                        <option value="MXC001">MXC005</option>
-                        <option value="MXC006">MXC006</option>
+                        <option>MXC001</option>
+                        <option>MXC002</option>
+                        <option>MXC003</option>
+                        <option>MXC004</option>
+                        <option>MXC005</option>
+                        <option>MXC006</option>
                     </select>
                 </CardInfo>
                 <CardInfo widthLabel="28vw" width="25vw">

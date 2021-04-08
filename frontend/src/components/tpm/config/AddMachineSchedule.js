@@ -6,15 +6,15 @@ import querystring from 'querystring'
 import { CreateUserForm, CardInfo  } from '../../../styles/tpm'
 import { ButtonPrimary, ModalContainer } from '../../../styles/common'
 
-import { days, URL } from '../../../var'
+import { days, URL, maxWidth } from '../../../var'
  
 const customStyles = {
     content : {
         top                   : '22.5%',
-        left                  : '30%',
+        left                  : window.innerWidth <= maxWidth ? '10%' : '30%',
         right                 : 'auto',
         bottom                : 'auto',
-        width                 : '40%',
+        width                 : window.innerWidth <= maxWidth ? '70%' : '40%',
         height                : '55%'
     },
     overlay: {
@@ -62,7 +62,7 @@ function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine, check
                     <h1>Agregar Máquina</h1>
                     <CardInfo>
                         <label>Máquina: </label>
-                        <select value={machine} onChange={handleSelectMachine}>
+                        <select value={machine} onChange={handleSelectMachine} className="select-schedule">
                             {machines.map((machine, idx) => (
                                 <option value={idx} key={idx}>{machine.nombre}</option>
                             ))}
@@ -70,7 +70,7 @@ function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine, check
                     </CardInfo>
                     <CardInfo>
                         <label>Día: </label>
-                        <select value={day} onChange={handleSelectDay}>
+                        <select value={day} onChange={handleSelectDay} className="select-schedule">
                             {days.map(day => (
                                 <option value={day} key={day}>{day}</option>
                             ))}

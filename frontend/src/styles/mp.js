@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { device } from './device'
+
 const red = "rgb(254, 13, 46)"
 const gray = "rgb(80, 80, 80)"
 
@@ -14,6 +16,13 @@ export const TableContainer = styled.div`
         font-size: 2vw;
         color: ${gray};
         margin-bottom: 2vh;
+    }
+
+    @media ${device.tablet} {
+        h1{
+            font-size: 5vw;
+            color: rgb(150,150,150)
+        }
     }
 `
 
@@ -42,6 +51,62 @@ export const Table = styled.div`
             align-items: center;
         }
     }
+
+    @media ${device.tablet} {
+        background-color: rgba(100, 100, 100, 0.5);
+        align-items: center;
+
+        .table-header{
+            flex-direction: column;
+            padding: 2vh 8vw;
+            width: 82%;
+
+            .column{
+                div{
+                    width: 100%;
+                    margin-bottom: 1vh;
+                    span{
+                        font-size: 5vw;
+                    }
+                    
+                    .radio-button{
+                        width: 5vw;
+                        height: 5vw;
+                        border-radius: 5vw;
+                        margin: 0;
+                        div{
+                            width: 4.5vw;
+                            height: 4.5vw;
+                            border-radius: 4.5vw;
+                            margin: 0;
+                        }
+                    }
+
+                    .input{
+                        flex-direction: column;
+                        align-items: flex-start;
+                        label, input{
+                            font-size: 4vw;
+                        }
+                        label{
+                            width: 100%;
+                            margin: 0;
+                            margin-bottom: 0.5vh;
+                        }
+                        input{
+                            padding: 1vh 2vw;
+                        }
+                    }
+
+                    #fecha{ display: none }
+                }
+            }
+
+            .row{
+                flex-direction: column;
+            }
+        }
+    }
 `
 
 export const SelectContainer = styled.div`
@@ -66,6 +131,25 @@ export const SelectContainer = styled.div`
         min-height: 2vh;
         border-bottom: 1px solid black;
         outline: none;
+    }
+
+    @media ${device.tablet} {
+        flex-direction: column;
+        align-items:flex-start;
+        width: 100%;
+        
+        label{
+            font-size: 4vw;
+            margin-bottom: 0.5vh;
+        }
+
+        select{
+            width: 105%;
+            font-size: 4vw;
+            padding: 1vh 2vw;
+        }
+
+
     }
 `
 
@@ -129,6 +213,44 @@ export const TableRow = styled.div`
             font-size: 1vw;
         }
     }
+
+    @media ${device.tablet} {
+        border: 0;
+        border-bottom: 1px solid white;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 2vw;
+        width: 90%;
+
+        .label{
+            border: 0;
+            width: 100%;
+            align-items: center;
+            justify-content: flex-start;
+
+            span{
+                color: white;
+                font-size: 5vw;
+            }
+        }
+
+        .input-container{
+            width: 100%;
+            align-items: flex-start;
+            
+            input, select{
+                background-color: transparent;
+                color: white;
+                font-size: 4vw;
+                border-bottom: 1px solid rgb(83, 83, 83)
+            }
+
+            span{
+                color: white;
+                font-size: 4vw;
+            }
+        }
+    }
 `
 
 export const SearcherContainer = styled.div`
@@ -153,6 +275,28 @@ export const SearcherContainer = styled.div`
         align-items: center;
         justify-content: space-between;
     }
+
+    @media ${device.tablet} {
+        h1{
+            color: white;
+            font-size: 7vw;
+            text-align: center;
+        }
+
+        .inputs-container{
+            flex-direction: column;
+
+            div{ width: 80%; }
+
+            label{ color: white; }
+
+            input{
+                color: white;
+                background-color: transparent;
+                border-bottom: 1px solid white;
+            }
+        }
+    }
 `
 
 export const HistoryTableContainer = styled.div`
@@ -160,5 +304,5 @@ export const HistoryTableContainer = styled.div`
     padding: 0 5%; 
     display: flex;
     flex-direction: column;
-    padding-bottom: 5vh;
+    padding-bottom: 5vh; 
 `

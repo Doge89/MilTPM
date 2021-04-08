@@ -9,15 +9,15 @@ import Panel from '../components/tpm/panel/Panel'
 import History from '../components/tpm/history/History'
 import Modify from '../components/tpm/config/Modify'
 
-import { URL } from '../var'
+import { URL, maxWidth } from '../var'
 
 function Tpm(){
 
     const [viewType, setViewType] = useState('panel')
     const [line, setLine] = useState('')
     const [user, setUser] = useState('')
-    const [state, setState] = useState('red')
-    const [machineState, setMachineState] = useState('')
+    const [state, setState] = useState('rgb(254, 13, 46)')
+    const [machineState, setMachineState] = useState('rgb(254, 13, 46)')
     const [machine, setMachine] = useState({})
     const [machines, setMachines] = useState([])
     const [schedule, setSchedule] = useState([])
@@ -55,7 +55,7 @@ function Tpm(){
     }
 
     const setCurrentMachineState = (cards) => {
-        if(cards.length === 0){ setState('red') }
+        if(cards.length === 0){ setMachineState('rgb(254, 13, 46)') }
         else{
             let ctrl = true
             for(let i = 0; i < cards.length; i++){
@@ -91,6 +91,7 @@ function Tpm(){
 
     useEffect(() => {
         document.getElementById('root').style.overflowY = 'auto'
+        if(window.innerWidth <= maxWidth){ document.getElementById('root').style.backgroundColor = 'black' }
 
         getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
             const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
@@ -102,7 +103,6 @@ function Tpm(){
             setUser(usuario)
             
             getMachinesDay().then(({ maqdia, tarjetas}) =>{
-                console.log(tarjetas)
                 const cards = JSON.parse(tarjetas).map(item => item.fields)
                 const newMachinesDay = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
                     return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
@@ -133,6 +133,8 @@ function Tpm(){
                     activities={activities}
                     state={state}
                     machineState={machineState}
+                    line={line}
+                    user={user}
                 />
             ):viewType === 'history' ? (
                 <History 

@@ -35,8 +35,11 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
     const showCard = (idx) => {
         setCard(true)
         setCardInfo(history[idx])
-        document.getElementById('card').scrollIntoView({ behavior: 'smooth' })
     }
+
+    useEffect(() => {
+        if(card){ document.getElementById('card').scrollIntoView({ behavior: 'smooth' }) }
+    }, [card])
 
     useEffect(() => {
         if(JSON.stringify(machine !== "{}")){
@@ -50,16 +53,16 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
 
     return(
         <Container>
+            <HistorySearch 
+                setHistory={setHistory}
+                machines={machines}
+                notFound={notFound}
+            />
             <MachineSelector 
                 setMachine={setMachine}
                 machines={machines}
                 machineSelected={machine}
                 title="Selecciona la Máquina"
-            />
-            <HistorySearch 
-                setHistory={setHistory}
-                machines={machines}
-                notFound={notFound}
             />
             {history.length !== 0 && (
                 <TableHistory 
@@ -69,7 +72,17 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
             )}
             
             {card && (
-                <Card info={cardInfo} history edit line={line}/>
+                <Card 
+                    info={{...cardInfo, descripcion: cardInfo.descripcion.split(',').map((item, idx) => (
+                        <React.Fragment key={idx}>
+                            {item}
+                            <br/>
+                        </React.Fragment>
+                    ))}} 
+                    history 
+                    edit 
+                    line={line}
+                />
             )}
         </Container>
     )
