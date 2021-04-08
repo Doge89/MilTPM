@@ -7,7 +7,7 @@ function Ports(){
     return(
         <Container padding="2vh 10%">
             <CardInfo widthLabel="20vw">
-                <label>Seleccione un puerto: </label>
+                <label id="label-ports">Seleccione un puerto: </label>
                 <select>
                     <option value="1">COM 1</option>
                     <option value="2">COM 2</option>

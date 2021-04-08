@@ -10,7 +10,7 @@ export const FormContainer = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    background-color: rgb(0,0,0);
+    
     
 
     h1{
@@ -96,6 +96,7 @@ export const FormContainer = styled.div`
 
     @media ${device.tablet} {
         justify-content: flex-start;
+        background-color: rgb(0,0,0, 0.5);
 
         h1{
             font-size: 5vw;

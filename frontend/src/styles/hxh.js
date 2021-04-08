@@ -178,7 +178,7 @@ export const Row = styled.div`
 
         button{
             width: 70vw;
-            height: 5vh;
+            height: 12vw;
             font-size: 4vw;
             margin: 2vh 0;
         }

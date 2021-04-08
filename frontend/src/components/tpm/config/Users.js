@@ -4,12 +4,10 @@ import querystring from 'querystring'
 
 import CreateUser from './CreateUser'
 import ModalMessage from '../../common/ModalMessage'
+import UserItem from './UserItem'
 
 import { Container, Table, PanelTableCell } from '../../../styles/tpm'
 import { ButtonPrimary } from '../../../styles/common'
-
-import trash from '../../../assets/img/basura.png'
-import pencil from '../../../assets/img/lapiz.png'
 
 import { URL } from '../../../var'
 
@@ -81,11 +79,11 @@ function Users({ users, setUsers }){
 
     useEffect(() => {
         getUsers().then(({ usuarios }) => {
-            const { id, username, email, linea } = usuarios
+            const { id, username, email, linea, clave } = usuarios
 
             let newUsers = []
             for(let i = 0; i < id.length; i++){
-                let user = { id: id[i], username: username[i], email: email[i], linea: linea[i] }
+                let user = { id: id[i], username: username[i], email: email[i], linea: linea[i], clave: clave[i] }
                 newUsers.push(user)
             }
             setUsers(newUsers)
@@ -96,25 +94,18 @@ function Users({ users, setUsers }){
         <Container>
             <Table width="70%">
                 <div className="table border-none">
-                    <div className="table-row border-none">
+                    <div className="table-row border-none" id="row-users-header">
                         <PanelTableCell width="33%" className="header border-right border-bottom border-top border-left move-left">Usuario</PanelTableCell>
                         <PanelTableCell width="33%" className="header border-bottom border-right  border-top move-left">Email</PanelTableCell>
-                        
                     </div>
                     {users.map((user, idx) => (
-                        <div className={`table-row border-none`} key={idx}>
-                            <PanelTableCell width="33%" className="border-right border-bottom border-left move-left">
-                                <img src={pencil} alt="Icono de un lapiz" className="img-effect" onClick={() => editUser(user)}/>
-                                <div>
-                                    <span>{user.username}</span>
-                                </div>
-                            </PanelTableCell>
-                            <PanelTableCell width="33%" className="border-right border-bottom move-left">{user.email}</PanelTableCell>
-                            <PanelTableCell width="33%" className="header clickable move-left" onClick={() => openModalDeleteUser({...user, idx })}>
-                                <img src={trash} alt="Icono de un bote de basura"/>
-                                <span>Eliminiar Usuario</span>
-                            </PanelTableCell>
-                        </div>
+                        <UserItem 
+                            key={idx}
+                            idx={idx}
+                            user={user}
+                            openModalDeleteUser={openModalDeleteUser}
+                            editUser={editUser}
+                        />
                     ))}
                 </div>
             </Table>

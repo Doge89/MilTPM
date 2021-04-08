@@ -172,8 +172,8 @@ function Schedule({ machines, schedule }){
         <Container >
             <Table widthColumn="20vw" heightRow='fit-content' width="75vw">
                 <div className="table border-none">
-                    <div className="table-row border-none flex-start">
-                        {days.map(day => (
+                    <div className="table-row border-none flex-start  table-schedule">
+                        {days.map(day => ( 
                             <div 
                                 key={day} 
                                 className={`table-column border-none`}

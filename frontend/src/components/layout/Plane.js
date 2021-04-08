@@ -10,8 +10,10 @@ import { URL } from '../../var'
 function Plane(){
 
     const interval = useRef(null)
+    const intervalColor = useRef()
 
-    const [lines, setLines] = useState([{ nombre: 'MXC001', status: 'ok' }])
+    const [colorCambio, setColorCambio] = useState('white')
+    const [lines, setLines] = useState([])
 
     const fetchSession = async () => {
         const res = await axios({
@@ -24,7 +26,7 @@ function Plane(){
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}/layout`,
+            url: `${URL}/layout/status/`,
             method: 'GET'
         })
 
@@ -44,23 +46,38 @@ function Plane(){
         }, 1000)
     }
 
-    const setLinesStatus = () => {
-        getData().then(data => {
-            setLines(lines)
-        }).catch(e => console.log(e))
+    const getColor = (name) => {
+        switch(name){
+            case "cambio": return colorCambio
+            case "ingenieria": return 'cyan'
+            case "mantenimiento": return 'rgb(254, 13, 46)'
+            case "materiales": return 'blue' 
+            case "produccion": return 'purple'
+            case "materiales": return '#FF7000'
+            default: return 'green'
+        }
     }
 
-    const getColor = status => {
-        switch(status){
-            case "ok": return 'green'
-            default: return ''
-        }
+    const setLinesStatus = () => {
+        getData().then(({ lineas, status }) => {
+            //setLines(lines)
+            let lines = JSON.parse(lineas).map(item => { return { ...item.fields, id: item.pk, status: 'ok' } })
+            const nStatus = JSON.parse(status).map(item => { return { ...item.fields, id: item.pk } })
+
+            for(let i = 0; i < nStatus.length; i++){
+                const idx = lines.findIndex(item => item.id === nStatus[i].linea)
+                lines[idx].status = nStatus[i].estatus
+            }
+            setLines(lines)
+
+        }).catch(e => console.log(e))
     }
 
     useEffect(() => {
         checkHour()
+        setLinesStatus()
         return () => {
-            clearInterval(interval.current)
+            clearInterval(interval.current) 
         }
     }, [])
 
@@ -69,7 +86,8 @@ function Plane(){
             <h1>Líneas de producción</h1>
             <PlaneComponent img={layout}>
                 {lines.map((line, idx) => (
-                    line.nombre === 'MXC001' && <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}/>
+                    line.linea === "MXC001" ? <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}/> :
+                    line.linea === "MXC002" && <Indicator color={getColor(line.status)} top="79%" left="36.4%" key={idx}/>
                 ))}
             </PlaneComponent>
         </LayoutContainer>

@@ -88,12 +88,13 @@ function TableHeader({ history }){
                         label="Línea"
                         labelColor="white"
                     />
-                    <Text color="white">Fecha: {date}</Text>
+                    <Text color="white" id="fecha">Fecha: {date}</Text>
                 </Container>
                 <Container
                     alignItems="center"
                     width="50vw"
                     margin="0 0 1vh 0"
+                    className="row"
                 >
                     <SelectContainer>
                         <label>Turno:</label>
@@ -118,6 +119,7 @@ function TableHeader({ history }){
                     alignItems="center"
                     width="100%"
                     justifyContent="space-between"
+                    className="row"
                 >
                     <Input 
                         value={context.superMTTO}

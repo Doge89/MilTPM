@@ -5,9 +5,9 @@ import querystring from 'querystring'
 import { Card as CardComponent, CardInfo } from '../../styles/tpm'
 import { ButtonPrimary, Container } from '../../styles/common'
 
-import { URL } from '../../var'
+import { URL, maxWidth } from '../../var'
 
-function Card({ info, edit, history, line }){
+function Card({ info, edit, history }){
 
     const ref = useRef(null)
 
@@ -25,6 +25,18 @@ function Card({ info, edit, history, line }){
         })
 
         return res.data
+    }
+
+    const handleKeyboardOpen = () => {
+        if(window.innerWidth <= maxWidth){
+            document.getElementById('card').style.marginBottom = '50vh'
+        }
+    }
+
+    const handleKeyboardClose = () => {
+        if(window.innerWidth <= maxWidth){
+            document.getElementById('card').style.marginBottom = '2vh'
+        }
     }
 
     const handleBtn = () => {
@@ -62,7 +74,7 @@ function Card({ info, edit, history, line }){
                     </CardInfo>
                     <CardInfo>
                         <span>Localización: </span>
-                        <div>{line || info?.localizacion}</div>
+                        <div>{info?.localizacion}</div>
                     </CardInfo>
                     {!info.tipo && (
                         <>
@@ -79,6 +91,8 @@ function Card({ info, edit, history, line }){
                                     <textarea 
                                         value={proposed}
                                         onChange={handleInputProposed}
+                                        onFocus={handleKeyboardOpen}
+                                        onBlur={handleKeyboardClose}
                                     />
                                     </>
                                 ):(
@@ -95,6 +109,8 @@ function Card({ info, edit, history, line }){
                                     <textarea 
                                         value={implemented}
                                         onChange={handleInputImplemented}
+                                        onFocus={handleKeyboardOpen}
+                                        onBlur={handleKeyboardClose}
                                     />
                                     </>
                                 ):(
@@ -120,7 +136,7 @@ function Card({ info, edit, history, line }){
                     {history && edit && (
                         <Container
                             width="100%"
-                            justifyContent="center"
+                            justifyContent="center" 
                             alignItems="center"
                             onClick={handleBtn}
                         >
