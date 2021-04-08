@@ -9,7 +9,7 @@ import TableBody from './TableBody'
 import { Table as TableComponent } from '../../../styles/mp'
 import { ButtonPrimary, Container, Text } from '../../../styles/common'
 
-import { URL } from '../../../var'
+import { URL, maxWidth } from '../../../var'
 import { appContext } from '../../../reducers/ProviderMP'
 
 function Table({ isHistory }){
@@ -74,6 +74,7 @@ function Table({ isHistory }){
     } 
 
     useEffect(() => {
+        if(window.innerWidth <= maxWidth){ document.getElementById('table-mp').scrollIntoView({ behavior: 'smooth' }) }
         getLine().then(({ linea, Logged }) => {
             //if(!Logged){ window.location.replace('/login') }
             context.dispatchLine({ type: 'SET', value: linea })
@@ -83,7 +84,7 @@ function Table({ isHistory }){
     }, [])
 
     return(
-        <TableComponent>
+        <TableComponent id="table-mp">
             <TableHeader history={isHistory}/>
             <TableBody history={isHistory} />
             {err && <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="2vh auto 0 auto">{message}</Text>}

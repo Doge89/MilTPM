@@ -22,14 +22,11 @@ function Searcher({ setData, setSearched }){
     const handleInputDate = e => setDate(e.target.value)
 
     const getData = async () => {
-        console.log(line)
         const res = await axios({
             url: `${URL}/mp/historial/get/`,
             method: 'POST',
             data: querystring.stringify({ data: JSON.stringify({ fecha: date, linea: line, turno }) })
         })
-
-        console.log(res.data)
         return res.data
     }
 
