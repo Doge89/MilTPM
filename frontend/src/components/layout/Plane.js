@@ -5,7 +5,7 @@ import { LayoutContainer, Plane as PlaneComponent, Indicator } from '../../style
 
 import layout from '../../assets/img/layout.jpeg'
 
-import { URL } from '../../var'
+import { URL, maxWidth } from '../../var'
 
 function Plane(){
 
@@ -76,6 +76,7 @@ function Plane(){
     useEffect(() => {
         checkHour()
         setLinesStatus()
+        if(window.innerWidth <= maxWidth){ document.getElementById('root').style.overflowY = 'auto' }
         return () => {
             clearInterval(interval.current) 
         }
@@ -84,12 +85,22 @@ function Plane(){
     return(
         <LayoutContainer>
             <h1>Líneas de producción</h1>
-            <PlaneComponent img={layout}>
+            {window.innerWidth <= maxWidth ? (
+                <>
                 {lines.map((line, idx) => (
-                    line.linea === "MXC001" ? <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}/> :
-                    line.linea === "MXC002" && <Indicator color={getColor(line.status)} top="79%" left="36.4%" key={idx}/>
+                    <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}>
+                        {line.linea}
+                    </Indicator>
                 ))}
-            </PlaneComponent>
+                </>
+            ):(
+                <PlaneComponent img={layout}>
+                    {lines.map((line, idx) => (
+                        line.linea === "MXC001" ? <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}/> :
+                        line.linea === "MXC002" && <Indicator color={getColor(line.status)} top="79%" left="36.4%" key={idx}/>
+                    ))}
+                </PlaneComponent>
+            )}
         </LayoutContainer>
     )
 }

@@ -11,8 +11,6 @@ export const FormContainer = styled.div`
     justify-content: center;
     flex-direction: column;
     
-    
-
     h1{
         font-size: 1.5vw;
         font-family: Arial, Helvetica, sans-serif; 
@@ -96,7 +94,7 @@ export const FormContainer = styled.div`
 
     @media ${device.tablet} {
         justify-content: flex-start;
-        background-color: rgb(0,0,0, 0.5);
+        background-color: rgb(0,0,0);
 
         h1{
             font-size: 5vw;

@@ -295,6 +295,8 @@ export const Table = styled.div`
         margin-bottom: 0;
         ${props => props.mp && `margin: 1vh auto;`}
 
+        #table-mp-mobile{ border: 0; }
+
         .error{
             font-size: 4vw;
             text-align: center;
@@ -341,6 +343,7 @@ export const Table = styled.div`
                 padding: 0 5%;
                 border-bottom: 1px solid white;
                 margin-bottom: 2vh;
+                ${props => props.mp && `align-items: flex-start;`}
                 
                 div{
                     justify-content: flex-start;
@@ -355,6 +358,7 @@ export const Table = styled.div`
                 justify-content: flex-start;
                 margin-top: 2vh;
             }
+
         }
 
         .table-schedule{
