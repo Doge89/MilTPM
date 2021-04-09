@@ -84,7 +84,7 @@ export const Cell = styled.div`
     @media ${device.tablet} {
         p{
             color: white;
-            font-size: 4vw;
+            font-size: 4vw; 
         }
 
         .slash{
@@ -173,6 +173,8 @@ export const Row = styled.div`
                 width: 100%;
                 align-items: center;
                 margin-bottom: 2vh;
+
+                span{ font-size: 4vw; }
             }            
         }
 

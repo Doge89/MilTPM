@@ -156,7 +156,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         if(!hxhHistory){
             checkHour()
             isLogged().then((data) =>{
-                if(!data.Logged){ window.location.replace('/login') }
+                //if(!data.Logged){ window.location.replace('/login') }
                 getData().then(({ InfProd, InfGen, Linea, Andon }) => {
                     const dataInfo = JSON.parse(InfGen)
                     const data = JSON.parse(InfProd).map(row => row.fields)

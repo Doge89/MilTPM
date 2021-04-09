@@ -47,7 +47,7 @@ function Plane(){
     }
 
     const getColor = (name) => {
-        switch(name){
+        switch(name?.toLowerCase()){
             case "cambio": return colorCambio
             case "ingenieria": return 'cyan'
             case "mantenimiento": return 'rgb(254, 13, 46)'

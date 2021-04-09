@@ -49,7 +49,7 @@ function Tpm(){
 
     const getMachinesDay = async () => { 
         const res = await axios({
-            url: `${URL}/tpm/get/`,
+            url: `${URL}/tpm/get/${line}/`,
             method: 'GET'
         })
 
