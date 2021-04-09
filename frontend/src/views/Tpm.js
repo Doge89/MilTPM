@@ -125,10 +125,13 @@ function Tpm(){
                 setUser(usuario)
                 
                 getMachinesDay().then(({ maqdia, tarjetas}) =>{
+                    console.log(maqdia)
                     const cards = JSON.parse(tarjetas).map(item => item.fields)
                     const newMachinesDay = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
                         return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
                     })
+
+                    console.log(newMachinesDay)
                     
                     setCards(cards)
                     setGeneralState(cards)
