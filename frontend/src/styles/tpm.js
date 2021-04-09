@@ -250,6 +250,11 @@ export const Table = styled.div`
         border: 2px solid black;
     }
 
+    .table-users{
+        width: 100%;
+        margin-left: -18%;
+    }
+
     .table.margin{ margin-bottom: 2vh; }
 
     .table-header{

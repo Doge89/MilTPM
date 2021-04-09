@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'
+import axios from 'axios'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUserSlash } from '@fortawesome/free-solid-svg-icons'
 
 import Clock from './Clock'
 import SlideMenu from './SlideMenu'
@@ -13,7 +16,11 @@ import TpmImage from '../../assets/img/tpm.png'
 import MilwaukeeImage from '../../assets/img/milwaukee.png'
 import MpImage from '../../assets/img/mp.png'
 
+import { URL } from '../../var'
+
 function TopBar(){
+
+    const [userType, setUserType] = useState('')
 
     const handlers = useSwipeable({
         onSwipedRight: (e) => {
@@ -26,16 +33,51 @@ function TopBar(){
         }
     });
 
+    const logout = async () => {
+        const res = await axios({
+            url: `${URL}/login/validate/logout/`,
+            method: 'GET'
+        })
+
+        return res.data
+    }
+
+    const isLogged = async () => {
+        const res = await axios({
+            url : `${URL}/login/validate/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
+
     const history = useHistory()
 
-    const gotoHXH = () => history.push('/hxh')
-    const gotoTPM = () => history.push('/tpm')
-    const gotoMP = () => history.push('/mp')
+    const gotoHXH = () => {
+        if(userType !== 'mantenimiento'){ history.push('/hxh') }
+    }
+    const gotoTPM = () => {
+        if(userType === 'admin'){ history.push('/tpm') }
+    }
+    const gotoMP = () => {
+        if(userType !== "production"){ history.push('/mp') }
+    }
     const gotoLayout = () => history.push('/layout')
+
+    const handleLogout = () => {
+        logout().then(() => {
+            window.location.replace('/')
+        }).catch(e => {
+            console.log(e)
+        })
+    }
 
     useEffect(() => {
         document.getElementById('navbar-mobile').style.height = `${window.innerHeight * 0.9}px`
         document.getElementById('navbar-mobile').style.padding = `${window.innerHeight * 0.05}px 0`
+        isLogged().then(({ priv }) => {
+            setUserType(priv)
+        }).catch(e => console.log(e))
     }, [])
 
     return(
@@ -43,9 +85,12 @@ function TopBar(){
         
         <TopBarContainer img={TopBarBg} >
             <nav>
-                <Clock id="clock-desktop"/>
-                <SlideMenu />
-                <Image src={MilwaukeeImage} width='8vw' onClick={gotoHXH} id="logo-mobile"/>
+                <div className="clock-container">
+                    <FontAwesomeIcon icon={faUserSlash} color="white" onClick={handleLogout} />
+                    <Clock id="clock-desktop"/>
+                    <SlideMenu />
+                    <Image src={MilwaukeeImage} width='8vw' onClick={gotoHXH} id="logo-mobile"/>
+                </div>
                 <div className="row">
                     <Image src={TpmImage} width='8vw' onClick={gotoTPM} />
                     <Image src={MpImage} width='8vw' onClick={gotoMP} />

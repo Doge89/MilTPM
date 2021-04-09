@@ -190,13 +190,14 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                             placeholder="Correo del usuario"
                         />
                     </CardInfo>
-                    {/* <CardInfo>
+                    <CardInfo>
                         <label>Tipo de usuario: </label>
                         <select value={typeUser} onChange={handleSelect}>
                             <option value="admin">Administrador</option>
-                            <option value="user">Usuario</option>
+                            <option value="production">Producción</option>
+                            <option value="mantenimiento">Mantenimiento</option>
                         </select>
-                    </CardInfo> */}
+                    </CardInfo>
                     <ButtonPrimary width="15vw" height="4vh" onClick={handleBtn}>{userToEdit ? 'Actualizar Usuario' : 'Crear Usuario'}</ButtonPrimary>
                     {err && <Text color="red" id="message-err">{message}</Text>}
                 </CreateUserForm>

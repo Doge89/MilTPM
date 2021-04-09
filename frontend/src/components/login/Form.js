@@ -50,8 +50,14 @@ function Form(){
         e.preventDefault()
         if(user !== '' && password !== ''){
             setErr(false)
-            login({ user, password }).then((data) =>{
-                window.location.replace('/hxh')
+            login({ user, password }).then(({ priv }) =>{
+                isLogged().then((data) => {
+                    if(data.Logged){
+                        if(data.priv === 'mantenimiento'){ window.location.replace('/mp') }
+                        else if(data.priv === 'production'){ window.location.replace('/hxh') }
+                        else if(data.priv === 'admin'){ window.location.replace('/tpm') }
+                    }
+                }).catch(e => console.log(e))
             }).catch(e => {
                 setErr(true)
                 if(e.response.status === 401){ setMessage('Usuario o contraseña incorrectos') }
@@ -77,7 +83,11 @@ function Form(){
         resize()
         window.addEventListener('resize', resize)
         isLogged().then((data) => {
-            if(data.Logged){ window.location.replace('/hxh') }
+            if(data.Logged){
+                if(data.priv === 'mantenimiento'){ window.location.replace('/mp') }
+                else if(data.priv === 'production'){ window.location.replace('/hxh') }
+                else if(data.priv === 'admin'){ window.location.replace('/tpm') }
+            }
         }).catch(e => console.log(e))
         
 

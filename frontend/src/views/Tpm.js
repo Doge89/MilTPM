@@ -10,6 +10,7 @@ import History from '../components/tpm/history/History'
 import Modify from '../components/tpm/config/Modify'
 
 import { URL, maxWidth } from '../var'
+import { setRootStyle } from '../scripts'
 
 function Tpm(){
 
@@ -54,6 +55,15 @@ function Tpm(){
         return res.data
     }
 
+    const isLogged = async () => {
+        const res = await axios({
+            url : `${URL}/login/validate/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
+
     const setCurrentMachineState = (cards) => {
         if(cards.length === 0){ setMachineState('rgb(254, 13, 46)') }
         else{
@@ -90,34 +100,38 @@ function Tpm(){
     }
 
     useEffect(() => {
-        document.getElementById('root').style.overflowY = 'auto'
-        if(window.innerWidth <= maxWidth){ document.getElementById('root').style.backgroundColor = 'black' }
+        setRootStyle()
 
-        getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
-            const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
-            const schedule = JSON.parse(cronograma).map(item => item.fields)
-            
-            setSchedule(schedule)
-            setMachines(machines)
-            setLine(linea)
-            setUser(usuario)
-            
-            getMachinesDay().then(({ maqdia, tarjetas}) =>{
-                const cards = JSON.parse(tarjetas).map(item => item.fields)
-                const newMachinesDay = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
-                    return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
-                })
+        isLogged().then((data) => {
+            if(!data.Logged){ window.location.replace('/login') }
+            getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
+                const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
+                const schedule = JSON.parse(cronograma).map(item => item.fields)
                 
-                setCards(cards)
-                setGeneralState(cards)
-                setMachinesDay(newMachinesDay)
-
+                setSchedule(schedule)
+                setMachines(machines)
+                setLine(linea)
+                setUser(usuario)
+                
+                getMachinesDay().then(({ maqdia, tarjetas}) =>{
+                    const cards = JSON.parse(tarjetas).map(item => item.fields)
+                    const newMachinesDay = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
+                        return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
+                    })
+                    
+                    setCards(cards)
+                    setGeneralState(cards)
+                    setMachinesDay(newMachinesDay)
+    
+                }).catch(e => {
+                    console.log(e)
+                })
             }).catch(e => {
                 console.log(e)
             })
-        }).catch(e => {
-            console.log(e)
-        })
+        }).catch(e => console.log(e))
+
+        
        
     }, [])
 

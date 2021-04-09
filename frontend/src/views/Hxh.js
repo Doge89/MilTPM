@@ -4,19 +4,18 @@ import MainContainer from '../components/common/MainContainer'
 import Info from '../components/hxh/table/Info'
 import Table from '../components/hxh/table/Table'
 
-import { maxWidth } from '../var'
+import { setRootStyle } from '../scripts'
 
 function Hxh(){
 
     const [rerender, setRerender] = useState(false)
     const [generalInfo, setGeneralInfo] = useState({})
 
+    
+
     useEffect(() => {
-        document.getElementById('root').style.overflowY = 'auto'
-        if(window.innerWidth <= maxWidth){
-            document.getElementById('root').style.backgroundColor = 'black'
-            document.getElementsByTagName('body')[0].style.overflowX = 'hidden'
-        }
+        setRootStyle()
+        
     }, [])
 
     return (

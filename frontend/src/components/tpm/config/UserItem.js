@@ -19,14 +19,14 @@ function UserItem({ editUser, openModalDeleteUser, idx, user }) {
 
     return (
         <div className={`table-row border-none`} key={idx}>
-            <PanelTableCell width="33%" className="border-right border-bottom border-left move-left" onClick={handleEditUserMobile}>
+            <PanelTableCell width="50%" className="border-right border-bottom border-left move-left" onClick={handleEditUserMobile}>
                 <img src={pencil} alt="Icono de un lapiz" className="img-effect" onClick={handleEditUser}/>
                 <div>
                     <span>{user.username}</span>
                 </div>
             </PanelTableCell>
-            <PanelTableCell width="33%" className="border-right border-bottom move-left">{user.email}</PanelTableCell>
-            <PanelTableCell width="33%" className="header clickable move-left" onClick={handleDeleteUser}>
+            <PanelTableCell width="50%" className="border-right border-bottom move-left">{user.email}</PanelTableCell>
+            <PanelTableCell width="50%" className="header clickable move-left" onClick={handleDeleteUser}>
                 <img src={trash} alt="Icono de un bote de basura" className="trash-icon"/>
                 <span className="trash-label">Eliminiar Usuario</span>
             </PanelTableCell>

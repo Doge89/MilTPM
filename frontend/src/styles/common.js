@@ -31,6 +31,18 @@ export const TopBarContainer = styled.header`
             width: 55vw;
             justify-content: space-between;
         }
+
+        .clock-container{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 2.5vw;
+
+            svg{
+                margin-right: 2vw;
+                cursor: pointer;
+            }
+        }
     }
 
     @media ${device.tablet} {
@@ -183,10 +195,18 @@ export const ClockSlide = styled.div`
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        font-size: 4vw;
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: bold;
         transition: transform 0.2s linear;
+
+        span{
+            font-size: 4vw;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+
+        img{
+            width: 6vw;
+            margin-left: 1vw;
+        }
     }
 `
 
@@ -221,6 +241,17 @@ export const Container = styled.div`
         margin: ${props => props.marginText || '0'};
         font-weight: normal;
         text-align: center;
+    }
+
+    @media ${device.tablet}{
+        &.bg{
+            background-size: contain;
+            background-position: center;
+        }
+
+        &.login{
+            background-color: rgb(31, 31, 31);
+        }
     }
 `;
 
