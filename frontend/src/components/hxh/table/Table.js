@@ -174,12 +174,12 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                 if(newActual.length !== 0){
                     const idx = returnSchedule().findIndex(item => Number(item.start.split(':')[0]) === new Date().getHours())
                     console.log(idx)
-                    console.log(value)
+                    console.log(actual)
                     newActual[idx] = actual?.toString()
                     context.dispatchActual({ type: 'SET', value: newActual })
                 }
             }).catch(e => console.log(e))
-        }, 500);
+        }, 1000);
     }
 
     useEffect(() => {
