@@ -170,11 +170,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         interval.current = setInterval(() => {
             fetchActualInfo().then(({ actual }) => {
                 const newActual = [...context.actual]
-                console.log(newActual)
                 if(newActual.length !== 0){
                     const idx = returnSchedule().findIndex(item => Number(item.start.split(':')[0]) === new Date().getHours())
-                    console.log(idx)
-                    console.log(actual)
                     newActual[idx] = actual?.toString()
                     context.dispatchActual({ type: 'SET', value: newActual })
                 }
@@ -183,9 +180,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     }
 
     useEffect(() => {
-        if(!hxhHistory){
-            getActualInfo()
-        }
+        //if(!hxhHistory){ getActualInfo() }
         return () => {
             window.clearInterval(interval.current)
         }
@@ -204,6 +199,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                     const andon = JSON.parse(Andon).map(row => row.fields)
                     setDataFetched(data)
                     setInfoTable(data)
+                    console.log(dataInfo)
                     setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
                     setAndonInfo(andon)
                     if(window.innerWidth <= maxWidth){
