@@ -121,6 +121,19 @@ def finish_andon(request):
             return HttpResponse(status=401)
     return HttpResponse(status=405)
 
+#SOLO SCRIPT REMOTO DE PYTHON
+@require_http_methods(['GET'])
+def _get_status(request, linea = None):
+    if request.method == 'GET':
+        try:
+            print(linea)
+            status = Andon.objects.filter(linea_id__linea__exact=f"{linea}")
+            return JsonResponse({'andon': [i.estatus for i in status]}, status = 200)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)
+    return HttpResponse(status=405)
+
 def _calc_time(Tiempo = None):
     hh = math.floor(Tiempo/3600)
     mm = math.floor((Tiempo - (hh * 3600))/60)
