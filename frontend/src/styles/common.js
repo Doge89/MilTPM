@@ -52,11 +52,21 @@ export const TopBarContainer = styled.header`
         }
 
         nav{
-            background-color: black;
+            background-color: transparent;
             background-image: url('');
 
             .row{
                 display: none;
+            }
+
+            .clock-container{
+                font-size: 7vw;
+                margin-left: 5vw;
+
+                svg{
+                    margin-right: 5vw;
+                    cursor: pointer;
+                }
             }
         }
     }
