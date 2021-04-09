@@ -21,6 +21,7 @@ import { URL } from '../../var'
 function TopBar(){
 
     const [userType, setUserType] = useState('')
+    const [logged, setLogged] = useState(false)
 
     const handlers = useSwipeable({
         onSwipedRight: (e) => {
@@ -54,12 +55,15 @@ function TopBar(){
     const history = useHistory()
 
     const gotoHXH = () => {
+        if(!logged){ window.location.replace('/login') }
         if(userType !== 'mantenimiento'){ history.push('/hxh') }
     }
     const gotoTPM = () => {
+        if(!logged){ window.location.replace('/login') }
         if(userType === 'admin'){ history.push('/tpm') }
     }
     const gotoMP = () => {
+        if(!logged){ window.location.replace('/login') }
         if(userType !== "production"){ history.push('/mp') }
     }
     const gotoLayout = () => history.push('/layout')
@@ -75,8 +79,9 @@ function TopBar(){
     useEffect(() => {
         document.getElementById('navbar-mobile').style.height = `${window.innerHeight * 0.9}px`
         document.getElementById('navbar-mobile').style.padding = `${window.innerHeight * 0.05}px 0`
-        isLogged().then(({ priv }) => {
+        isLogged().then(({ priv, Logged }) => {
             setUserType(priv)
+            setLogged(logged)
         }).catch(e => console.log(e))
     }, [])
 

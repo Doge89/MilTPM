@@ -87,8 +87,6 @@ function TableHeader({ history }){
                         onChange={handleInputLine}
                         label="Línea"
                         labelColor="white"
-                        
-                        disabled
                     />
                     <Text color="white" id="fecha">Fecha: {date}</Text>
                 </Container>
