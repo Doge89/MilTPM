@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react' 
+import React, { useContext, useEffect, useState, useRef } from 'react' 
 import axios from 'axios'
 import querystring from 'querystring'
 import { useHistory } from 'react-router-dom'
@@ -18,6 +18,7 @@ import { twoDigits } from '../../../scripts'
 function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     let timeout
+    const interval = useRef()
 
     const date = new Date()
 
@@ -43,6 +44,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     const getData = async () => {
         const res = await axios({
             url: `${URL}/hxh/get/`,
+            method: 'GET'
+        })
+
+        return res.data
+    }
+
+    const fetchActualInfo =  async () => {
+        const res = await axios({
+            url: `${URL}/hxh/get/act/`,
             method: 'GET'
         })
 
@@ -150,11 +160,33 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         setRerender(!rerender)
     }
 
+    const returnSchedule = () => {
+        if(date.getHours() >= 6 && date.getHours() < 15){ return scheduleA }
+        else if(date.getHours() >= 15 && date.getHours() < 23){ return scheduleB }
+        else{ return scheduleC }
+    }
+
+    const getActualInfo = () => {
+        interval.current = setInterval(() => {
+            fetchActualInfo().then(({ actual }) => {
+                console.log(actual)
+                const newActual = [...context.actual]
+                if(newActual.length !== 0){
+                    const schedule = returnSchedule()
+                    const idx = returnSchedule().findIndex(item => Number(item.split(':')[0]) === new Date().getHours())
+                    newActual[idx] = actual?.toString()
+                    context.dispatchActual({ type: 'SET', newActual })
+                }
+            }).catch(e => console.log(e))
+        }, 500);
+    }
+
     useEffect(() => {
         const date = new Date()
        
         if(!hxhHistory){
             checkHour()
+            getActualInfo()
             isLogged().then((data) =>{
                 //if(!data.Logged){ window.location.replace('/login') }
                 getData().then(({ InfProd, InfGen, Linea, Andon }) => {
@@ -197,37 +229,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                 />
             )): (
                 <>
-                {date.getHours() >= 6 && date.getHours() < 15 ? (
-                    scheduleA.map(( hours, idx ) => (
-                        <TableRow  
-                            columns={columns} 
-                            info={{...hours, ...dataFetched[idx]}}
-                            key={idx}
-                            idx={idx}
-                            length={scheduleA.length}
-                        />
-                    ))
-                ) : date.getHours() >= 15 && date.getHours() < 23 ? (
-                    scheduleB.map(( hours, idx ) => (
-                        <TableRow  
-                            columns={columns} 
-                            info={{...hours, ...dataFetched[idx]}}
-                            key={idx}
-                            idx={idx}
-                            length={scheduleB.length}
-                        />
-                    )) 
-                ) : (
-                    scheduleC.map(( hours, idx ) => (
-                        <TableRow  
-                            columns={columns} 
-                            info={{...hours, ...dataFetched[idx]}}
-                            key={idx}
-                            idx={idx}
-                            length={scheduleC.length}
-                        />
-                    ))
-                )}
+                {returnSchedule().map(( hours, idx ) => (
+                    <TableRow  
+                        columns={columns} 
+                        info={{...hours, ...dataFetched[idx]}}
+                        key={idx}
+                        idx={idx}
+                        length={returnSchedule().length}
+                    />
+                ))}
                 </>
             )}
             {!hxhHistory && (
