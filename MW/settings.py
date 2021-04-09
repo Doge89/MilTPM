@@ -62,6 +62,14 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ramirez.alberto.1ev@gmail.com'
+EMAIL_HOST_PASSWORD = 'U375S9622T'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
 SESSION_COOKIE_PATH = '/;HttpOnly'
 
 CORS_ALLOW_ALL_ORIGINS = True

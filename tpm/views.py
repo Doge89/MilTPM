@@ -3,6 +3,8 @@ from datetime import datetime
 from django.core import serializers
 from django.shortcuts import render
 from django.forms import model_to_dict
+from MW.settings import EMAIL_HOST_USER
+from django.core.mail import send_mail
 from usuarios.models import Usuarios, Linea
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
@@ -25,9 +27,14 @@ def _get_panel_inf(request):
             dia = datetime.now().weekday()
             cronAct = Cronograma.objects.filter(dia__exact=dia)
             serializedCronAct = serializers.serialize('json', list(cronAct))
-            estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"MXC001", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
+            estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
             serializedEstados = serializers.serialize('json', list(estados))
             print(serializedEstados)
+            try:
+                if datetime.now().hour == 9 and len(Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(datetime.date(datetime.now()), datetime.now()))) == 0:
+                    send_mail('TPM', 'NO SE HAN REALIZADO TARJETAS', EMAIL_HOST_USER, ['undertale.9055@gmail.com'], False)
+            except Exception as e:
+                print(e)
             return JsonResponse({'maqdia': serializedCronAct, "tarjetas": serializedEstados}, status=200)
         except Exception as e:
             print(e)
@@ -42,15 +49,50 @@ def _get_panel_inf(request):
 @csrf_exempt
 def _post_tpm_inf(request):
     if request.method == 'POST':
-        data = request.POST.get('data')
-        print(data)
-        data = ast.literal_eval(data)
-        print(data)
-        maquina = Maquina.objects.get(nombre__exact=data['categoria'])
-        linea = Linea.objects.get(linea__exact=f"MXC001")
-        user = Usuarios.objects.get(username__exact=f"admin")
-        tarjeta = Tarjetas.objects.create(Id=None, maquina=maquina, descripcion=data['descripcion'], usuario = user, area='ensamble', categoria=data['categoria'], localizacion=linea, tipo=data['tipo'], fecha=datetime.now())
-        return HttpResponse(status=201)     
+        try:
+            data = request.POST.get('data')
+            print(data)
+            data = ast.literal_eval(data)
+            print(data)
+            maquina = Maquina.objects.get(nombre__exact=data['categoria'])
+            linea = Linea.objects.get(linea__exact=f"{request.session['Linea']}")
+            user = Usuarios.objects.get(username__exact=f"{request.session['Usuario']}")
+            tarjeta = Tarjetas.objects.create(Id=None, maquina=maquina, descripcion=data['descripcion'], usuario = user, area='ensamble', categoria=data['categoria'], localizacion=linea, tipo=data['tipo'], fecha=datetime.now())
+            if data['tipo'] != 1:
+                html_message = f"\
+                <div style='width: 50%; margin: auto; background-color: yellow; border-radius: 10px; padding: 15px; color: black;'>\
+                    <h1 style='text-align:center; font-family: Arial;'>TARJETA NO CONFORME</h1>\
+                    <div style='width: 100%; background-color: white;'>\
+                        <div style='padding: 10px;'>\
+                            <div style='display: flex; align-items:center; justify-content: space-between; margin-bottom: 25px;'>\
+                                <span style='width: 25%; font-size: 20px; font-weight: bold;'>NOMBRE: </span>\
+                                <input style='width: 75%; outline: none; cursor: default; font-family: Arial; border-radius: 5px; padding: 10px; border: none; border-bottom: 1px solid black;' value={request.session['Usuario']} readonly>\
+                            </div>\
+                            <div style='display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;'>\
+                                <span style='width: 25%; font-size: 20px; font-weight: bold;'>AREA: </span>\
+                                <input style='width: 75%; outline: none; cursor: default; font-family: Arial; border-radius: 5px; padding: 10px; border: none; border-bottom: 1px solid black;' value='Ensamble' readonly>\
+                            </div>\
+                            <div style='display: flex; align-items:center; justify-content: space-between; margin-bottom: 25px;'>\
+                                <span style='width: 25%; font-size: 20px; font-weight: bold;'>CATEGORIA: </span>\
+                                <input style='width: 75%; outline: none; cursor: default; font-family: Arial; border-radius: 5px; padding: 10px; border: none; border-bottom: 1px solid black;' value={data['categoria']} readonly>\
+                            </div>\
+                            <div style='display: flex; align-items:center; justify-content: space-between; margin-bottom: 25px;'>\
+                                <span style='width: 25%; font-size: 20px; font-weight: bold;'>LOCALIZACIÓN: </span>\
+                                <input style='width: 75%; outline: none; cursor: default; font-family: Arial; border-radius: 5px; padding: 10px; border: none; border-bottom: 1px solid black;' value={request.session['Linea']} readonly>\
+                            </div>\
+                            <div style='margin-bottom: 25px;'>\
+                                <span style='font-size: 20px; font-weight: bold;'>DESCRIPCIÓN DEL PROBLEMA: </span>\
+                                <textarea style='outline: none; cursor: default; font-family: Arial; border-radius: 5px; padding: 10px; border: 1px solid black; resize: none; width: 100%;' rows='15' columns='25' readonly>{data['descripcion']}</textarea>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>\
+                "
+                send_mail('TPM', 'NO CONFORME', EMAIL_HOST_USER, ['undertale.9055@gmail.com'], False, html_message=html_message)
+            return HttpResponse(status=201)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)     
     return HttpResponse(status=405)
 
 @require_http_methods(['POST'])
@@ -80,7 +122,7 @@ def cronograma(request):
             serializedCronograma = serializers.serialize('json', list(cronograma))
             print(serializedMaquinas)
             print(serializedCronograma)
-            return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": "MXC001", "usuario": "admin"}, status = 200)
+            return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": request.session['Linea'], "usuario": request.session['Usuario']}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -218,7 +260,7 @@ def _machine_history(request):
         try:
             machine = request.POST.get('maquina')
             user = Usuarios.objects.get(username__exact=f"admin")
-            hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"MXC001", maquina_id__nombre__exact=f"{machine}")
+            hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", maquina_id__nombre__exact=f"{machine}")
             serializedTarj = serializers.serialize('json', list(hisTarj))
             print(serializedTarj)
             return JsonResponse({'hist': serializedTarj, 'Usuario': user.username}, status = 200)
@@ -257,7 +299,7 @@ def _get_machine_card_by_id(request):
             Tarj = Tarjetas.objects.get(Id__exact=Id)
             serializedTarj = model_to_dict(Tarj)
             
-            return JsonResponse({'card': serializedTarj, "usuario": "admin"}, status = 200)
+            return JsonResponse({'card': serializedTarj, "usuario": request.session['Usuario']}, status = 200)
         except Tarjetas.DoesNotExist:
             print("No existe la Tarjeta")
             return JsonResponse({'mensaje': "No existen registros"},status = 200)
