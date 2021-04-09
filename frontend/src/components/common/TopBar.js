@@ -81,7 +81,8 @@ function TopBar(){
         document.getElementById('navbar-mobile').style.padding = `${window.innerHeight * 0.05}px 0`
         isLogged().then(({ priv, Logged }) => {
             setUserType(priv)
-            setLogged(logged)
+            setLogged(Logged)
+            console.log(Logged)
         }).catch(e => console.log(e))
     }, [])
 
