@@ -30,9 +30,8 @@ function Tpm(){
 
     const getMachines = async () => {
         const res = await axios({
-            url: `${URL}/tpm/modificar/cronograma/get/`,
-            method: 'POST',
-            data: querystring.stringify(JSON.stringify({ linea: line }))
+            url: `${URL}/tpm/modificar/cronograma/get/${line}/`,
+            method: 'GET',
         })
 
         return res.data
