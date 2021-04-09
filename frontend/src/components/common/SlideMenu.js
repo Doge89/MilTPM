@@ -3,6 +3,8 @@ import { useSwipeable } from 'react-swipeable'
 
 import { ClockSlide } from '../../styles/common'
 
+import clock from '../../assets/img/clock.png'
+
 const width = window.innerWidth
 
 function SlideMenu() {
@@ -29,7 +31,8 @@ function SlideMenu() {
 
     return (
         <ClockSlide {...handlers} id="clock-slide">
-           {'<'} Deslizar
+           <span>{'<'} Deslizar</span>
+           <img src={clock} alt="icono de un reloj" />
         </ClockSlide>
     )
 }

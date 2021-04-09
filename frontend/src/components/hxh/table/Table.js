@@ -49,6 +49,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         return res.data
     }
 
+    const isLogged = async () => {
+        const res = await axios({
+            url : `${URL}/login/validate/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
+
     const prepareData = () => {
         return JSON.stringify({
             actual: context.actual.map(value => Number(value)), diferencia: context.diferencia.map(value => Number(value)), 
@@ -146,20 +155,26 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
        
         if(!hxhHistory){
             checkHour()
-            getData().then(({ InfProd, InfGen, Linea, Andon }) => {
-                const dataInfo = JSON.parse(InfGen)
-                const data = JSON.parse(InfProd).map(row => row.fields)
-                const andon = JSON.parse(Andon).map(row => row.fields)
-                setDataFetched(data)
-                setInfoTable(data)
-                setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
-                setAndonInfo(andon)
-                if(window.innerWidth <= maxWidth){
-                    setTimeout(() => {
-                        document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
-                    }, 1000);
-                }
-            }).catch(e => console.log(e))
+            isLogged().then((data) =>{
+                if(!data.Logged){ window.location.replace('/login') }
+                getData().then(({ InfProd, InfGen, Linea, Andon }) => {
+                    const dataInfo = JSON.parse(InfGen)
+                    const data = JSON.parse(InfProd).map(row => row.fields)
+                    const andon = JSON.parse(Andon).map(row => row.fields)
+                    setDataFetched(data)
+                    setInfoTable(data)
+                    setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
+                    setAndonInfo(andon)
+                    if(window.innerWidth <= maxWidth){
+                        setTimeout(() => {
+                            document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
+                        }, 1000);
+                    }
+                }).catch(e => console.log(e))
+            }).catch(e => {
+                console.log(e)
+            })
+           
         }
         return () => { clearTimeout(timeout) }
     }, [])

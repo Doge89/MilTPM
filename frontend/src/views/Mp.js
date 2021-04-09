@@ -1,17 +1,31 @@
 import React, { useEffect } from 'react'
+import axios from 'axios'
 
 import MainContainer from '../components/common/MainContainer'
 import Table from '../components/mp/table/Table'
 
 import { TableContainer } from '../styles/mp'
 
-import { maxWidth } from '../var'
+import { URL } from '../var'
+import { setRootStyle } from '../scripts'
 
 function Mp(){
 
+    const isLogged = async () => {
+        const res = await axios({
+            url : `${URL}/login/validate/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
+
     useEffect(() => {
-        document.getElementById('root').style.overflowY = 'auto'
-        if(window.innerWidth < maxWidth){ document.getElementById('root').style.backgroundColor = 'black' }
+        setRootStyle()
+        isLogged().then((data) =>{
+            if(!data.Logged){ window.location.replace('/login') }
+            
+        }).catch(e => { console.log(e) })
     }, [])
 
     return(

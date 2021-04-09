@@ -4,7 +4,10 @@ import Form from '../components/login/Form'
 
 import { Container } from '../styles/common'
 
+import { maxWidth } from '../var'
+
 import loginBg from '../assets/img/login-bg.jpeg'
+import loginBgMobile from '../assets/img/bg-mobile.png'
 
 function Login(){
 
@@ -16,8 +19,8 @@ function Login(){
             height="100%"
             alignItems="center"
             justifyContent="center"
-            className="bg"
-            img={loginBg}
+            className="bg login"
+            img={window.innerWidth <= maxWidth ? loginBgMobile : loginBg}
         >
             <Form />
         </Container>
