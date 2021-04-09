@@ -130,6 +130,13 @@ export const Container = styled.div`
             color: white;
         }
 
+        button{
+            background-color: white;
+            border-radius: 5vw;
+            color: black;
+            width: 60%;
+        }
+
     }
 `;
 
