@@ -10,9 +10,7 @@ function Hxh(){
 
     const [rerender, setRerender] = useState(false)
     const [generalInfo, setGeneralInfo] = useState({})
-
     
-
     useEffect(() => {
         setRootStyle()
         
