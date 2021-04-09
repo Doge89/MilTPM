@@ -56,15 +56,15 @@ function TopBar(){
     const history = useHistory()
 
     const gotoHXH = () => {
-        if(!logged){ window.location.replace('/login') }
+        if(!logged){ return window.location.replace('/login') }
         if(userType !== 'mantenimiento'){ history.push('/hxh') }
     }
     const gotoTPM = () => {
-        if(!logged){ window.location.replace('/login') }
+        if(!logged){ return window.location.replace('/login') }
         if(userType === 'admin'){ history.push('/tpm') }
     }
     const gotoMP = () => {
-        if(!logged){ window.location.replace('/login') }
+        if(!logged){ return window.location.replace('/login') }
         if(userType !== "production"){ history.push('/mp') }
     }
     const gotoLayout = () => history.push('/layout')
