@@ -61,7 +61,7 @@ function TopBar(){
     }
     const gotoTPM = () => {
         if(!logged){ return window.location.replace('/login') }
-        if(userType === 'admin'){ history.push('/tpm') }
+        history.push('/tpm')
     }
     const gotoMP = () => {
         if(!logged){ return window.location.replace('/login') }
