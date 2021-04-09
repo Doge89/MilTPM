@@ -11,6 +11,7 @@ function Info({ user, line, setLine, lineUser }){
             <div>{user}</div>
             <div>Línea: {!lineUser ? (
                 <select value={line} onChange={handleSelect}> 
+                    <option>Seleccionar linea</option>
                     <option>MXC001</option>
                     <option>MXC002</option>
                     <option>MXC003</option>

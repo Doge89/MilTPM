@@ -60,15 +60,16 @@ export const InfoContainer = styled.div`
         align-items: center;
         justify-content: center;
         color: ${gray};
-        width: 17vw;
+        width: 20vw;
         padding: 1vw 0;
         font-size: 1.5vw;
         font-family: Arial, Helvetica, sans-serif;
+        min-height: 5vh;
     }
 
     select{
         background-color: transparent;
-        padding: 1vh 2vw;
+        padding: 1vh 1vw;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 1vw;
         border: 0;
