@@ -26,11 +26,13 @@ function Tpm(){
     const [activities, setActivities] = useState([])
     const [history, setHistory] = useState([])
     const [cards, setCards] = useState([])
+    const [lineUser, setLineUser] = useState(true)
 
     const getMachines = async () => {
         const res = await axios({
             url: `${URL}/tpm/modificar/cronograma/get/`,
-            method: 'GET'
+            method: 'POST',
+            data: querystring.stringify({ linea: line })
         })
 
         return res.data
@@ -101,9 +103,17 @@ function Tpm(){
 
     useEffect(() => {
         setRootStyle()
+        isLogged().then(({ Logged, linea }) => {
+            //if(!Logged){ window.location.replace('/login') }
+            if(linea){ setLine(linea) }
+            else{ setLineUser(false) }
+            
+        }).catch(e => console.log(e))
 
-        isLogged().then((data) => {
-            if(!data.Logged){ window.location.replace('/login') }
+    }, [])
+
+    useEffect(() => {
+        if(line !== ''){
             getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
                 const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
                 const schedule = JSON.parse(cronograma).map(item => item.fields)
@@ -129,16 +139,13 @@ function Tpm(){
             }).catch(e => {
                 console.log(e)
             })
-        }).catch(e => console.log(e))
-
-        
-       
-    }, [])
+        }
+    }, [line])
 
     return(
         <MainContainer>
             <TopBar setViewType={setViewType} viewType={viewType}/>
-            <Info line={line} user={user}/>
+            <Info line={line} user={user} setLine={setLine} lineUser={lineUser} />
             {viewType === 'panel' ? (
                 <Panel 
                     machines={machinesDay}
