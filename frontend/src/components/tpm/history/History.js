@@ -57,6 +57,7 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
                 setHistory={setHistory}
                 machines={machines}
                 notFound={notFound}
+                line={line}
             />
             <MachineSelector 
                 setMachine={setMachine}

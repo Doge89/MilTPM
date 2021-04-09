@@ -8,7 +8,7 @@ import { ButtonSecondary, Text } from '../../../styles/common'
 import { URL } from '../../../var'
 import { getDate } from '../../../scripts'
 
-function HistorySearch({ setHistory, machines, notFound }){
+function HistorySearch({ setHistory, machines, notFound, line }){
 
     const [id, setId] = useState('')
     const [message, setMessage] = useState('')
@@ -18,7 +18,7 @@ function HistorySearch({ setHistory, machines, notFound }){
         const res = await axios({
             url: `${URL}/tpm/historial/get/id/`,
             method: 'POST',
-            data: querystring.stringify({ id: id })
+            data: querystring.stringify(JSON.stringify({ id: id, linea: line }))
         })
 
         return res.data
