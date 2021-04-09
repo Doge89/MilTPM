@@ -40,6 +40,7 @@ export const InfoContainer = styled.div`
                     background-color: transparent;
                     font-size: 3.5vw;
                     color: white;
+                    border: 0;
                     border-bottom: 1px solid white;
                     padding: 2.5vw 2vw;
                     outline: none;
