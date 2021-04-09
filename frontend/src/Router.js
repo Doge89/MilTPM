@@ -44,7 +44,7 @@ function Router(){
                     </ProviderMP>
                 </Route>
                 <Route exact path="/" >
-                    <Redirect to="/login" />
+                    <Redirect to="/layout" />
                 </Route>
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/andon" component={Andon} />
