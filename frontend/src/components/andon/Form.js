@@ -62,6 +62,15 @@ function Form({ children, location }){
         return res.data
     }
 
+    const isLogged = async () => {
+        const res = await axios({
+            url : `${URL}/login/validate/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
+
     const pauseTimer = (e) => {
         e.preventDefault()
         setErr(false)
@@ -180,16 +189,21 @@ function Form({ children, location }){
 
     useEffect(() => {
 
-        const query = new URLSearchParams(location.search)
+        isLogged().then((data) => {
+            if(data.Logged){
+                if(data.priv !== 'production'){ window.location.replace('/login') }
+                const query = new URLSearchParams(location.search)
         
-        if(!query.get('tipo')){ window.location.replace('/hxh') }
+                if(!query.get('tipo')){ window.location.replace('/hxh') }
 
-        setType(query.get('tipo'))
+                setType(query.get('tipo'))
 
-        const timerIsPaused = localStorage.getItem(`timerPaused${query.get('tipo')}`)
-        const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
-        if(timerIsPaused){ setTimerPaused(true) }
-        if(timerValue){ setTimerRunning(true) }
+                const timerIsPaused = localStorage.getItem(`timerPaused${query.get('tipo')}`)
+                const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
+                if(timerIsPaused){ setTimerPaused(true) }
+                if(timerValue){ setTimerRunning(true) }
+            }else{ window.location.replace('/login') }
+        }).catch(e => console.log(e))
 
     }, [])
 
