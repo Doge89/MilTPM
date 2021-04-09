@@ -15,24 +15,31 @@ from .models import Cronograma, Tarjetas, Maquina, Actividades, sel_com, com
 hasher = PBKDF2PasswordHasher()
 #INDICE 
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
+    if 'Usuario' in request.session and 'Pass' in request.session and 'priv' in request.session:
         return render(request, 'index.html', status = 200)
-    return HttpResponse(status=401)
+    return render(request, 'index.html', status = 401)
 
 #OBTIENE LA INFORMACION PARA SER MOSTRADA EN EL PANEL DEL TPM 
 @require_http_methods(['GET'])
-def _get_panel_inf(request):
+def _get_panel_inf(request, linea=None):
     if request.method == 'GET':
         try:
             dia = datetime.now().weekday()
             cronAct = Cronograma.objects.filter(dia__exact=dia)
             serializedCronAct = serializers.serialize('json', list(cronAct))
-            estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
+            if 'Linea' in request.session:
+                estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
+            else:
+                estados = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{linea}", fecha__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
             serializedEstados = serializers.serialize('json', list(estados))
             print(serializedEstados)
             try:
-                if datetime.now().hour == 9 and len(Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(datetime.date(datetime.now()), datetime.now()))) == 0:
-                    send_mail('TPM', 'NO SE HAN REALIZADO TARJETAS', EMAIL_HOST_USER, ['undertale.9055@gmail.com'], False)
+                if 'Linea' in request.session:
+                    if datetime.now().hour == 9 and len(Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", fecha__range=(datetime.date(datetime.now()), datetime.now()))) == 0:
+                        send_mail('TPM', 'NO SE HAN REALIZADO TARJETAS', EMAIL_HOST_USER, ['undertale.9055@gmail.com'], False)
+                else:
+                    if datetime.now().hour == 9 and len(Tarjetas.objects.filter(localizacion_id__linea__exact=f"{linea}", fecha__range=(datetime.date(datetime.now()), datetime.now()))) == 0:
+                        send_mail('TPM', 'NO SE HAN REALIZADO TARJETAS', EMAIL_HOST_USER, ['undertale.9055@gmail.com'], False)
             except Exception as e:
                 print(e)
             return JsonResponse({'maqdia': serializedCronAct, "tarjetas": serializedEstados}, status=200)
@@ -55,7 +62,7 @@ def _post_tpm_inf(request):
             data = ast.literal_eval(data)
             print(data)
             maquina = Maquina.objects.get(nombre__exact=data['categoria'])
-            linea = Linea.objects.get(linea__exact=f"{request.session['Linea']}")
+            linea = Linea.objects.get(linea__exact=f"{data['linea']}")
             user = Usuarios.objects.get(username__exact=f"{request.session['Usuario']}")
             tarjeta = Tarjetas.objects.create(Id=None, maquina=maquina, descripcion=data['descripcion'], usuario = user, area='ensamble', categoria=data['categoria'], localizacion=linea, tipo=data['tipo'], fecha=datetime.now())
             if data['tipo'] != 1:
@@ -78,7 +85,7 @@ def _post_tpm_inf(request):
                             </div>\
                             <div style='display: flex; align-items:center; justify-content: space-between; margin-bottom: 25px;'>\
                                 <span style='width: 25%; font-size: 20px; font-weight: bold;'>LOCALIZACIÓN: </span>\
-                                <input style='width: 75%; outline: none; cursor: default; font-family: Arial; border-radius: 5px; padding: 10px; border: none; border-bottom: 1px solid black;' value={request.session['Linea']} readonly>\
+                                <input style='width: 75%; outline: none; cursor: default; font-family: Arial; border-radius: 5px; padding: 10px; border: none; border-bottom: 1px solid black;' value={data['linea']} readonly>\
                             </div>\
                             <div style='margin-bottom: 25px;'>\
                                 <span style='font-size: 20px; font-weight: bold;'>DESCRIPCIÓN DEL PROBLEMA: </span>\
@@ -113,16 +120,20 @@ def _get_act_machine(request):
 #CRONOGRAMA
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
-def cronograma(request):
-    if request.method == 'GET':
+def cronograma(request, linea=None):
+    if request.method == 'GET' :
         try:
+            print(linea)
             Maquinas = Maquina.objects.all()
             cronograma = Cronograma.objects.all()
             serializedMaquinas = serializers.serialize('json', list(Maquinas))
             serializedCronograma = serializers.serialize('json', list(cronograma))
             print(serializedMaquinas)
             print(serializedCronograma)
-            return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": request.session['Linea'], "usuario": request.session['Usuario']}, status = 200)
+            if 'Linea' in request.session:
+                return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": request.session['Linea'], "usuario": request.session['Usuario']}, status = 200)
+            else:
+                return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma,"linea": linea, "usuario": "admin"}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -163,7 +174,7 @@ def cronograma_delete(request):
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
 def usuarios(request):
-    if request.method == 'GET':
+    if request.method == 'GET' and request.session['priv'] == 'admin':
         try:
             serializedUsuarios = {}
             usuarios = Usuarios.objects.all()
@@ -203,7 +214,7 @@ def usuarios(request):
 @require_http_methods(['POST'])
 @csrf_exempt
 def _del_user(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.session['priv'] == 'admin':
         try:
             data = request.POST.get('id')
             user = Usuarios.objects.get(pk=data)
@@ -218,7 +229,7 @@ def _del_user(request):
 @require_http_methods(['POST'])
 @csrf_exempt
 def _modify_user(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.session['priv'] == 'admin':
         try:
             data = request.POST.get('data')
             data =ast.literal_eval(data) 
@@ -239,7 +250,7 @@ def _modify_user(request):
 @require_http_methods(['POST', 'GET'])
 @csrf_exempt
 def _select_com(request):
-    if request.method == 'GET':
+    if request.method == 'GET' and request.session['priv'] == 'admin':
         pass
     else:
         try:
@@ -258,9 +269,10 @@ def _select_com(request):
 def _machine_history(request):
     if request.method == 'POST':
         try:
-            machine = request.POST.get('maquina')
+            data = request.POST.get('data')
+            data = ast.literal_eval(data)
             user = Usuarios.objects.get(username__exact=f"admin")
-            hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{request.session['Linea']}", maquina_id__nombre__exact=f"{machine}")
+            hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{data['linea']}", maquina_id__nombre__exact=f"{data['maquina']}")
             serializedTarj = serializers.serialize('json', list(hisTarj))
             print(serializedTarj)
             return JsonResponse({'hist': serializedTarj, 'Usuario': user.username}, status = 200)

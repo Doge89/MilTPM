@@ -6,9 +6,7 @@ from django.views.decorators.http import require_http_methods
 
 # Create your views here.
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
-        return render(request, 'index.html', status=200)
-    return HttpResponse(status=401)
+    return render(request, 'index.html', status=200)
 
 @require_http_methods(['GET'])
 def _get_status(request):

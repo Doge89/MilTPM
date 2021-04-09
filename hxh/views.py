@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 # Create your views here.
 
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
+    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production':
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
@@ -23,9 +23,9 @@ def index(request):
 def get(request):
     if request.method == 'GET':
         try:
-            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"MXC001", fecha__exact=datetime.date(datetime.now()))) == 0:
+            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{request.session['Linea']}", fecha__exact=datetime.date(datetime.now()))) == 0:
                 #MODIFICAR
-                linUser = Linea.objects.get(usuario_id__username__exact=f"admin")
+                linUser = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
                 dataInfGeneral = infoGeneral.objects.create(Id = None, linea = linUser, consola = '', job='', mod='')
                 general = infoGeneral.objects.last()
                 print("NO EXISTEN REGISTROS")
@@ -41,8 +41,8 @@ def get(request):
             datosInfProd = _get_objects(Linea = "MXC001")
             serializedInfProd = serializers.serialize('json', list(datosInfProd))
             #MODIFICAR
-            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"MXC001").last() 
-            datLinea = Linea.objects.get(usuario_id__username__exact=f"admin")
+            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last() 
+            datLinea = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
             datInfGen = model_to_dict(datInfGen)
 
             serializedInfGen = json.dumps(datInfGen)
@@ -53,7 +53,7 @@ def get(request):
             print(serializedLinea)
 
             try:
-                andon = Andon.objects.filter(linea_id__linea__exact=f"MXC001")
+                andon = Andon.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}")
                 serializedAndon = serializers.serialize('json', list(andon))
             except Exception as e:
                 print(e)
@@ -105,6 +105,17 @@ def post(request):
         return HttpResponse(status=201)
     return HttpResponse(status = 401)
 
+@require_http_methods(['GET'])
+def _get_actual(request):
+    if request.method == 'GET':
+        try:
+            actual = infoProduccion.objects.get(fecha__exact=datetime.date(datetime.now()), inicio__exact=f"{datetime.now().hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}")
+            print(actual.actual)
+            return JsonResponse({'actual': actual.actual})
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)
+    return HttpResponse(status=405)
 @require_http_methods(['GET'])
 def historial(request):
     if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:

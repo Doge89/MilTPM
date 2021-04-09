@@ -8,7 +8,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.hashers import check_password
 # Create your views here.
 
-URL = 'http://192.168.100.22:8000/api/token/'
+URL = 'http://10.134.35.11:8000/api/token/'
 
 def _get_credentials(username, password):
     credentials ={
@@ -35,17 +35,20 @@ def index(request):
             if check_password(passwordIn, str(userData['password'])):
                 response = HttpResponse("Cookies Añadidas")
                 print("Coinciden")
+                if userData['user_type'] == 'production':
+                    request.session['Linea'] = userData['linea']
+
                 request.session['Usuario'] = userIn
                 request.session['Pass'] = passwordIn
-                request.session['Linea'] = userData['linea']
+                request.session['priv'] = userData['user_type']
                 #GET TOKENS
                 tokens = _get_credentials(userIn, passwordIn)
                 access = tokens['access']
                 refresh = tokens['refresh']
                 #VERIFY
-                print(access)
-                print(tokens)
-                print(request.session['Linea'])
+                # print(access)
+                # print(tokens)
+                #print(request.session['Linea'])
                 #SET COOKIES
                 response.set_cookie(key = 'access', value=access, max_age=604800)
                 response.set_cookie(key = 'refresh', value=refresh, max_age=604800)

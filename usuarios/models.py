@@ -8,18 +8,18 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 # Create your models here.
 class UsuariosManager(BaseUserManager):
 
-    def create_user(self, username, email, password=None, linea = None, clave = None):
+    def create_user(self, username, email, password=None, linea = None, clave = None, user_type = None):
 
         if username is None:
             raise TypeError("Los usuarios deben tener un nombre de Usuario")
 
-        user = self.model(username = username, email = self.normalize_email(email), linea = linea, clave = clave)
+        user = self.model(username = username, email = self.normalize_email(email), linea = linea, clave = clave, user_type = user_type)
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, username, email, password, linea, clave):
+    def create_superuser(self, username, email, password, linea, clave, user_type):
         #print(clave)
         if password is None:
             raise TypeError("Superusuarios deben tener una contrasena")
@@ -30,11 +30,12 @@ class UsuariosManager(BaseUserManager):
         if clave is None:
             raise TypeError("Superusuarios deben de tener una clave")
 
-        user = self.create_user(username, email, password, linea, clave)
+        user = self.create_user(username, email, password, linea, clave, user_type)
         user.is_superuser = True
         user.is_staff = True
         user.save()
-        lineaProd = Linea.objects.create(Id = None, linea = linea, usuario = user)
+        if user_type == 'production':
+            lineaProd = Linea.objects.create(Id = None, linea = linea, usuario = user)
 
         return user
 
@@ -45,9 +46,11 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(db_index=True, blank=True, unique=True)
 
-    linea = models.CharField(max_length=50, unique=True, blank=False)
+    linea = models.CharField(max_length=50, unique=False, blank=True, default='')
 
     clave = models.CharField(max_length=50, blank=False, default=None, unique=True)
+
+    user_type = models.CharField(max_length=50, blank=False, default=None)
 
     is_active = models.BooleanField(default=True)
 
@@ -59,12 +62,12 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD='username'
 
-    REQUIRED_FIELDS = ['email', 'linea', 'clave']
+    REQUIRED_FIELDS = ['email', 'linea', 'clave', 'user_type']
 
     objects = UsuariosManager()
 
     def __unicode__(self):
-        return "%s %s %s %s" % (self.id, self.username, self.email, self.linea)
+        return "%s %s %s %s %s" % (self.id, self.username, self.email, self.linea, self.user_type)
 
     def __repr__(self):
         return self.__unicode__()

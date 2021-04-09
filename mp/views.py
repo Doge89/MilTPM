@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 #INDICE DEL MP
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
+    if 'Usuario' in request.session and 'Pass' in request.session and request.session['priv'] == 'mantenimiento':
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
@@ -29,7 +29,7 @@ def post_mp(request):
             print(data)
             data = ast.literal_eval(data)
             print(type(data))
-            sesLinea = Linea.objects.get(linea__exact=f"MXC001")
+            sesLinea = Linea.objects.get(linea__exact=f"{data['linea']}")
             print(sesLinea)
             histMP = mp.objects.create(Id = None, linea = sesLinea, fecha = datetime.now().date(), area = data['tipo'], turno = data['turno'], tecnico = data['tecnicoJefe'], superMTTO = data['superMTTO'], superPRDN = data['superPRDN'], nombre = data['reportadoPor'], hora = datetime.now().strftime('%H:%M:%S'), tipoMaquina = data['tipoMaquina'], tagMaquina = data['tagMaquina'], descripcion = data['decripcion'], tipoFalla = data['tipoFalla'], afecta = data['afectaProduccion'], horaInicio=f"{data['iniciadoEn']}:00", horaFinal=f"{data['terminadoEn']}:00", reparacion=data['arregladoPor'], refacciones=data['refacciones'], causa = data['causa'], tiempoMuerto=f"{data['tiempoMuerto']}:00", validado=data['validadoPor'], tecnicoJefe = data['tecnicoJefe'])
             return HttpResponse(status=201)
@@ -41,7 +41,7 @@ def post_mp(request):
 
 #HISTORIAL DEL MP
 def historial(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
+    if 'Usuario' in request.session and 'Pass' in request.session and request.session['priv'] == 'mantenimiento':
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
@@ -49,7 +49,7 @@ def historial(request):
 @csrf_exempt
 #@ensure_csrf_cookie
 def _get_mp(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.session['priv'] == 'mantenimiento':
         try:
             data = request.POST.get('data')
             data = ast.literal_eval(data)
@@ -59,7 +59,7 @@ def _get_mp(request):
             print(serializedMP)
             print(type(serializedMP))
 
-            linAct = Linea.objects.get(linea__exact=f"MXC001")
+            linAct = Linea.objects.get(linea__exact=f"{data['linea']}")
             linAct = model_to_dict(linAct)
             serializedLinea = json.dumps(linAct)
             return JsonResponse({'infMP': serializedMP, 'Linea': serializedLinea })

@@ -3,17 +3,18 @@ from django.shortcuts import render
 from django.middleware.csrf import get_token
 from django.http import JsonResponse, HttpResponse
 # Create your views here.
-URL = 'http://192.168.100.22:8000/api/token/verify/'
-REFRESH = 'http://192.168.100.22:8000/api/token/refresh/'
+URL = 'http://10.134.35.11/api/token/verify/'
+REFRESH = 'http://10.134.35.11/api/token/refresh/'
 
 def validation(request):
-    if 'Usuario' in request.session and 'Pass' in request.session:
-        return JsonResponse({'Logged':True, 'linea': request.session['Linea'], "Usuario": request.session['Usuario']}, status = 200)
+    if 'Usuario' in request.session and 'Pass' in request.session and 'priv' in request.session:
+        
+        if 'Linea' in request.session:
+            return JsonResponse({'Logged':True, 'linea': request.session['Linea'], "Usuario": request.session['Usuario'], 'priv': request.session['priv']}, status = 200)
+        else:
+            return JsonResponse({'Logged':True, "Usuario": request.session['Usuario'], 'priv': request.session['priv']}, status = 200)
     else:
-        response = HttpResponse('CSFR', status = 200)
-        response.set_cookie(key = 'csrftoken', value = get_token(request), max_age=604800)
-        print("NO TIENE AUTORIAZION")
-        return response
+        return JsonResponse({'Logged': False}, status = 200)
     return JsonResponse({'Logged': False}, status = 200)
 
 #CIERRE DE SESION DE
@@ -21,12 +22,14 @@ def validation(request):
 def loggout(request):
     response = HttpResponse('Cookies Eliminadas', status =200)
     print("Eliminando Cookies...")
-    if 'Usuario' in request.session and 'Pass' in request.session:
+    if 'Usuario' in request.session and 'Pass' in request.session and 'priv' in request.session:
         response.delete_cookie('access', path = '/')
         response.delete_cookie('refresh',path = '/')
         del request.session['Usuario']
         del request.session['Pass']
-        del request.session['Linea']
+        if 'Linea' in request.session:
+            del request.session['Linea']
+        del request.session['priv']
         return response
     return render(request, 'index.html')
 
@@ -51,6 +54,7 @@ def _token_validation(request):
                 del request.session['Usuario']
                 del request.session['Linea']
                 del request.session['Pass']
+                del request.session['priv']
                 response.delete_cookie('access', path = '/')
                 response.delete_cookie('refresh', path = '/')
                 return HttpResponse(status=401)

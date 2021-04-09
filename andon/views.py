@@ -7,12 +7,12 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-URL = 'http://192.168.100.22:8000/api/token/verify/'
+URL = 'http://10.134.35.11:8000/api/token/verify/'
 # Create your views here.
 
 #CARGA DEL SISTEMA ANDON
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
+    if ('Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production'):
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
@@ -31,7 +31,7 @@ def start_andon(request):
             estatus = request.POST.get('razon')
             print(estatus)
             #MODIFICAR
-            lineaAct = Linea.objects.get(usuario_id__username__exact=f"admin")
+            lineaAct = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
             sisAnd = Andon.objects.create(Id = None, estatus = estatus, linea = lineaAct, registro= datetime.now())
             andHist = AndonHist.objects.create(Id = None, estatus = estatus, linea=lineaAct, registro = datetime.now())
             # sisAnd.linea.add(lineaAct)
@@ -51,7 +51,7 @@ def _pause_andon(request):
             razon = request.POST.get('razon')
             clave = request.POST.get('clave')
             user = Usuarios.objects.get(clave__exact=f"{clave}")
-            andon = Andon.objects.get(linea_id__linea__exact=f"MXC001", estatus=f"{razon}")
+            andon = Andon.objects.get(linea_id__linea__exact=f"{request.session['Linea']}", estatus=f"{razon}")
             if andon.active == 1 and user.clave == clave:
                 andon.active = False
                 andon.pause = andon.pause + f"{datetime.now()}" + "\n"
@@ -104,7 +104,7 @@ def finish_andon(request):
                 tmFin = timedelta(hours=fin.hour, minutes=fin.minute, seconds=fin.second)
                 t1 = tmMidl - tmInit
                 t2 = tmFin - tmMidl
-                print("%s %s %s" (tiempo, tmInit, tmFin))
+                #print("%s %s %s" (tiempo, tmInit, tmFin))
                 hrProduccion1 = infoProduccion.objects.get(inicio__exact=f"{ahora.hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}")
                 hrProduccion1.comentarios = hrProduccion1.comentarios + "\n" + str(t1)
                 hrProduccion1.save()
