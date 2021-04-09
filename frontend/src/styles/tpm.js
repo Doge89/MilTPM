@@ -66,6 +66,15 @@ export const InfoContainer = styled.div`
         font-family: Arial, Helvetica, sans-serif;
     }
 
+    select{
+        background-color: transparent;
+        padding: 1vh 2vw;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1vw;
+        border: 0;
+        outline: none;
+    }
+
     @media ${device.tablet} {
         width: 100%;
         padding: 0;
