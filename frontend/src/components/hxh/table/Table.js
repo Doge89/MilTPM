@@ -174,7 +174,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                     const idx = returnSchedule().findIndex(item => Number(item.start.split(':')[0]) === new Date().getHours())
                     console.log(idx)
                     newActual[idx] = actual?.toString()
-                    context.dispatchActual({ type: 'SET', newActual })
+                    context.dispatchActual({ type: 'SET', value: newActual })
                 }
             }).catch(e => console.log(e))
         }, 500);
