@@ -32,7 +32,7 @@ function Tpm(){
         const res = await axios({
             url: `${URL}/tpm/modificar/cronograma/get/`,
             method: 'POST',
-            data: querystring.stringify({ linea: line })
+            data: querystring.stringify(JSON.stringify({ linea: line }))
         })
 
         return res.data
