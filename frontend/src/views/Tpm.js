@@ -115,6 +115,7 @@ function Tpm(){
 
     useEffect(() => {
         if(line !== ''){
+            console.log(line)
             getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
                 const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
                 const schedule = JSON.parse(cronograma).map(item => item.fields)
