@@ -169,11 +169,10 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     const getActualInfo = () => {
         interval.current = setInterval(() => {
             fetchActualInfo().then(({ actual }) => {
-                console.log(actual)
                 const newActual = [...context.actual]
                 if(newActual.length !== 0){
-                    const schedule = returnSchedule()
-                    const idx = returnSchedule().findIndex(item => Number(item.split(':')[0]) === new Date().getHours())
+                    const idx = returnSchedule().findIndex(item => Number(item.start.split(':')[0]) === new Date().getHours())
+                    console.log(idx)
                     newActual[idx] = actual?.toString()
                     context.dispatchActual({ type: 'SET', newActual })
                 }
