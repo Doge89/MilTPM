@@ -101,7 +101,7 @@ function Tpm(){
     }
 
     useEffect(() => {
-        setRootStyle()
+        setRootStyle(true)
         isLogged().then(({ Logged, linea, Usuario }) => {
             //if(!Logged){ window.location.replace('/login') }
             setUser(Usuario)

@@ -24,7 +24,15 @@ function PanelTableRow({ idx, activity, last, card, getCellWidth, getSmallCellWi
         <div key={idx} className={`table-row ${last ? 'border-none' : ''}`}>
             <PanelTableCell width={getSmallCellWidth()}>{idx + 1}</PanelTableCell>
             <PanelTableCell width={getCellWidth()} className="border">{activity.nombre}</PanelTableCell>
-            <PanelTableCell width={`calc(${getSmallCellWidth()} - 4px)`} bgColor={status ? 'green' : 'rgb(254, 13, 46)'} pointer onClick={handleStatus}></PanelTableCell>
+            <PanelTableCell 
+                width={`calc(${getSmallCellWidth()} - 4px)`} 
+                bgColor={status ? 'green' : 'rgb(254, 13, 46)'} 
+                pointer 
+                onClick={handleStatus}
+                className="cell-status"
+            >
+                <div className="status-indicator"></div>
+            </PanelTableCell>
         </div>
     )
 }

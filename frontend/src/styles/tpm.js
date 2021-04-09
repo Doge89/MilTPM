@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { glob } from 'styled-components'
 
 import { device } from './device'
 
@@ -19,6 +19,11 @@ export const TopBar = styled.ul`
     @media ${device.tablet} {
         flex-wrap: wrap;   
         height: fit-content;
+        background-color: transparent;
+        list-style: disc;
+        width: fit-content;
+        width: 80%;
+        padding: 3vh 10%;
     }
     
 `;
@@ -37,8 +42,9 @@ export const TopBarItem = styled.li`
 
     @media ${device.tablet} {
         font-size: 5vw;
-        width: 40%;
-        margin: 2vw 0;
+        width: fit-content;
+        margin: 2vw 8vw;
+        text-align: left;
 
         &:hover{ font-size: 5vw }
     }
@@ -79,13 +85,26 @@ export const InfoContainer = styled.div`
     @media ${device.tablet} {
         width: 100%;
         padding: 0;
+        flex-direction: column;
         
         div{
-            min-width: 30vw;
+            min-width: 70vw;
             font-size: 5vw;
             text-align: center;
             padding: 1vw 2vw;
-            min-height: 15vw;
+            min-height: 10vw;
+            background-color: transparent;
+            border: 2px solid white;
+            border-radius: 5vw;
+            color: white;
+            margin-bottom: 2vh;
+        }
+
+        select{
+            color: white;
+            font-size: 5vw;
+            width: fit-content;
+            text-align: right;
         }
 
     }
@@ -222,7 +241,11 @@ export const SelectorItem = styled.div`
         width: 40vw;
         font-size: 4vw;
         margin: 1vw 2vw;
-        background-color: rgba(100, 100, 100, 0.5);
+        background-color: transparent;
+        border: 2px solid white;
+        min-height: 12vw;
+        border-radius: 5vw;
+        height: fit-content;
         
         &.selected{ font-size: 4vw }
 
@@ -305,7 +328,7 @@ export const Table = styled.div`
     .table-mobile{ display: none; }
 
     @media ${device.tablet} {
-        background-color: rgba(100, 100, 100, 0.5);
+        background-color: transparent;
         width: 85vw;
         margin-bottom: 0;
         ${props => props.mp && `margin: 1vh auto;`}
@@ -457,6 +480,8 @@ export const PanelTableCell = styled.div`
         cursor: pointer;
     }
 
+    .status-indicator{ display: none; }
+
     &.hover{
         .img-effect{
             left: 0vw;
@@ -480,9 +505,23 @@ export const PanelTableCell = styled.div`
         color: white;
         text-align: center;
         height: 4.5vh;
-
+        background-color: transparent;
         
+        &.cell-status{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         img, .trash-label{ display: none; }
+
+        .status-indicator{ 
+            width: 30%;
+            height: 100%;
+            background-color: ${props => props.bgColor};
+            display: block;
+            margin-left: 2vw;
+        }
 
         .trash-icon{
             display: inline;
@@ -502,7 +541,7 @@ export const PanelTableCell = styled.div`
 
         &.header{
             font-size: 5vw;
-            color: rgb(150, 150, 150);
+            color: white;
         }
 
         &.move-left{ left: 0; }

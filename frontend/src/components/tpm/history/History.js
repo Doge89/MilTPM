@@ -42,7 +42,7 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
     }, [card])
 
     useEffect(() => {
-        if(JSON.stringify(machine !== "{}") && line !== ''){
+        if(JSON.stringify(machine) !== "{}" && line !== ''){
             console.log(line)
             getHistory().then(({ hist, Usuario }) => {
                 const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario: Usuario, maquina: machine.nombre } })
@@ -71,10 +71,9 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
                     showCard={showCard} 
                 />
             )}
-            
             {card && (
                 <Card 
-                    info={{...cardInfo, descripcion: cardInfo.descripcion.split(',').map((item, idx) => (
+                    info={{...cardInfo, localizacion: line, descripcion: cardInfo.descripcion.split(',').map((item, idx) => (
                         <React.Fragment key={idx}>
                             {item}
                             <br/>
