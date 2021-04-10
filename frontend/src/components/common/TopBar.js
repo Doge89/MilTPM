@@ -57,8 +57,8 @@ function TopBar(){
 
     const gotoHXH = () => {
         console.log(logged)
-        /* if(!logged){ return window.location.replace('/login') }
-        if(userType !== 'mantenimiento'){ history.push('/hxh') } */
+        if(!logged){ return window.location.replace('/login') }
+        if(userType !== 'mantenimiento'){ history.push('/hxh') }
     }
     const gotoTPM = () => {
         if(!logged){ return window.location.replace('/login') }
