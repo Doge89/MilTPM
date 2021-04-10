@@ -52,6 +52,7 @@ function Form(){
             setErr(false)
             login({ user, password }).then(({ priv }) =>{
                 isLogged().then((data) => {
+                    console.log('a')
                     if(data.Logged){
                         if(data.priv === 'mantenimiento'){ window.location.replace('/mp') }
                         else if(data.priv === 'production'){ window.location.replace('/hxh') }
@@ -83,6 +84,7 @@ function Form(){
         resize()
         window.addEventListener('resize', resize)
         isLogged().then((data) => {
+            
             if(data.Logged){
                 if(data.priv === 'mantenimiento'){ window.location.replace('/mp') }
                 else if(data.priv === 'production'){ window.location.replace('/hxh') }
