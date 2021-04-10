@@ -137,6 +137,21 @@ def historial_get(request):
         
         return JsonResponse({'InfProd': serializedData, 'InfGen': serializedDataGen, 'Linea': serializedDataLinea}, status = 200)
     return HttpResponse(status=405)
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def _actual_pieces(request, linea=None):
+    if request.method == 'POST':
+        try:
+            data = request.POST.get('pyload')
+            linea = infoProduccion.objects.get(linea_id__linea__exact=f"{linea}", inicio__exact=f"{datetime.now().hour}:00:00", fecha__exact=f"{datetime.date(datetime.now)}")
+            linea.actual = data['value']
+            linea.save()
+        except Exception as e:
+            print(e)
+            return HttpResponse(status=500)
+    return HttpResponse(status=200)
+
 #METODOS SIN VISTAS 
 def _get_objects(Linea = None):
     #print(Linea)
