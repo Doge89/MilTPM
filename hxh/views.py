@@ -143,14 +143,18 @@ def historial_get(request):
 def _actual_pieces(request, linea=None):
     if request.method == 'POST':
         try:
-            data = request.POST.get('pyload')
-            linea = infoProduccion.objects.get(linea_id__linea__exact=f"{linea}", inicio__exact=f"{datetime.now().hour}:00:00", fecha__exact=f"{datetime.date(datetime.now)}")
-            linea.actual = data['value']
+            data = request.POST.get('value')
+            print(data)
+            ahora = datetime.now()
+            linea = infoProduccion.objects.filter(info_id__linea_id__linea__exact=f"{linea}", inicio__exact=f"{ahora.hour}:00:00").last()
+            print(linea)
+            linea.actual = data
             linea.save()
+            return HttpResponse(status=200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
-    return HttpResponse(status=200)
+    return HttpResponse(status=405)
 
 #METODOS SIN VISTAS 
 def _get_objects(Linea = None):

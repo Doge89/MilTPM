@@ -7,7 +7,7 @@ urlpatterns = [
     path('get/', views.get),
     path('get/act/', views._get_actual),
     path('post/', views.post),
-    path('post/pz/<linea>/', views._get_actual),
+    path('post/pz/<linea>/', views._actual_pieces),
     path('historial/', views.historial, name='Historial'),
     path('historial/get/', views.historial_get)
 
