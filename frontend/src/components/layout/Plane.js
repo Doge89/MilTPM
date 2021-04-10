@@ -64,17 +64,12 @@ function Plane(){
             let lines = JSON.parse(lineas).map(item => { return { ...item.fields, id: item.pk, status: [] } })
             const nStatus = JSON.parse(status).map(item => { return { ...item.fields, id: item.pk } })
 
-            console.log(lines)
-            console.log(nStatus)
-
             for(let i = 0; i < nStatus.length; i++){
                 const idx = lines.findIndex(item => item.id === nStatus[i].linea)
                 lines[idx].status.push(nStatus[i].estatus)
             }
 
             lines = lines.map(item => { return { ...item, status: item.status.length === 0 ? ['ok'] : item.status } })
-
-            console.log(lines)
             setCurrentColor(new Array(lines.length).fill(0))
             setLines(lines)
 
@@ -82,7 +77,6 @@ function Plane(){
     }
 
     const handleLineBlink = () => {
-        console.log('a')
         for(let i = 0; i < lines.length; i++){
             const domElement = document.getElementById(`line${lines[i].linea}`)
             if(lines[i].status.length === 1){ domElement.style.backgroundColor = getColor(lines[i].status[0]) }

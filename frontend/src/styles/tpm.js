@@ -747,7 +747,7 @@ export const HistorySearchContainer = styled.form`
     }
 
     input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
+    input::-webkit-inner-spin-button { 
         -webkit-appearance: none;
         appearance: none;
     }
@@ -762,14 +762,19 @@ export const HistorySearchContainer = styled.form`
             margin-right: 5vw;
             outline: none;
             padding: 1vh 2vw;
-            width: 70vw;
+            width: 50vw;
         }
 
         button{
-            width: 20vw;
+            width: 25vw;
             margin: 0;
             border: 0;
-
+            height: 14vw;
+            position: relative;
+            font-weight: bold;
+            font-size: 5vw;
+            margin-left: -10vw;
+            box-shadow: 10px 0px 20px 10px rgba(0,0,0, 0.7)
         }
     } 
 `;
