@@ -53,6 +53,7 @@ function Form(){
             login({ user, password }).then(({ priv }) =>{
                 isLogged().then((data) => {
                     console.log('a')
+                    console.log(data)
                     if(data.Logged){
                         if(data.priv === 'mantenimiento'){ window.location.replace('/mp') }
                         else if(data.priv === 'production'){ window.location.replace('/hxh') }
