@@ -56,6 +56,7 @@ function TopBar(){
     const history = useHistory()
 
     const gotoHXH = () => {
+        console.log(logged)
         if(!logged){ return window.location.replace('/login') }
         if(userType !== 'mantenimiento'){ history.push('/hxh') }
     }
