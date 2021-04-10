@@ -180,7 +180,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     }
 
     useEffect(() => {
-        //if(!hxhHistory){ getActualInfo() }
+        if(!hxhHistory){ getActualInfo() }
         return () => {
             window.clearInterval(interval.current)
         }
