@@ -756,18 +756,20 @@ export const HistorySearchContainer = styled.form`
         margin: 2vh 0;
 
         input{
-            background-color: transparent;
             font-size: 4vw;
             color: white;
             border-bottom: 1px solid white;
             margin-right: 5vw;
             outline: none;
             padding: 1vh 2vw;
+            width: 70vw;
         }
 
         button{
             width: 20vw;
             margin: 0;
+            border: 0;
+
         }
     } 
 `;

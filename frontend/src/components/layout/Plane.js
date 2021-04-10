@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import { LayoutContainer, Plane as PlaneComponent, Indicator } from '../../styles/layout'
 
-import layout from '../../assets/img/layout.jpeg'
+import layout from '../../assets/img/layout.jpg'
 
 import { URL, maxWidth } from '../../var'
 
@@ -96,8 +96,7 @@ function Plane(){
             ):(
                 <PlaneComponent img={layout}>
                     {lines.map((line, idx) => (
-                        line.linea === "MXC001" ? <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}/> :
-                        line.linea === "MXC002" && <Indicator color={getColor(line.status)} top="79%" left="36.4%" key={idx}/>
+                        line.linea === "MXC001" && <Indicator color={getColor(line.status)} top="75%" left="77%" key={idx}/> 
                     ))}
                 </PlaneComponent>
             )}

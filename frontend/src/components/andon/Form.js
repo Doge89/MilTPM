@@ -188,7 +188,8 @@ function Form({ children, location }){
     }, [intervalID])
 
     useEffect(() => {
-
+        const query = new URLSearchParams(location.search)
+        if(!query.get('tipo')){ window.location.replace('/hxh') }
         isLogged().then((data) => {
             if(data.Logged){
                 if(data.priv !== 'production'){ window.location.replace('/login') }
@@ -202,7 +203,7 @@ function Form({ children, location }){
                 const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
                 if(timerIsPaused){ setTimerPaused(true) }
                 if(timerValue){ setTimerRunning(true) }
-            }else{ window.location.replace('/login') }
+            }//else{ window.location.replace('/login') }
         }).catch(e => console.log(e))
 
     }, [])

@@ -42,7 +42,7 @@ export const Plane = styled.div`
 
 export const Indicator = styled.div`
     width: 2%;
-    height: 13%;
+    height: 8%;
     background-color: ${props => props.color};
     position: absolute;
     top: ${props => props.top};
