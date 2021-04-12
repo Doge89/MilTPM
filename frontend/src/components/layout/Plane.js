@@ -49,7 +49,7 @@ function Plane(){
 
     const getColor = (name) => {
         switch(name?.toLowerCase()){
-            case "cambio": return colorCambio
+            case "cambio": return 'white'
             case "ingenieria": return 'cyan'
             case "mantenimiento": return 'rgb(254, 13, 46)'
             case "materiales": return 'blue' 
@@ -92,13 +92,20 @@ function Plane(){
     }
 
     useEffect(() => {
-        if(lines.some(item => item.status.length > 1)){ interval.current = setInterval(handleLineBlink, 2000); }
-        else{
-            for(let i = 0; i < lines.length; i++){
-                document.getElementById(`line${lines[i].linea}`).style.backgroundColor = getColor(lines[i].status[0])
+        if(lines.length !== 0){
+            if(lines.some(item => item.status.length > 1)){ interval.current = setInterval(handleLineBlink, 2000); }
+            else{
+                for(let i = 0; i < lines.length; i++){
+                    
+                    if(document.getElementById(`line${lines[i].linea}`)){
+                        let color = getColor(lines[i].status[0])
+                        document.getElementById(`line${lines[i].linea}`).style.backgroundColor = color
+                    }   
+                }
             }
         }
-        return () => window.clearInterval(interval.current)
+        
+        return () => { window.clearInterval(interval.current) }
     }, [lines, currentColor])
 
     useEffect(() => {
