@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from .models import Cronograma, Tarjetas, Maquina, Actividades, sel_com, com
 # Create your views here.
 hasher = PBKDF2PasswordHasher()
+
 #INDICE 
 def index(request):
     if 'Usuario' in request.session and 'Pass' in request.session and 'priv' in request.session:
@@ -174,7 +175,7 @@ def cronograma_delete(request):
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
 def usuarios(request):
-    if request.method == 'GET' and request.session['priv'] == 'admin':
+    if request.method == 'GET':
         try:
             serializedUsuarios = {}
             usuarios = Usuarios.objects.all()

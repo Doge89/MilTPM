@@ -1,10 +1,10 @@
 import requests, ast
+from .valurls import *
 from django.shortcuts import render
 from django.middleware.csrf import get_token
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
-URL = 'http://10.134.35.11/api/token/verify/'
-REFRESH = 'http://10.134.35.11/api/token/refresh/'
 
 def validation(request):
     if 'Usuario' in request.session and 'Pass' in request.session and 'priv' in request.session:
@@ -77,8 +77,8 @@ def validate(access, refresh):
     acceso = {
         "token": access
     }
-    x = requests.post(URL, acceso)
-    y = requests.post(URL, tokRef)
+    x = requests.post(validUrls.TOKEN, acceso)
+    y = requests.post(validUrls.TOKEN, tokRef)
     x = ast.literal_eval(x.content.decode('UTF-8'))
     y = ast.literal_eval(y.content.decode('UTF-8'))
     if not x.get('code'):
@@ -87,7 +87,7 @@ def validate(access, refresh):
         tokRef = {
             "refresh": refresh
         }
-        x = requests.post(REFRESH, tokRef)
+        x = requests.post(validUrls.REFRESH, tokRef)
         accToken = ast.literal_eval(x.content.decode('UTF-8'))
         print(accToken)
         return accToken['access']
