@@ -338,7 +338,35 @@ export const Table = styled.div`
         background-color: transparent;
         width: 85vw;
         margin-bottom: 0;
+        align-items: center;
         ${props => props.mp && `margin: 1vh auto;`}
+
+        &.table-mobile-white{
+            background-color: white;
+            width: 100vw;
+
+            .table{ border: 0; }
+
+            div, span{
+                color: black;
+                left: 0;
+            }
+
+        }
+
+        &.table-users{
+            margin-bottom: 2vh;
+
+            div{ word-break: break-all; }
+
+            .table{
+                margin: 0 auto;
+                .trash{
+                    margin-left: -50%;
+                    left: -68vw;
+                }
+            }
+        }
 
         #table-mp-mobile{ border: 0; }
 
@@ -537,6 +565,7 @@ export const PanelTableCell = styled.div`
 
         div{
             background-color: transparent;
+            left: 0;
             
             span{
                 font-size: 4vw;
@@ -774,7 +803,7 @@ export const HistorySearchContainer = styled.form`
             font-weight: bold;
             font-size: 5vw;
             margin-left: -10vw;
-            box-shadow: 10px 0px 20px 10px rgba(0,0,0, 0.7)
+            box-shadow: 0px 0px 20px 10px rgba(0,0,0, 0.7)
         }
     } 
 `;
@@ -807,9 +836,23 @@ export const CreateUserForm = styled.form`
         margin-top: 2vh;
     }
     @media ${device.tablet} {
-        h1{ font-size: 5vw; }
+        margin-top: 5vh;
 
-        button{ width: 100%; }
+        h1{
+            font-size: 5vw;
+            color: black;
+            font-weight: bold;
+        }
+
+        select{ color: black; }
+
+        button{
+            width: 100%;
+            background-color: white;
+            border: 2px solid black;
+            color: black;
+            border-radius: 5vw;
+        }
         span{
             font-size: 3vw; 
             margin-bottom: 2vh;

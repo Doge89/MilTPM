@@ -16,7 +16,7 @@ function HistoryTable({ history, showCard }){
     }
 
     return(
-        <Table alignItems="center">
+        <Table alignItems="center" className="table-mobile-white">
             <div className="table">
                 <div className="table-row border-none">
                     <PanelTableCell width={getCellWidth('id')} className={`header ${history.length === 0 ? '' : 'border-bottom'}`}>ID</PanelTableCell>

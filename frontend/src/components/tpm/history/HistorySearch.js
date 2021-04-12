@@ -45,7 +45,7 @@ function HistorySearch({ setHistory, machines, notFound, line }){
         <>
         <HistorySearchContainer>
             <input 
-                value={id}
+                value={id} 
                 onChange={handleInput}
                 placeholder="Folio"
                 type="number"

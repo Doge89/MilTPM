@@ -49,7 +49,6 @@ function TopBar(){
             method: 'GET',
         })
 
-        console.log(res.data)
         return res.data
     }
 
@@ -83,7 +82,6 @@ function TopBar(){
         isLogged().then(({ priv, Logged }) => {
             setUserType(priv)
             setLogged(Logged)
-            console.log(Logged)
         }).catch(e => console.log(e))
     }, [])
 

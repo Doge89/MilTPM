@@ -25,8 +25,8 @@ function UserItem({ editUser, openModalDeleteUser, idx, user }) {
                     <span>{user.username}</span>
                 </div>
             </PanelTableCell>
-            <PanelTableCell width="50%" className="border-right border-bottom move-left">{user.email}</PanelTableCell>
-            <PanelTableCell width="50%" className="header clickable move-left" onClick={handleDeleteUser}>
+            <PanelTableCell width="50%" className="border-right border-bottom move-left email">{user.email}</PanelTableCell>
+            <PanelTableCell width="50%" className="header clickable move-left trash" onClick={handleDeleteUser}>
                 <img src={trash} alt="Icono de un bote de basura" className="trash-icon"/>
                 <span className="trash-label">Eliminiar Usuario</span>
             </PanelTableCell>

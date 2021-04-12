@@ -206,6 +206,7 @@ export const ClockSlide = styled.div`
         align-items: center;
         justify-content: center;
         transition: transform 0.2s linear;
+        z-index: 2;
 
         span{
             font-size: 4vw;
@@ -366,6 +367,16 @@ export const ModalContainer = styled.div`
     justify-content: center;
 
     @media ${device.tablet}{
+
+        h1{ color: black }
+
+        .btn-cancel{ 
+            color: black; 
+            border: 1px solid black;
+        }
+
+        
+
         span{
             font-size: 4vw;
             text-align: center;
@@ -422,9 +433,10 @@ export const RadioButtonContainer = styled.div`
             border-radius: 5vw;
             
             div{
-                width: 4.5vw;
-                height: 4.5vw;
-                border-radius: 4.5vw;
+                width: 3.5vw;
+                height: 3.5vw;
+                border-radius: 3.5vw;
+                background-color: ${props => props.checked ? 'black' : 'white'};
             }
         }
 
