@@ -94,6 +94,7 @@ function Table({ isHistory }){
                     alignItems="center"
                     justifyContent="center"
                     flexDirection="column"
+                    className="btn-container"
                 >
                     <ButtonPrimary width="20vw" height="4vh" onClick={handleBtn}>Registrar</ButtonPrimary>
                     <ButtonPrimary width="20vw" height="4vh" onClick={gotoHistory}>Historial</ButtonPrimary>

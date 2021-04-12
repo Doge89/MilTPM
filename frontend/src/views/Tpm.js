@@ -26,7 +26,7 @@ function Tpm(){
     const [activities, setActivities] = useState([])
     const [history, setHistory] = useState([])
     const [cards, setCards] = useState([])
-    const [lineUser, setLineUser] = useState(true)
+    const [lineUser, setLineUser] = useState(false)
 
     const getMachines = async () => {
         const res = await axios({
@@ -103,7 +103,7 @@ function Tpm(){
     useEffect(() => {
         setRootStyle(true)
         isLogged().then(({ Logged, linea, Usuario }) => {
-            //if(!Logged){ window.location.replace('/login') }
+            if(!Logged){ window.location.replace('/login') }
             setUser(Usuario)
             if(linea){ setLine(linea) }
             else{ setLineUser(false) }

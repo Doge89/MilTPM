@@ -92,7 +92,7 @@ function Users({ users, setUsers }){
 
     return(
         <Container>
-            <Table width="78%">
+            <Table width="78%" className="table-mobile-white table-users">
                 <div className="table border-none table-users">
                     <div className="table-row border-none" id="row-users-header">
                         <PanelTableCell width="50%" className="header border-right border-bottom border-top border-left move-left">Usuario</PanelTableCell>

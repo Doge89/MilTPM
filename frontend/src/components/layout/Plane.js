@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import { LayoutContainer, Plane as PlaneComponent, Indicator } from '../../styles/layout'
 
-import layout from '../../assets/img/layout.jpeg'
+import layout from '../../assets/img/layout.jpg'
 
 import { URL, maxWidth } from '../../var'
 
@@ -14,6 +14,7 @@ function Plane(){
 
     const [colorCambio, setColorCambio] = useState('white')
     const [lines, setLines] = useState([])
+    const [currentColor, setCurrentColor] = useState([])
 
     const fetchSession = async () => {
         const res = await axios({
@@ -60,18 +61,45 @@ function Plane(){
 
     const setLinesStatus = () => {
         getData().then(({ lineas, status }) => {
-            //setLines(lines)
-            let lines = JSON.parse(lineas).map(item => { return { ...item.fields, id: item.pk, status: 'ok' } })
+            let lines = JSON.parse(lineas).map(item => { return { ...item.fields, id: item.pk, status: [] } })
             const nStatus = JSON.parse(status).map(item => { return { ...item.fields, id: item.pk } })
 
             for(let i = 0; i < nStatus.length; i++){
                 const idx = lines.findIndex(item => item.id === nStatus[i].linea)
-                lines[idx].status = nStatus[i].estatus
+                lines[idx].status.push(nStatus[i].estatus)
             }
+
+            lines = lines.map(item => { return { ...item, status: item.status.length === 0 ? ['ok'] : item.status } })
+            setCurrentColor(new Array(lines.length).fill(0))
             setLines(lines)
 
         }).catch(e => console.log(e))
     }
+
+    const handleLineBlink = () => {
+        for(let i = 0; i < lines.length; i++){
+            const domElement = document.getElementById(`line${lines[i].linea}`)
+            if(lines[i].status.length === 1){ domElement.style.backgroundColor = getColor(lines[i].status[0]) }
+            else{
+                let newCurrentColor = [...currentColor]
+                
+                domElement.style.backgroundColor = getColor(lines[i].status[newCurrentColor[i]])
+                if(newCurrentColor[i] + 1 > lines[i].status.length -1){ newCurrentColor[i] = 0 }
+                else{ newCurrentColor[i] += 1 }
+                setCurrentColor(newCurrentColor)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if(lines.some(item => item.status.length > 1)){ interval.current = setInterval(handleLineBlink, 2000); }
+        else{
+            for(let i = 0; i < lines.length; i++){
+                document.getElementById(`line${lines[i].linea}`).style.backgroundColor = getColor(lines[i].status[0])
+            }
+        }
+        return () => window.clearInterval(interval.current)
+    }, [lines, currentColor])
 
     useEffect(() => {
         checkHour()
@@ -88,7 +116,7 @@ function Plane(){
             {window.innerWidth <= maxWidth ? (
                 <>
                 {lines.map((line, idx) => (
-                    <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}>
+                    <Indicator top="79%" left="40.2%" key={idx}>
                         {line.linea}
                     </Indicator>
                 ))}
@@ -96,8 +124,7 @@ function Plane(){
             ):(
                 <PlaneComponent img={layout}>
                     {lines.map((line, idx) => (
-                        line.linea === "MXC001" ? <Indicator color={getColor(line.status)} top="79%" left="40.2%" key={idx}/> :
-                        line.linea === "MXC002" && <Indicator color={getColor(line.status)} top="79%" left="36.4%" key={idx}/>
+                        line.linea === "MXC001" && <Indicator top="75%" left="77%" key={idx} id={`line${line.linea}`}/> 
                     ))}
                 </PlaneComponent>
             )}

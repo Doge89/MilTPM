@@ -21,9 +21,9 @@ function Mp(){
     }
 
     useEffect(() => {
-        setRootStyle()
+        setRootStyle(true)
         isLogged().then((data) =>{
-            if(!data.Logged){ window.location.replace('/login') }
+            //if(!data.Logged){ window.location.replace('/login') }
             
         }).catch(e => { console.log(e) })
     }, [])

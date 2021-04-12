@@ -43,8 +43,8 @@ function ModalMessage({ title, text, success, cancel, modalOpen, closeModal }){
                         justifyContent="space-between"
                         id="btn-modal-container"
                     >
-                    <ButtonSecondary width="10vw" height="4vh" onClick={cancel}>Cancelar</ButtonSecondary>
-                    <ButtonPrimary width="10vw" height="4vh" onClick={success}>Aceptar</ButtonPrimary>
+                    <ButtonSecondary width="10vw" height="4vh" onClick={cancel} className="btn-cancel">Cancelar</ButtonSecondary>
+                    <ButtonPrimary width="10vw" height="4vh" onClick={success} className="btn-success">Aceptar</ButtonPrimary>
                 </Container>
                </Container>
             </ModalContainer>
