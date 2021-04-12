@@ -6,8 +6,6 @@ function Info({ user, line, setLine, lineUser }){
 
     const handleSelect = e => setLine(e.target.value)
 
-    console.log(lineUser)
-
     return(
         <InfoContainer>
             <div>{user}</div>
