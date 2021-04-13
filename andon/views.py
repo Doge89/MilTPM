@@ -17,8 +17,7 @@ def index(request):
     return HttpResponse(status=401)
 
 @require_http_methods(['POST'])
-#@ensure_csrf_cookie
-@csrf_exempt
+@ensure_csrf_cookie
 def start_andon(request):
     if request.method == 'POST':
         try:
@@ -44,7 +43,7 @@ def start_andon(request):
 
 #SUJETO A CAMBIOS
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
 def _pause_andon(request):
     if request.method == 'POST':
         try:
@@ -66,7 +65,7 @@ def _pause_andon(request):
     return HttpResponse(status=405)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
 def finish_andon(request):
     if request.method == 'POST':
         try:

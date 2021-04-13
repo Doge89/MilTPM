@@ -54,7 +54,8 @@ def _get_panel_inf(request, linea=None):
 
 #POSTEA LA INFORMACION SOLICITADA
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _post_tpm_inf(request):
     if request.method == 'POST':
         try:
@@ -104,7 +105,8 @@ def _post_tpm_inf(request):
     return HttpResponse(status=405)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _get_act_machine(request):
     if request.method == 'POST':
         try:
@@ -120,7 +122,8 @@ def _get_act_machine(request):
 
 #CRONOGRAMA
 @require_http_methods(['GET', 'POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def cronograma(request, linea=None):
     if request.method == 'GET' :
         try:
@@ -157,7 +160,8 @@ def cronograma(request, linea=None):
     return HttpResponse(status=405)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def cronograma_delete(request):
     if request.method == 'POST':
         try:
@@ -173,7 +177,8 @@ def cronograma_delete(request):
 
 #USUARIOS
 @require_http_methods(['GET', 'POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def usuarios(request):
     if request.method == 'GET':
         try:
@@ -213,7 +218,8 @@ def usuarios(request):
     
 #ELIMINA USUARIOS
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _del_user(request):
     if request.method == 'POST' and request.session['priv'] == 'admin':
         try:
@@ -228,7 +234,8 @@ def _del_user(request):
 
 #MODIFICA USUARIOS EXISTENTES
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _modify_user(request):
     if request.method == 'POST' and request.session['priv'] == 'admin':
         try:
@@ -249,7 +256,8 @@ def _modify_user(request):
     return HttpResponse(status = 405)
 
 @require_http_methods(['POST', 'GET'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _select_com(request):
     if request.method == 'GET' and request.session['priv'] == 'admin':
         pass
@@ -266,7 +274,8 @@ def _select_com(request):
 
 #HISTORIAL
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _machine_history(request):
     if request.method == 'POST':
         try:
@@ -287,7 +296,8 @@ def _machine_history(request):
 
 #TARJETA ESPECIFICA
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _get_machine_card(request):
     if request.method == 'POST':
         try:
@@ -304,7 +314,8 @@ def _get_machine_card(request):
     return HttpResponse(status =405)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _get_machine_card_by_id(request):
     if request.method == 'POST':
         try:
@@ -322,7 +333,8 @@ def _get_machine_card_by_id(request):
     return HttpResponse(status = 405)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
+#@csrf_exempt
 def _modify_card(request):
     if request.method == 'POST':
         try:

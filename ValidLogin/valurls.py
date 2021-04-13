@@ -1,4 +1,4 @@
-import requests, ast
+import requests
 class validUrls():
     TOKEN =  'http://192.168.100.22:8000/api/token/'
     REFRESH = 'http://192.168.100.22:8000/api/token/refresh/'
