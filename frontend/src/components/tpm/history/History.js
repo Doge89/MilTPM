@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import MachineSelector from '../Selector'
 import TableHistory from './HistoryTable'
@@ -21,7 +22,12 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
         const res = await axios({
             url : `${URL}/tpm/historial/`,
             method: 'POST',
-            data: querystring.stringify({ data: JSON.stringify({ maquina: machine.nombre, linea: line })})
+            data: querystring.stringify({ data: JSON.stringify({ maquina: machine.nombre, linea: line })}),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
