@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
 import { useHistory } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 import TableHeadRow from './TableHeadRow'
 import TableRow from './TableRow'
@@ -34,8 +35,10 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             method: 'POST',
             data: querystring.stringify(data),
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data

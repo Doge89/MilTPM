@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import { FormContainer } from '../../styles/andon'
 import { ButtonPrimary, ButtonSecondary, Text } from '../../styles/common'
@@ -36,7 +37,12 @@ function Form({ children, location }){
         const res = await axios({
             url: `${URL}/andon/start/`,
             method: 'POST',
-            data: querystring.stringify({ razon: type })
+            data: querystring.stringify({ razon: type }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
@@ -46,7 +52,12 @@ function Form({ children, location }){
         const res = await axios({
             url: `${URL}/andon/pause/`,
             method: 'POST',
-            data: querystring.stringify({ razon: type, clave: password })
+            data: querystring.stringify({ razon: type, clave: password }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
@@ -56,7 +67,12 @@ function Form({ children, location }){
         const res = await axios({
             url: `${URL}/andon/finish/`,
             method: 'POST',
-            data: querystring.stringify(data)
+            data: querystring.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
