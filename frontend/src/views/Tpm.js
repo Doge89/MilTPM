@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import MainContainer from '../components/common/MainContainer'
 import TopBar from '../components/tpm/TopBar'
@@ -42,6 +43,11 @@ function Tpm(){
             url: `${URL}/tpm/maquina/`,
             method: 'POST',
             data: querystring.stringify({ id: machine.id }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
