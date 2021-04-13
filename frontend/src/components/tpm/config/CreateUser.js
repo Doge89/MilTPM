@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Modal from 'react-modal';
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import { CreateUserForm, CardInfo  } from '../../../styles/tpm'
 import { ButtonPrimary, Text, ModalContainer } from '../../../styles/common'
@@ -57,7 +58,12 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
         const res = await axios({
             url: `${URL}/tpm/modificar/usuarios/`,
             method: 'POST',
-            data: querystring.stringify(data)
+            data: querystring.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data

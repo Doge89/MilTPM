@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import TableHeader from './TableHeader'
 import TableBody from './TableBody'
@@ -26,7 +27,12 @@ function Table({ isHistory }){
         const res = await axios({
             url: `${URL}/mp/post/`,
             method: 'POST',
-            data: querystring.stringify(data)
+            data: querystring.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
@@ -76,7 +82,7 @@ function Table({ isHistory }){
     useEffect(() => {
         if(window.innerWidth <= maxWidth){ document.getElementById('table-mp').scrollIntoView({ behavior: 'smooth' }) }
         getLine().then(({ linea, Logged }) => {
-            //if(!Logged){ window.location.replace('/login') }
+            if(!Logged){ window.location.replace('/login') }
             context.dispatchLine({ type: 'SET', value: linea })
         }).catch(e => {
             console.log(e)

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import MachineSelector from '../Selector'
 import PanelTable from './PanelTable'
@@ -25,7 +26,12 @@ function Panel({ setMachine, machines, machine, activities, state, machineState,
         const res = await axios({
             url: `${URL}/tpm/post/`,
             method: 'POST',
-            data: querystring.stringify(data)
+            data: querystring.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
