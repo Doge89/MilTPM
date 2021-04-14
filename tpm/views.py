@@ -137,7 +137,7 @@ def cronograma(request, linea=None):
             if 'Linea' in request.session:
                 return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": request.session['Linea'], "usuario": request.session['Usuario']}, status = 200)
             else:
-                return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma,"linea": linea, "usuario": "admin"}, status = 200)
+                return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma,"linea": linea, "usuario": request.session['Usuario']}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -281,7 +281,7 @@ def _machine_history(request):
         try:
             data = request.POST.get('data')
             data = ast.literal_eval(data)
-            user = Usuarios.objects.get(username__exact=f"admin")
+            user = Usuarios.objects.get(username__exact=f"{request.session['Usuarios']}")
             hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{data['linea']}", maquina_id__nombre__exact=f"{data['maquina']}")
             serializedTarj = serializers.serialize('json', list(hisTarj))
             print(serializedTarj)
