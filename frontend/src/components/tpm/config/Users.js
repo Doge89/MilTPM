@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import CreateUser from './CreateUser'
 import ModalMessage from '../../common/ModalMessage'
@@ -31,7 +32,12 @@ function Users({ users, setUsers }){
         const res = await axios({
             url: `${URL}/tpm/modificar/usuarios/del/`,
             method: 'POST',
-            data: querystring.stringify(data)
+            data: querystring.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
@@ -92,7 +98,7 @@ function Users({ users, setUsers }){
 
     return(
         <Container>
-            <Table width="78%">
+            <Table width="78%" className="table-mobile-white table-users">
                 <div className="table border-none table-users">
                     <div className="table-row border-none" id="row-users-header">
                         <PanelTableCell width="50%" className="header border-right border-bottom border-top border-left move-left">Usuario</PanelTableCell>

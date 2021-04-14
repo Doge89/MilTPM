@@ -9,7 +9,7 @@ import { HistoryTableContainer } from '../styles/mp'
 
 import { appContext } from '../reducers/ProviderMP'
 
-import { maxWidth } from '../var'
+import { setRootStyle } from '../scripts'
 
 function MpHistory(){
 
@@ -20,10 +20,8 @@ function MpHistory(){
     const [searched, setSearched] = useState(false)
 
     useEffect(() => {
-        document.getElementById('root').style.overflowY = 'auto'
-        if(window.innerWidth < maxWidth){ document.getElementById('root').style.backgroundColor = 'black' }
+        setRootStyle(true)
         if(JSON.stringify(report) !== "{}"){
-            console.log(report)
             context.dispatchType({ type: 'SET', value: report.area })
             context.dispatchTechnician({ type: 'SET', value: report.tecnico })
             context.dispatchTechnicianChief({ type: 'SET', value: report.tecnicoJefe })

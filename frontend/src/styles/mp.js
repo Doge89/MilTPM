@@ -21,7 +21,8 @@ export const TableContainer = styled.div`
     @media ${device.tablet} {
         h1{
             font-size: 5vw;
-            color: rgb(150,150,150)
+            color: white;
+            text-align: center;
         }
     }
 `
@@ -53,13 +54,36 @@ export const Table = styled.div`
     }
 
     @media ${device.tablet} {
-        background-color: rgba(100, 100, 100, 0.5);
+        background-color: transparent;
         align-items: center;
+
+        .btn-container{
+            flex-direction: row;
+            justify-content: space-around;
+            margin-top: 2vh;
+
+            button{
+                width: 30vw;
+                background-color: white;
+                color: black;
+                border-radius: 5vw;
+            }
+
+            button:first-child{
+                background-color: transparent;
+                border: 2px solid white;
+                border-radius: 5vw;
+                color: white;
+            }
+        }
 
         .table-header{
             flex-direction: column;
             padding: 2vh 8vw;
             width: 82%;
+            border-top-right-radius: 5vw;
+            border-top-left-radius: 5vw;
+            background-color: rgba(100, 100, 100, 0.5);
 
             .column{
                 div{
@@ -75,9 +99,9 @@ export const Table = styled.div`
                         border-radius: 5vw;
                         margin: 0;
                         div{
-                            width: 4.5vw;
-                            height: 4.5vw;
-                            border-radius: 4.5vw;
+                            width: 3.5vw;
+                            height: 3.5vw;
+                            border-radius: 3.5vw;
                             margin: 0;
                         }
                     }
@@ -95,7 +119,11 @@ export const Table = styled.div`
                         }
                         input{
                             padding: 1vh 2vw;
+                            background-color: transparent;
+                            color: white;
+                            border-bottom: 1px solid white;
                         }
+                        
                     }
 
                     #fecha{ display: none }
@@ -147,6 +175,9 @@ export const SelectContainer = styled.div`
             width: 105%;
             font-size: 4vw;
             padding: 1vh 2vw;
+            background-color: transparent;
+            color: white;
+            border-bottom: 1px solid white;
         }
 
 

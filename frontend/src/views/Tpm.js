@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import MainContainer from '../components/common/MainContainer'
 import TopBar from '../components/tpm/TopBar'
@@ -26,7 +27,7 @@ function Tpm(){
     const [activities, setActivities] = useState([])
     const [history, setHistory] = useState([])
     const [cards, setCards] = useState([])
-    const [lineUser, setLineUser] = useState(true)
+    const [lineUser, setLineUser] = useState(false)
 
     const getMachines = async () => {
         const res = await axios({
@@ -42,6 +43,11 @@ function Tpm(){
             url: `${URL}/tpm/maquina/`,
             method: 'POST',
             data: querystring.stringify({ id: machine.id }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
@@ -103,7 +109,7 @@ function Tpm(){
     useEffect(() => {
         setRootStyle(true)
         isLogged().then(({ Logged, linea, Usuario }) => {
-            //if(!Logged){ window.location.replace('/login') }
+            if(!Logged){ window.location.replace('/login') }
             setUser(Usuario)
             if(linea){ setLine(linea) }
             else{ setLineUser(false) }
@@ -125,13 +131,10 @@ function Tpm(){
                 setUser(usuario)
                 
                 getMachinesDay().then(({ maqdia, tarjetas}) =>{
-                    console.log(maqdia)
                     const cards = JSON.parse(tarjetas).map(item => item.fields)
                     const newMachinesDay = JSON.parse(maqdia).map(item => { return { ...item.fields, id: item.pk } }).map(machineSchedule => { 
                         return { ...machines.find(machine => machine.id === machineSchedule.maquina) }
                     })
-
-                    console.log(newMachinesDay)
                     
                     setCards(cards)
                     setGeneralState(cards)

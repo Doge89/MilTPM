@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import { SearcherContainer } from '../../../styles/mp'
 import { CardInfo } from '../../../styles/tpm'
@@ -25,7 +26,12 @@ function Searcher({ setData, setSearched }){
         const res = await axios({
             url: `${URL}/mp/historial/get/`,
             method: 'POST',
-            data: querystring.stringify({ data: JSON.stringify({ fecha: date, linea: line, turno }) })
+            data: querystring.stringify({ data: JSON.stringify({ fecha: date, linea: line, turno }) }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
         return res.data
     }

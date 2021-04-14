@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import { HistorySearchContainer } from '../../../styles/tpm'
 import { ButtonSecondary, Text } from '../../../styles/common'
@@ -18,7 +19,12 @@ function HistorySearch({ setHistory, machines, notFound, line }){
         const res = await axios({
             url: `${URL}/tpm/historial/get/id/`,
             method: 'POST',
-            data: querystring.stringify(JSON.stringify({ id: id, linea: line }))
+            data: querystring.stringify(JSON.stringify({ id: id, linea: line })),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
@@ -45,12 +51,12 @@ function HistorySearch({ setHistory, machines, notFound, line }){
         <>
         <HistorySearchContainer>
             <input 
-                value={id}
+                value={id} 
                 onChange={handleInput}
                 placeholder="Folio"
                 type="number"
             />
-            <ButtonSecondary height="4vh" width="8vw" className="size-effect" onClick={handleBtn}>Buscar</ButtonSecondary>
+            <ButtonSecondary height="4vh" width="8vw" className="size-effect btn-search" onClick={handleBtn}>Buscar</ButtonSecondary>
         </HistorySearchContainer>
         {err && <Text size="1.5vw" color="rgb(254, 13, 46)" margin="0 0 2vh 0">{message}</Text>}
         </>
