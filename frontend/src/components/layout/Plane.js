@@ -131,7 +131,8 @@ function Plane(){
             ):(
                 <PlaneComponent img={layout}>
                     {lines.map((line, idx) => (
-                        line.linea === "MXC001" && <Indicator top="75%" left="77%" key={idx} id={`line${line.linea}`}/> 
+                        line.linea === "MXC001" ? <Indicator top="75%" left="77%" key={idx} id={`line${line.linea}`}/> : <Indicator top="75%" left="73.2%" key={idx} id={`line${line.linea}`} ></Indicator>
+                        
                     ))}
                 </PlaneComponent>
             )}
