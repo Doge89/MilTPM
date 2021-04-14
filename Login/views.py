@@ -1,4 +1,5 @@
 import requests, ast
+from ValidLogin.valurls import *
 from django.shortcuts import render
 from django.http import HttpResponse
 from usuarios.models import Usuarios
@@ -8,14 +9,12 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.contrib.auth.hashers import check_password
 # Create your views here.
 
-URL = 'http://10.134.35.11:8000/api/token/'
-
 def _get_credentials(username, password):
     credentials ={
         "username": username,
         "password": password
     }
-    x = requests.post(url=URL, data=credentials)
+    x = requests.post(url=validUrls.TOKEN, data=credentials)
     tokens = x.content.decode('UTF-8')
     tokens = ast.literal_eval(tokens)
     return tokens

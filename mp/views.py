@@ -20,8 +20,8 @@ def index(request):
 
 #POST DE LA INFORMACION DEL MP
 @require_http_methods(['POST'])
-@csrf_exempt #QUITAR AL MOMENTO DE HACER PRUEBAS
-#@ensure_csrf_cookie
+#QUITAR AL MOMENTO DE HACER PRUEBAS
+@ensure_csrf_cookie
 def post_mp(request):
     if request.method == 'POST':
         try:
@@ -41,15 +41,15 @@ def post_mp(request):
 
 #HISTORIAL DEL MP
 def historial(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and request.session['priv'] == 'mantenimiento':
+    if 'Usuario' in request.session and 'Pass' in request.session:
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
 @require_http_methods(['POST'])
-@csrf_exempt
-#@ensure_csrf_cookie
+#@csrf_exempt
+@ensure_csrf_cookie
 def _get_mp(request):
-    if request.method == 'POST' and request.session['priv'] == 'mantenimiento':
+    if request.method == 'POST':
         try:
             data = request.POST.get('data')
             data = ast.literal_eval(data)

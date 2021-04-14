@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-URL = 'http://10.134.35.11:8000/api/token/verify/'
+URL = 'http://192.168.100.22:8000/api/token/verify/'
 # Create your views here.
 
 #CARGA DEL SISTEMA ANDON
@@ -17,8 +17,7 @@ def index(request):
     return HttpResponse(status=401)
 
 @require_http_methods(['POST'])
-#@ensure_csrf_cookie
-@csrf_exempt
+@ensure_csrf_cookie
 def start_andon(request):
     if request.method == 'POST':
         try:
@@ -44,7 +43,7 @@ def start_andon(request):
 
 #SUJETO A CAMBIOS
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
 def _pause_andon(request):
     if request.method == 'POST':
         try:
@@ -66,53 +65,59 @@ def _pause_andon(request):
     return HttpResponse(status=405)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
 def finish_andon(request):
     if request.method == 'POST':
         try:
-            ahora = datetime.now()
-            fin = ahora.hour
+            fin = datetime.now()
+            finHr = fin.hour
             estatus = request.POST.get('razon')
             clave = request.POST.get('clave')
             tiempo = request.POST.get('tiempo')
             tiempo = int(tiempo)
-            print(tiempo)
-            print("%s %s" % (estatus,clave))
+            #print(tiempo)
+            #print("%s %s" % (estatus,clave))
 
             hrInit = request.session['InicioH']
             print(hrInit)
-            andAct = Andon.objects.get(linea_id__linea__exact=f"{request.session['Linea']}", estatus__exact=f"{estatus}")
-            print(andAct)
+            andAct = Andon.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}", estatus__exact=f"{estatus}").last()
+            #print(andAct)
             
-
+            ahoraInit = request.session['Inicio']
+            #print(type(ahoraInit))
             user = Usuarios.objects.get(clave__exact=f"{clave}")
 
             #ASIGNACION DEL TIEMPO MUERTO
-            if hrInit == fin and user.clave == clave:
+            if hrInit == finHr and user.clave == clave:
                 hora =_calc_time(tiempo)
-                print(hora)
+                #print(hora)
                 horProd = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{request.session['Linea']}", inicio__exact=f"{hrInit}:00:00", fecha__exact=datetime.date(datetime.now()))
-                horProd.comentarios = str(horProd.comentarios) + "\n" + hora
+                horProd.comentarios = str(horProd.comentarios) + "\n" + f"{estatus}: {hora}"
                 horProd.save()
                 andAct.delete()
-            elif hrInit != fin and user.clave == clave:
-                ahora = request.session['Inicio']
-                print(type(ahora))
-                tiempo = timedelta(seconds=tiempo)
-                tmMidl = timedelta(hours=fin.hour)
-                tmInit = timedelta(hours=ahora.hour, minutes=ahora.minute, seconds=ahora.second)
-                tmFin = timedelta(hours=fin.hour, minutes=fin.minute, seconds=fin.second)
-                t1 = tmMidl - tmInit
-                t2 = tmFin - tmMidl
-                #print("%s %s %s" (tiempo, tmInit, tmFin))
-                hrProduccion1 = infoProduccion.objects.get(inicio__exact=f"{ahora.hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}")
-                hrProduccion1.comentarios = hrProduccion1.comentarios + "\n" + str(t1)
+            elif hrInit != finHr and user.clave == clave:
+                ahoraInit = datetime.strptime(ahoraInit, '%Y-%m-%d %H:%M:%S.%f')
+                # print(ahoraInit)
+                # print(fin)
+                # print(finHr)
+
+                deltaFin = timedelta(hours=fin.hour, minutes=fin.minute, seconds=fin.second)
+                deltaInt = timedelta(hours=fin.hour)
+                deltaInit = timedelta(hours=ahoraInit.hour, minutes=ahoraInit.minute, seconds=ahoraInit.second)
+                print(deltaInit, deltaInt, deltaFin)
+
+                t1 = deltaFin - deltaInt
+                t2 = deltaInt - deltaInit
+                print(t1, t2)
+
+                # print("%s %s %s" (tiempo, tmInit, tmFin))
+                hrProduccion1 = infoProduccion.objects.filter(inicio__exact=f"{ahoraInit.hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}").last()
+                hrProduccion1.comentarios = hrProduccion1.comentarios + "\n" + f"{estatus}: " + str(t2)
                 hrProduccion1.save()
-                hrProduccion2 = infoProduccion.objects.get(inicio__exact=f"{fin.hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}")
-                hrProduccion2.comentarios = hrProduccion2.comentarios + "\n" + str(t2)
+                hrProduccion2 = infoProduccion.objects.filter(inicio__exact=f"{fin.hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}").last()
+                hrProduccion2.comentarios = hrProduccion2.comentarios + "\n" + f"{estatus}: " + str(t1)
                 hrProduccion2.save()  
-                andAct.delete()           
-                pass   
+                andAct.delete()            
                 
 
             return HttpResponse(status=200)

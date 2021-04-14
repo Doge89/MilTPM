@@ -69,8 +69,7 @@ def get(request):
 
 #ACTUALIZA LA INFORMACION EN LA BD
 @require_http_methods(['POST'])
-@csrf_exempt
-#@ensure_csrf_cookie
+@ensure_csrf_cookie
 def post(request):
     if request.method == 'POST':
         try:
@@ -123,7 +122,7 @@ def historial(request):
     return HttpResponse(status=401)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
 def historial_get(request):
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
@@ -139,7 +138,7 @@ def historial_get(request):
     return HttpResponse(status=405)
 
 @require_http_methods(['POST'])
-@csrf_exempt
+@ensure_csrf_cookie
 def _actual_pieces(request, linea=None):
     if request.method == 'POST':
         try:
