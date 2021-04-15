@@ -12,7 +12,7 @@ function Layout(){
     }, [])
 
     return(
-        <MainContainer>
+        <MainContainer type="layout">
             <Plane />
         </MainContainer>
     )
