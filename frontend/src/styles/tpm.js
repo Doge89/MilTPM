@@ -58,7 +58,7 @@ export const InfoContainer = styled.div`
     align-items: center;
     flex-direction: row;
     justify-content: space-around;
-    margin: 3vh 0;
+    margin: 3vh 0;    
 
     div{
         background-color: rgb(243, 243, 243);
@@ -116,6 +116,7 @@ export const Container = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
+    min-height: 60%;
 
     h1{
         font-size: 1.5vw;

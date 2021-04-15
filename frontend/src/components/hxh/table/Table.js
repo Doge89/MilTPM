@@ -184,9 +184,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     useEffect(() => {
         if(!hxhHistory){ getActualInfo() }
-        return () => {
-            window.clearInterval(interval.current)
-        }
+        return () => { window.clearInterval(interval.current) }
     }, [context.actual])
 
     useEffect(() => {
@@ -195,7 +193,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         if(!hxhHistory){
             checkHour()
             isLogged().then((data) =>{
-                if(!data.Logged){ window.location.replace('/login') }
+                //if(!data.Logged){ window.location.replace('/login') }
                 getData().then(({ InfProd, InfGen, Linea, Andon }) => {
                     const dataInfo = JSON.parse(InfGen)
                     const data = JSON.parse(InfProd).map(row => row.fields)
@@ -217,7 +215,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
            
         }
         return () => { clearTimeout(timeout) }
-    }, [])
+    }, [rerender])
 
     useEffect(() => {
         if(hxhHistory){ setInfoTable(data) }
