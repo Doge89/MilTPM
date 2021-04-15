@@ -138,18 +138,26 @@ function Form({ children, location }){
         }).catch(e => console.log(e))
     }
 
+    const getTitle = () => {
+        console.log(type)
+        switch(type){
+            case "materiales": return 'Materiales'
+            case "mantenimiento": return 'Mantenimiento'
+            case "produccion": return 'Producción'
+            case "ingenieria": return 'Ingeniería'
+            case "calidad": return 'Calidad'
+            case "cambio": return 'Cambio de modelo'
+        }
+    }
+
     useEffect(() => {
         getData().then(({ Andon }) => {
             const query = new URLSearchParams(location.search)
             const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
 
-            console.log(andon)
-
             if(andon){
                 const date = new Date(andon?.registro)
                 const periodPaused = andon.pause.split('/')
-
-                console.log(andon.registro)
 
                 let totalTime = 0
                 let lastPausedTime = 0
@@ -158,7 +166,6 @@ function Form({ children, location }){
             
                 for(let i = 0; i < periodPaused.length; i++){
                     const period = periodPaused[i]
-                    console.log(period)
 
                     const startedAt = new Date(period.split('\n')[0])
                     const endAt = new Date(period.split('\n')[1])
@@ -197,7 +204,6 @@ function Form({ children, location }){
                 clearInterval(intervalID)
             }
 
-            console.log('a')
             setRerender(!rerender)
             
         }).catch(e => console.log(e))
@@ -226,7 +232,7 @@ function Form({ children, location }){
 
     return(
         <FormContainer>
-            <h1>Si necesitas materiales, elabore su solicitud</h1>
+            <h1>{getTitle()}</h1>
             <form> 
                 <label>Descripción</label>
                 <textarea 

@@ -446,3 +446,89 @@ export const RadioButtonContainer = styled.div`
         }
     }
 `;
+
+export const Footer = styled.footer`
+    width: 100%;
+    height: 15%;
+    background-color: rgb(41, 41, 41);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    img{
+        width: 10vw;
+    }
+
+    .info{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 33%;
+        justify-content: center;
+
+        a{
+            color: white;
+            font-size: 1vw;
+            font-family: Arial, Helvetica, sans-serif;
+            text-decoration: none;
+            margin: 0 1vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            img{
+                width: 2vw;
+                margin-right: 0.2vw;
+            }
+        }
+    }
+
+    .address{
+        display: flex;
+        flex-direction: column;
+
+        span{
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1vw;
+        }
+    }
+
+    #qr{
+        width: 5vw;
+        margin-left: 1vw;
+    }
+
+    @media ${device.tablet}{
+        flex-direction: column;
+        padding: 5vh 0;
+        height: fit-content;
+
+        img{ width: 60vw; }
+
+        .info{
+            width: 100%;
+            flex-direction: column;
+            margin: 1vh 0;
+
+            a{
+                font-size: 5vw;
+                margin: 0.5vh 0;
+
+                img{ width: 8vw; }
+            }
+        }
+
+        .address{
+            span{
+                font-size: 4vw;
+            }
+        }
+
+        #qr{
+            width: 40vw;
+            margin: 2vh 0 0 0;
+        }
+    }
+`
