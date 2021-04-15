@@ -127,6 +127,7 @@ def finish_andon(request):
     return HttpResponse(status=405)
 
 #SOLO SCRIPT REMOTO DE PYTHON
+@csrf_exempt
 @require_http_methods(['GET'])
 def _get_status(request, linea = None):
     if request.method == 'GET':
