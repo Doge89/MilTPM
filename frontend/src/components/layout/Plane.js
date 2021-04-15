@@ -102,10 +102,10 @@ function Plane(){
 
     const getTopLine = (line) => {
         switch(line){
-            case "MXC001": return "70%"
-            case "MXC002": return "70%"
-            case "MXC003": return "70%"
-            case "MXC004": return "70%"
+            case "MXC001": return "75%"
+            case "MXC002": return "75%"
+            case "MXC003": return "75%"
+            case "MXC004": return "75%"
             case "MXC005": return "61%"
             case "MXC006": return "45%"
             case "MXC007": return "45%"
