@@ -78,11 +78,11 @@ function Plane(){
 
     const getLeftLine = (line) => {
         switch(line){
-            case "MXC001": return "86%"
-            case "MXC002": return "81%"
-            case "MXC003": return "76%"
-            case "MXC004": return "71%"
-            case "MXC005": return "15.75%"
+            case "MXC001": return "77%"
+            case "MXC002": return "73.25%"
+            case "MXC003": return "69.5%"
+            case "MXC004": return "65.75%"
+            case "MXC005": return "24.5%"
             case "MXC006": return "83.5%"
             case "MXC007": return "76.5%"
             case "MXC008": return "69.5%"
@@ -102,11 +102,11 @@ function Plane(){
 
     const getTopLine = (line) => {
         switch(line){
-            case "MXC001": return "69%"
-            case "MXC002": return "69%"
-            case "MXC003": return "69%"
-            case "MXC004": return "69%"
-            case "MXC005": return "48%"
+            case "MXC001": return "70%"
+            case "MXC002": return "70%"
+            case "MXC003": return "70%"
+            case "MXC004": return "70%"
+            case "MXC005": return "61%"
             case "MXC006": return "45%"
             case "MXC007": return "45%"
             case "MXC008": return "45%"
@@ -179,7 +179,8 @@ function Plane(){
             ):(
                 <PlaneComponent img={layout}>
                     {lines.map((line, idx) => (
-                        <Indicator top={getTopLine(line.linea)} left={getLeftLine(line.linea)} key={idx} id={`line${line.linea}`}/> 
+                        //<Indicator top={getTopLine(line.linea)} left={getLeftLine(line.linea)} key={idx} id={`line${line.linea}`}/>
+                        <Indicator top="61%" left="24.25%" key={idx} id={`line${line.linea}`}/>  
                     ))}
                 </PlaneComponent>
             )}
