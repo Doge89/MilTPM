@@ -179,8 +179,8 @@ function Plane(){
             ):(
                 <PlaneComponent img={layout}>
                     {lines.map((line, idx) => (
-                        //<Indicator top={getTopLine(line.linea)} left={getLeftLine(line.linea)} key={idx} id={`line${line.linea}`}/>
-                        <Indicator top="61%" left="24.25%" key={idx} id={`line${line.linea}`}/>  
+                        <Indicator top={getTopLine(line.linea)} left={getLeftLine(line.linea)} key={idx} id={`line${line.linea}`}/>
+                        //<Indicator top="61%" left="24.25%" key={idx} id={`line${line.linea}`}/>  
                     ))}
                 </PlaneComponent>
             )}
