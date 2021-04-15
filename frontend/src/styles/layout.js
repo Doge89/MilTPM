@@ -41,10 +41,10 @@ export const Plane = styled.div`
 `;
 
 export const Indicator = styled.div`
-    width: 2%;
-    height: 8%;
+    width: 2.5%;
+    height: 13%;
     background-color: ${props => props.color};
-    position: absolute;
+    position: relative;
     top: ${props => props.top};
     left: ${props => props.left};
 

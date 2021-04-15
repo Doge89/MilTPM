@@ -82,7 +82,7 @@ function Table({ isHistory }){
     useEffect(() => {
         if(window.innerWidth <= maxWidth){ document.getElementById('table-mp').scrollIntoView({ behavior: 'smooth' }) }
         getLine().then(({ linea, Logged }) => {
-            if(!Logged){ window.location.replace('/login') }
+            //if(!Logged){ window.location.replace('/login') }
             context.dispatchLine({ type: 'SET', value: linea })
         }).catch(e => {
             console.log(e)
