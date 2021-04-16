@@ -15,6 +15,29 @@ export const InfoContainer = styled.div`
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+
+        .select-container{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+
+            label{
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 1vw;
+                margin-right: 0.5vw;
+            }
+
+            select{
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 1vw;
+                background-color: white;
+                border: 1px solid black;
+                width: 100%;
+            }
+        }
+
+        
     }
 
     @media ${device.tablet} {
