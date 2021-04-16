@@ -28,6 +28,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     const history = useHistory()
 
     const [dataFetched, setDataFetched] = useState([])
+    const [rerenderChangeSchedule, setRerenderChangeSchedule] = useState(false)
 
     const postData = async (data) => {
         const res = await axios({
@@ -96,7 +97,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     const checkHour = () => {
         const date = new Date()
         if((date.getHours() === 6 ||  date.getHours() === 13 || date.getHours() === 23) && date.getMinutes() === 0){
-            setRerender(!rerender)
+            setRerenderChangeSchedule(!rerenderChangeSchedule)
         }
         timeout = setTimeout(checkHour, 1000 * 60)
     }
@@ -215,7 +216,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
            
         }
         return () => { clearTimeout(timeout) }
-    }, [rerender])
+    }, [rerenderChangeSchedule])
 
     useEffect(() => {
         if(hxhHistory){ setInfoTable(data) }

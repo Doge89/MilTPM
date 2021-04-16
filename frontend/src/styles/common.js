@@ -469,7 +469,7 @@ export const Footer = styled.footer`
 
         a{
             color: white;
-            font-size: 1vw;
+            font-size: 0.8vw;
             font-family: Arial, Helvetica, sans-serif;
             text-decoration: none;
             margin: 0 1vw;
@@ -478,7 +478,7 @@ export const Footer = styled.footer`
             align-items: center;
 
             img{
-                width: 2vw;
+                width: 1.5vw;
                 margin-right: 0.2vw;
             }
         }
@@ -491,12 +491,12 @@ export const Footer = styled.footer`
         span{
             color: white;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 1vw;
+            font-size: 0.8vw;
         }
     }
 
     #qr{
-        width: 5vw;
+        width: 4vw;
         margin-left: 1vw;
     }
 
