@@ -151,7 +151,7 @@ function Tpm(){
 
     return(
         <MainContainer>
-            <TopBar setViewType={setViewType} viewType={viewType}/>
+            <TopBar setViewType={setViewType} viewType={viewType} user={user} />
             <Info line={line} user={user} setLine={setLine} lineUser={lineUser} />
             {viewType === 'panel' ? (
                 <Panel 
