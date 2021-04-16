@@ -60,15 +60,14 @@ function MpHistory(){
     useEffect(() => {
         setRootStyle(true)
         isLogged().then((data) =>{
-            console.log(data)
-            if(!data.Logged){ window.location.replace('/login') }
-            if(data.priv === "production"){ history.goBack() }
+            //if(!data.Logged){ window.location.replace('/login') }
+            //if(data.priv === "production"){ history.goBack() }
         }).catch(e => { console.log(e) })
     }, [])
 
     return(
         <MainContainer>
-            <Searcher setData={setData} setSearched={setSearched} />
+            <Searcher setData={setData} setSearched={setSearched} searched={searched} />
             <Table searched={searched} data={data} setReport={setReport} />
             {JSON.stringify(report) !== "{}" && (
                 <HistoryTableContainer>

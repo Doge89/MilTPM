@@ -10,7 +10,7 @@ import { appContext } from '../../../reducers/ProviderMP'
 
 import { URL } from '../../../var'
 
-function Searcher({ setData, setSearched }){
+function Searcher({ setData, setSearched, searched }){
 
     const context = useContext(appContext)
 
@@ -20,7 +20,7 @@ function Searcher({ setData, setSearched }){
 
     const handleSelectLine = e => console.log(e.target.value)
     const handleSelectTurno = e => setTurno(e.target.value)
-    const handleInputDate = e => setDate(e.target.value)
+    const handleInputDate = e => setDate(e.target.value) 
 
     const getData = async () => {
         const res = await axios({
@@ -70,7 +70,7 @@ function Searcher({ setData, setSearched }){
     }, [])
 
     return(
-        <SearcherContainer>
+        <SearcherContainer marginb={searched ? '0' : '50vh'}>
             <h1>Consulte el historial del MP</h1>
             <div className="inputs-container">
                 <CardInfo widthLabel="28vw" width="25vw">
