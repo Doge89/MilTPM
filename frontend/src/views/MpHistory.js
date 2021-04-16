@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 
 import MainContainer from '../components/common/MainContainer'
 import Searcher from '../components/mp/history/Searcher'
@@ -9,15 +11,26 @@ import { HistoryTableContainer } from '../styles/mp'
 
 import { appContext } from '../reducers/ProviderMP'
 
+import { URL } from '../var'
 import { setRootStyle } from '../scripts'
 
 function MpHistory(){
 
+    const history = useHistory()
     const context = useContext(appContext)
 
     const [data, setData] = useState([])
     const [report, setReport] = useState({})
     const [searched, setSearched] = useState(false)
+
+    const isLogged = async () => {
+        const res = await axios({
+            url : `${URL}/login/validate/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
 
     useEffect(() => {
         setRootStyle(true)
@@ -43,6 +56,15 @@ function MpHistory(){
             context.dispatchTurno({ type: 'SET', value: report.turno })
         }
     }, [report])
+
+    useEffect(() => {
+        setRootStyle(true)
+        isLogged().then((data) =>{
+            console.log(data)
+            if(!data.Logged){ window.location.replace('/login') }
+            if(data.priv === "production"){ history.goBack() }
+        }).catch(e => { console.log(e) })
+    }, [])
 
     return(
         <MainContainer>

@@ -8,7 +8,7 @@ import { Text } from '../../../styles/common'
 function Table({ searched, data, setReport }){
     return(
         searched && (
-            <TableContainer width="100%" alignItems="center" tableWidth="80%" mp>
+            <TableContainer width="100%" alignItems="center" tableWidth="80%" mp history>
                 {data.length === 0 ? (
                     <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="0 auto" className="error">No se ha encontrado ningún reporte que coincida con la busqueda</Text>
                 ):(
