@@ -48,7 +48,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}/hxh/get/?linea=${context.linea}`,
+            url: `${URL}/hxh/get/${context.linea}/`,
             method: 'GET'
         })
 
