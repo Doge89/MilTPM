@@ -150,7 +150,7 @@ export const SelectContainer = styled.div`
     }
 
     select{
-        width: 10vw;
+        width: ${props => props.width || '10vw'};
         background-color: white;
         padding: 0.5vh 1vw;
         border: 0;

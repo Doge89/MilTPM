@@ -88,7 +88,7 @@ function TableHeader({ history, lines }){
                     width="100%"
                     justifyContent="space-between"
                 >
-                    <SelectContainer>
+                    <SelectContainer width="15vw">
                         <label>Línea:</label>
                         <select onChange={handleSelectLine} value={context.line} disabled={history}> 
                             <option value="none">Seleccionar linea</option>
