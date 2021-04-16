@@ -12,7 +12,7 @@ URL = 'http://192.168.100.22:8000/api/token/verify/'
 
 #CARGA DEL SISTEMA ANDON
 def index(request):
-    if ('Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production'):
+    if ('Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production' or request.session['priv'] == 'admin'):
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
