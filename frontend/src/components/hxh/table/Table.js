@@ -48,7 +48,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
 
     const getData = async (userType) => {
         const res = await axios({
-            url: `${URL}/hxh/get/${userType=== production ? '' : `${context.linea}/`}`,
+            url: `${URL}/hxh/get/${userType=== 'production' ? '' : `${context.linea}/`}`,
             method: 'GET'
         })
 
