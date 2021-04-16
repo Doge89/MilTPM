@@ -212,12 +212,12 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     }
 
     useEffect(() => {
-        /* if(!hxhHistory){
+        if(!hxhHistory){
             if(userType === "production"){ getActualInfo() }
             else{
                 if(context.linea && context.linea !== ''){ getActualInfo() }
             }
-        } */
+        }
         return () => { window.clearInterval(interval.current) }
     }, [context.actual, userType, context.linea])
 
