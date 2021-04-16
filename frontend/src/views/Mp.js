@@ -38,11 +38,11 @@ function Mp(){
         setRootStyle(true)
         isLogged().then((data) =>{
             console.log(data)
-            if(!data.Logged){ window.location.replace('/login') }
+            //if(!data.Logged){ window.location.replace('/login') }
             if(data.priv === "production"){ history.goBack() }
             if(data.priv === "admin"){
                 getLines().then(({ lineas }) => {
-                    const lines = JSON.parse(lineas).map(item => item.field.linea)
+                    const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
                 }).catch(e => console.log(e))
             }
