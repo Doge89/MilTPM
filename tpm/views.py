@@ -202,7 +202,7 @@ def usuarios(request):
             data = request.POST.get('data')
             print(data)
             data = ast.literal_eval(data)
-            user = Usuarios.objects.create_superuser(username=data['user'], email=data['email'], password=data['password'], linea=data['linea'], clave = data['clave'])
+            user = Usuarios.objects.create_superuser(username=data['user'], email=data['email'], password=data['password'], linea=data['linea'], clave = data['clave'], user_type=data['tipoUsuario'])
             serialized = {
                 "id": user.id,
                 "username": user.username,

@@ -23,13 +23,26 @@ def index(request):
 def get(request):
     if request.method == 'GET':
         try:
-            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{request.session['Linea']}", fecha__exact=datetime.date(datetime.now()))) == 0:
+            line = None
+            if "Linea" in request.session: line = request.session['Linea'] 
+            else: line = request.GET.get('linea')
+            if line == 'none' or line is None: return HttpResponse(status=400)
+            print('a')
+            print(line)
+            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{line}", fecha__exact=datetime.date(datetime.now()))) == 0:
+                print('b')
                 #MODIFICAR
-                linUser = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
+                linUser = None
+                if request.session['priv'] == "admin":
+                    user = Usuarios.objects.filter(linea__exact=f"{line}")
+                    print(user['usuario'])
+                    #linUser = Linea.objects.get(usuario_id__username__exact=f"{user}")
+                else:
+                    linUser = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
                 dataInfGeneral = infoGeneral.objects.create(Id = None, linea = linUser, consola = '', job='', mod='')
                 general = infoGeneral.objects.last()
                 print("NO EXISTEN REGISTROS")
-                print("CREANDO REGISTROS...")
+                print("CREANDO REGISTROS...") 
                 time.sleep(1)
 
                 for x in range(24):
@@ -38,10 +51,10 @@ def get(request):
                     else:
                         datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'{x+1}:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general, fecha=datetime.date(datetime.now()))
             #MODIFICAR
-            datosInfProd = _get_objects(Linea = f"{request.session['Linea']}")
+            datosInfProd = _get_objects(Linea = f"{line}")
             serializedInfProd = serializers.serialize('json', list(datosInfProd))
             #MODIFICAR
-            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last() 
+            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{line}").last() 
             datLinea = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
             datInfGen = model_to_dict(datInfGen)
 

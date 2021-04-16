@@ -33,6 +33,7 @@ urlpatterns = [
     path('andon/', include('andon.urls'), name='Andon'),
     path('mp/', include('mp.urls'), name='MP'),
     path('tpm/', include('tpm.urls'), name='TPM'),
+    path('admin/', include('usuarios.urls'), name='TPM'),
     path('layout/', include('layout.urls'), name='layout')
 
 ]
