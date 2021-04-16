@@ -236,13 +236,11 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 /* if(!data.Logged){ window.location.replace('/login') }
                 if(data.priv === "mantenimiento"){ history.goBack() } */
                 setUserType(data.priv)
-                if(data.priv === "admin"){
-                    getLines().then(({ lineas }) => {
-                        const lines = JSON.parse(lineas).map(item => item.fields.linea)
-                        setLines(lines)
-                    }).catch(e => console.log(e))
-                }
-                else{ getAllInfo() }
+                getLines().then(({ lineas }) => {
+                    const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                    setLines(lines)
+                }).catch(e => console.log(e))
+                if(data.priv === "production"){ getAllInfo() }
             }).catch(e => {
                 console.log(e)
             })
