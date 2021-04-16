@@ -16,7 +16,7 @@ import { setRootStyle } from '../scripts'
 
 function Tpm(){
 
-    const history = useHistory()
+    const historyBrowser = useHistory()
 
     const [viewType, setViewType] = useState('panel')
     const [line, setLine] = useState('')
@@ -113,7 +113,7 @@ function Tpm(){
         setRootStyle(true)
         isLogged().then(({ Logged, linea, Usuario, priv }) => {
             if(!Logged){ window.location.replace('/login') }
-            if(priv === "mantenimiento"){ history.goBack() }
+            if(priv === "mantenimiento"){ historyBrowser.goBack() }
             setUser(Usuario)
             if(linea){ setLine(linea) }
             else{ setLineUser(false) }
