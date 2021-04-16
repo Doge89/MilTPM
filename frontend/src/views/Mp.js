@@ -38,7 +38,7 @@ function Mp(){
         setRootStyle(true)
         isLogged().then((data) =>{
             console.log(data)
-            if(!data.Logged){ window.location.replace('/login') }
+            //if(!data.Logged){ window.location.replace('/login') }
             if(data.priv === "production"){ history.goBack() }
             if(data.priv === "admin"){
                 getLines().then(({ lineas }) => {
