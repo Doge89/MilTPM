@@ -13,7 +13,7 @@ import { ButtonPrimary, Container, Text } from '../../../styles/common'
 import { URL, maxWidth } from '../../../var'
 import { appContext } from '../../../reducers/ProviderMP'
 
-function Table({ isHistory }){
+function Table({ isHistory, lines }){
 
     const history = useHistory()
     const context = useContext(appContext)
@@ -91,7 +91,7 @@ function Table({ isHistory }){
 
     return(
         <TableComponent id="table-mp">
-            <TableHeader history={isHistory}/>
+            <TableHeader history={isHistory} lines={lines}/>
             <TableBody history={isHistory} />
             {err && <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="2vh auto 0 auto">{message}</Text>}
             {!isHistory && (

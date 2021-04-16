@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 
@@ -13,6 +13,8 @@ import { setRootStyle } from '../scripts'
 function Mp(){
 
     const history = useHistory()
+
+    const [lines, setLines] = useState([])
 
     const isLogged = async () => {
         const res = await axios({
@@ -40,7 +42,8 @@ function Mp(){
             if(data.priv === "production"){ history.goBack() }
             if(data.priv === "admin"){
                 getLines().then(({ lineas }) => {
-                    console.log(lineas)
+                    const lines = JSON.parse(lineas).map(item => item.field.linea)
+                    setLines(lines)
                 }).catch(e => console.log(e))
             }
             
@@ -51,7 +54,7 @@ function Mp(){
         <MainContainer>
             <TableContainer>
                 <h1>REGISTRO DE FALLAS Y TIEMPO MUERTO DE MANTENIMIENTO</h1>
-                <Table />
+                <Table lines={lines} />
             </TableContainer>
         </MainContainer>
     )

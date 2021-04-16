@@ -12,9 +12,12 @@ import { twoDigits } from '../../../scripts'
 
 const date = `${twoDigits(new Date().getDate())}/${twoDigits(new Date().getMonth() +1)}/${new Date().getFullYear()}`
 
-function TableHeader({ history }){
+function TableHeader({ history, lines }){
 
     const context = useContext(appContext) 
+
+    console.log(context.line)
+    console.log(lines)
 
     const handleSelect = e => context.dispatchTurno({ type: 'SET', value: e.target.value })
 
@@ -82,6 +85,7 @@ function TableHeader({ history }){
                     width="100%"
                     justifyContent="space-between"
                 >
+                    
                     <Input 
                         value={context.line}
                         onChange={handleInputLine}
