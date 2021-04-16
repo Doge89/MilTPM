@@ -237,7 +237,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 if(data.priv === "mantenimiento"){ history.goBack() } */
                 setUserType(data.priv)
                 setInfoUserType(data.priv)
-                if(priv === "production"){ context.dispatchLinea({ type: 'SET', value: data.Linea }) }
+                if(data.priv === "production"){ context.dispatchLinea({ type: 'SET', value: data.Linea }) }
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
