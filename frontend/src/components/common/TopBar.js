@@ -60,7 +60,7 @@ function TopBar(){
     }
     const gotoTPM = () => {
         if(!logged){ return window.location.replace('/login') }
-        history.push('/tpm')
+        if(userType !== 'mantenimiento'){ history.push('/tpm') }
     }
     const gotoMP = () => {
         if(!logged){ return window.location.replace('/login') }
