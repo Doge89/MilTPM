@@ -33,7 +33,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
 
     const postData = async (data) => {
         const res = await axios({
-            url: `${URL}/hxh/post/${userType=== 'production' ? '' : `${context.linea}/`}`,
+            url: `${URL}/hxh/post/`,
             method: 'POST',
             data: querystring.stringify(data),
             headers: {
