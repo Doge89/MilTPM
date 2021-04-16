@@ -16,7 +16,7 @@ import { appContext } from '../../../reducers/ProviderHXH'
 import { columns, scheduleA, scheduleB, scheduleC, URL, allDay, maxWidth, andonReason } from '../../../var'
 import { twoDigits } from '../../../scripts'
  
-function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLines }){
+function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLines, setInfoUserType }){
 
     let timeout
     const interval = useRef()
@@ -236,6 +236,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 /* if(!data.Logged){ window.location.replace('/login') }
                 if(data.priv === "mantenimiento"){ history.goBack() } */
                 setUserType(data.priv)
+                setInfoUserType(data.priv)
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
