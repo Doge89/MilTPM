@@ -214,7 +214,7 @@ function Form({ children, location }){
         if(!query.get('tipo')){ window.location.replace('/hxh') }
         isLogged().then((data) => {
             if(data.Logged){
-                if(data.priv !== 'production'){ window.location.replace('/login') }
+                if(data.priv === 'mantenimiento'){ window.location.replace('/login') }
                 const query = new URLSearchParams(location.search)
         
                 if(!query.get('tipo')){ window.location.replace('/hxh') }
