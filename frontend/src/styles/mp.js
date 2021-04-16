@@ -291,6 +291,7 @@ export const SearcherContainer = styled.div`
     width: 90%;
     padding: 0 5%;
     margin-top: 2vh;
+    margin-bottom: ${props => props.marginb};
 
     h1{
         font-family: Arial, Helvetica, sans-serif;
