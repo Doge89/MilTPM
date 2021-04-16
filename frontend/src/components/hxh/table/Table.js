@@ -212,12 +212,17 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     }
 
     useEffect(() => {
-        if(!hxhHistory){ getActualInfo() }
+        if(!hxhHistory){
+            if(userType === "production"){ getActualInfo() }
+            else{
+                if(context.linea && context.linea !== ''){ getActualInfo() }
+            }
+        }
         return () => { window.clearInterval(interval.current) }
-    }, [context.actual])
+    }, [context.actual, userType, context.linea])
 
     useEffect(() => {
-        if(userType === "admin"){
+        if(userType === "admin" && context.linea && context.linea !== ''){
             getAllInfo()
         }
     }, [context.linea, userType])
