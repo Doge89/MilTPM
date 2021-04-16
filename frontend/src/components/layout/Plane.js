@@ -159,7 +159,7 @@ function Plane(){
     useEffect(() => {
         checkHour()
         setLinesStatus()
-        intervalData.current = setInterval(setLinesStatus, 1000);
+        intervalData.current = setInterval(setLinesStatus, 5000);
         if(window.innerWidth <= maxWidth){ document.getElementById('root').style.overflowY = 'auto' }
         return () => {
             clearInterval(interval.current) 
