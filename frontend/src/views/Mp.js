@@ -26,6 +26,7 @@ function Mp(){
     useEffect(() => {
         setRootStyle(true)
         isLogged().then((data) =>{
+            console.log(data)
             if(!data.Logged){ window.location.replace('/login') }
             if(data.priv !== "production"){ history.goBack() }
             
