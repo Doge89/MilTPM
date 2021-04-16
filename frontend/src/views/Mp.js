@@ -34,7 +34,7 @@ function Mp(){
         return res.data
     }
 
-    useEffect(() => {
+    useEffect(() => { 
         setRootStyle(true)
         isLogged().then((data) =>{
             console.log(data)
