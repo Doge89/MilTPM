@@ -26,7 +26,7 @@ function Table({ isHistory, lines }){
     
     const getMachines = async () => {
         const res = await axios({
-            url: `${URL}/tpm/modificar/cronograma/get/${line}/`,
+            url: `${URL}/tpm/modificar/cronograma/get/${context.line}/`,
             method: 'GET',
         })
 
@@ -100,9 +100,10 @@ function Table({ isHistory, lines }){
     }, [])
 
     useEffect(() => {
-        if(line && line !== ""){
+        if(context.line && context.line !== ""){
             getMachines().then(({ maquinas }) => {
                 const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
+                setMachines(machines)
             }).catch(e => console.log(e))
         }
     }, [context.line])
