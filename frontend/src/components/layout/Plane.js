@@ -83,20 +83,20 @@ function Plane(){
             case "MXC003": return "69.5%"
             case "MXC004": return "65.75%"
             case "MXC005": return "24.5%"
-            case "MXC006": return "83.5%"
-            case "MXC007": return "76.5%"
-            case "MXC008": return "69.5%"
+            case "MXC006": return "75.5%"
+            case "MXC007": return "70%"
+            case "MXC008": return "64.75%"
             case "MXC009": return "42.5%"
             case "MXC010": return "83.5%"
-            case "MXC011": return "72.25%"
-            case "MXC012": return "14.75%"
-            case "MXC013": return "31.5%"
+            case "MXC011": return "69%"
+            case "MXC012": return "23.5%"
+            case "MXC013": return "36%"
             case "MXC014": return "69%"
-            case "MXC015": return "17.5%"
-            case "MXC016": return "32.5%"
-            case "MXC017": return "23%"
-            case "MXC018": return "27.5%"
-            case "MXC019": return "66.75%"
+            case "MXC015": return "25.5%"
+            case "MXC016": return "36.75%"
+            case "MXC017": return "29.75%"
+            case "MXC018": return "33%"
+            case "MXC019": return "62.5%"
         }
     }
 
@@ -107,19 +107,19 @@ function Plane(){
             case "MXC003": return "75%"
             case "MXC004": return "75%"
             case "MXC005": return "61%"
-            case "MXC006": return "45%"
-            case "MXC007": return "45%"
-            case "MXC008": return "45%"
-            case "MXC009": return "40%"
-            case "MXC010": return "23%"
-            case "MXC011": return "23%"
-            case "MXC012": return "23%"
-            case "MXC013": return "23%"
-            case "MXC014": return "23%"
-            case "MXC015": return "74%"
-            case "MXC016": return "74%"
+            case "MXC006": return "59%"
+            case "MXC007": return "59%"
+            case "MXC008": return "59%"
+            case "MXC009": return "45%"
+            case "MXC010": return "45%"
+            case "MXC011": return "45%"
+            case "MXC012": return "45%"
+            case "MXC013": return "45%"
+            case "MXC014": return "45%"
+            case "MXC015": return "77%"
+            case "MXC016": return "77%"
             case "MXC017": return "23%"
-            case "MXC018": return "74%"
+            case "MXC018": return "77%"
             case "MXC019": return "23%"
         }
     }
@@ -180,7 +180,7 @@ function Plane(){
                 <PlaneComponent img={layout}>
                     {lines.map((line, idx) => (
                         <Indicator top={getTopLine(line.linea)} left={getLeftLine(line.linea)} key={idx} id={`line${line.linea}`}/>
-                        //<Indicator top="61%" left="24.25%" key={idx} id={`line${line.linea}`}/>  
+                        //<Indicator top="45%" left="62.5%" key={idx} id={`line${line.linea}`}/>  
                     ))}
                 </PlaneComponent>
             )}
