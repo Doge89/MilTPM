@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
 import Cookies from 'js-cookie'
+import { useHistory } from 'react-router-dom'
 
 import MainContainer from '../components/common/MainContainer'
 import TopBar from '../components/tpm/TopBar'
@@ -14,6 +15,8 @@ import { URL, maxWidth } from '../var'
 import { setRootStyle } from '../scripts'
 
 function Tpm(){
+
+    const history = useHistory()
 
     const [viewType, setViewType] = useState('panel')
     const [line, setLine] = useState('')
@@ -108,8 +111,9 @@ function Tpm(){
 
     useEffect(() => {
         setRootStyle(true)
-        isLogged().then(({ Logged, linea, Usuario }) => {
-            //if(!Logged){ window.location.replace('/login') }
+        isLogged().then(({ Logged, linea, Usuario, priv }) => {
+            if(!Logged){ window.location.replace('/login') }
+            if(priv === "mantenimiento"){ history.goBack() }
             setUser(Usuario)
             if(linea){ setLine(linea) }
             else{ setLineUser(false) }
