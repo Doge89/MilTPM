@@ -240,7 +240,6 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                     getLines().then(({ lineas }) => {
                         const lines = JSON.parse(lineas).map(item => item.fields.linea)
                         setLines(lines)
-                        getAllInfo()
                     }).catch(e => console.log(e))
                 }
                 else{ getAllInfo() }
