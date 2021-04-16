@@ -37,7 +37,7 @@ export const FormContainer = styled.div`
             margin-bottom: 0.5vw;
         }
 
-        input{
+        input, select{
             height: 4vh;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 1vw;
@@ -127,7 +127,7 @@ export const FormContainer = styled.div`
                 height: 5vh;
             }
 
-            input{
+            input, select{
                 font-size: 4vw;
                 margin: 2vh 0;
                 padding: 0.5vh 3vw;
