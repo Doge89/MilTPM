@@ -239,8 +239,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
+                    if(data.priv === "production"){ getAllInfo() }
                 }).catch(e => console.log(e))
-                if(data.priv === "production"){ getAllInfo() }
             }).catch(e => {
                 console.log(e)
             })
