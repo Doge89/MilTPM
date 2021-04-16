@@ -6,7 +6,7 @@ import { TableRow } from '../../../styles/mp'
 
 import { appContext } from '../../../reducers/ProviderMP'
 
-function TableBody({ history }){
+function TableBody({ history, machines }){
 
     const context = useContext(appContext)
     
@@ -59,9 +59,9 @@ function TableBody({ history }){
                 <div className="input-container">
                     <select value={context.machineType} onChange={handleSelectMachineType} disabled={history}>
                         <option value="none">Selecciona máquina</option>
-                        <option>Open Link</option>
-                        <option>EOL</option>
-                        <option>Grease Dispenser</option>
+                        {machines.map((machine, idx) => (
+                            <option key={idx}>{machine.nombre}</option>
+                        ))}
                     </select>
                 </div>
             </TableRow>

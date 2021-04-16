@@ -10,7 +10,7 @@ import { URL, maxWidth } from '../../var'
 function Plane(){
 
     const interval = useRef(null)
-    const intervalColor = useRef()
+    const intervalData = useRef()
 
     const [colorCambio, setColorCambio] = useState('white')
     const [lines, setLines] = useState([])
@@ -159,9 +159,11 @@ function Plane(){
     useEffect(() => {
         checkHour()
         setLinesStatus()
+        intervalData.current = setInterval(setLinesStatus, 1000);
         if(window.innerWidth <= maxWidth){ document.getElementById('root').style.overflowY = 'auto' }
         return () => {
             clearInterval(interval.current) 
+            clearInterval(intervalData.current) 
         }
     }, [])
 
