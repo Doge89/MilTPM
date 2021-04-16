@@ -81,7 +81,7 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
 
     const checkData = () =>{
         setErr(false)
-        if(!user || (JSON.stringify(userToEdit) === "{}" && !password) || !line || !email){
+        if(!user || (JSON.stringify(userToEdit) === "{}" && !password) || (!line && typeUser === "production") || !email){
             setErr(true)
             setMessage('No puede dejar campos en blanco')
             return false
@@ -172,22 +172,26 @@ function CreateUser({ modalOpen, closeModal, userToEdit, addUser, updateUser }){
                         />
                     </CardInfo>
                     {userToEdit && <span>*Opcional.</span>}
-                    <CardInfo>
-                        <label>Linea: </label>
-                        <input 
-                            value={line}
-                            onChange={handleInputLine}
-                            placeholder="Linea de producción"
-                        />
-                    </CardInfo>
-                    <CardInfo>
-                        <label>Clave: </label>
-                        <input 
-                            value={clave}
-                            onChange={handleInputClave}
-                            placeholder="Clave de usuario"
-                        />
-                    </CardInfo>
+                    {typeUser === "production" && (
+                        <CardInfo>
+                            <label>Linea: </label>
+                            <input 
+                                value={line}
+                                onChange={handleInputLine}
+                                placeholder="Linea de producción"
+                            />
+                        </CardInfo>
+                    )}
+                    {typeUser === "production" && (
+                        <CardInfo>
+                            <label>Clave: </label>
+                            <input 
+                                value={clave}
+                                onChange={handleInputClave}
+                                placeholder="Clave de usuario"
+                            />
+                        </CardInfo>
+                    )}
                     <CardInfo>
                         <label>Email: </label>
                         <input 
