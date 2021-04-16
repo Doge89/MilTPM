@@ -14,7 +14,7 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 # Create your views here.
 
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production':
+    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production' or request.session['priv'] == 'admin':
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 

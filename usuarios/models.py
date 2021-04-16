@@ -62,7 +62,7 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD='username'
 
-    REQUIRED_FIELDS = ['email', 'linea', 'clave', 'user_type']
+    REQUIRED_FIELDS = ['email', 'clave', 'user_type']
 
     objects = UsuariosManager()
 
@@ -94,6 +94,9 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
         }, settings.SECRET_KEY, algorithm='HS256')
     
         return token.decode('utf-8')
+
+    def __del__(self):
+        del self
 
 class Linea(models.Model):
     Id = models.AutoField(primary_key=True)

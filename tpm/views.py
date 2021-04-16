@@ -255,6 +255,20 @@ def _modify_user(request):
             print(e)
     return HttpResponse(status = 405)
 
+@require_http_methods(['POST'])
+@csrf_exempt
+def _add_production_line(request):
+    if request.method == 'POST':
+        try:
+            data = request.POST.get('data')
+            user = Usuarios.objects.get(username__exact=f"{data['usuario']}")
+            linea = Linea.objects.create(Id = None, linea = f"{data['linea']}", usuario = user)
+            return HttpResponse(status = 201)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
+
 @require_http_methods(['POST', 'GET'])
 @ensure_csrf_cookie
 #@csrf_exempt
