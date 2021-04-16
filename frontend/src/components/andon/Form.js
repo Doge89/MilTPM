@@ -14,13 +14,14 @@ function Form({ children, location }){
     const [password, setPassword] = useState('')
     const [type, setType] = useState('')
     const [message, setMessage] = useState('')
+    const [line, setLine] = useState('')
+    const [userType, setUserType] = useState('')
     const [timerRunning, setTimerRunning] = useState(false)
     const [timerPaused, setTimerPaused] = useState(false)
     const [rerender, setRerender] = useState(false)
     const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
     const [lines, setLines] = useState([])
-    const [line, setLine] = useState('')
 
     const handleInputPassword = e => setPassword(e.target.value)
     const handleSelect = e => {
@@ -229,6 +230,7 @@ function Form({ children, location }){
             if(data.Logged){
                 if(data.priv === 'mantenimiento'){ window.location.replace('/login') }
                 if(data.priv === "production"){ setLine(data.Linea) }
+                setUserType(data.priv)
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
@@ -257,6 +259,7 @@ function Form({ children, location }){
                 <select 
                     value={line}
                     onChange={handleSelect}
+                    disabled={userType === "production"}
                 >
                     <option value="none">Seleccionar linea</option>
                     {lines.map(line => (
