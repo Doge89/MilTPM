@@ -16,7 +16,7 @@ import { appContext } from '../../../reducers/ProviderHXH'
 import { columns, scheduleA, scheduleB, scheduleC, URL, allDay, maxWidth, andonReason } from '../../../var'
 import { twoDigits } from '../../../scripts'
  
-function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
+function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLines }){
 
     let timeout
     const interval = useRef()
@@ -29,6 +29,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     const [dataFetched, setDataFetched] = useState([])
     const [rerenderChangeSchedule, setRerenderChangeSchedule] = useState(false)
+    const [userType, setUserType] = useState('')
 
     const postData = async (data) => {
         const res = await axios({
@@ -47,7 +48,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}/hxh/get/`,
+            url: `${URL}/hxh/get/?linea=${context.linea}`,
             method: 'GET'
         })
 
@@ -69,6 +70,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             method: 'GET',
         })
 
+        return res.data
+    }
+
+    const getLines = async () => {
+        const res = await axios({
+            url : `${URL}/admin/lineas/`,
+            method: 'GET',
+        })
+        console.log(res.data)
         return res.data
     }
 
@@ -183,10 +193,34 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         }, 1000);
     }
 
+    const getAllInfo = () => {
+        getData().then(({ InfProd, InfGen, Linea, Andon, lineas }) => {
+            const dataInfo = JSON.parse(InfGen)
+            const data = JSON.parse(InfProd).map(row => row.fields)
+            const andon = JSON.parse(Andon).map(row => row.fields)
+            setDataFetched(data)
+            setInfoTable(data)
+            console.log(dataInfo)
+            setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
+            setAndonInfo(andon)
+            if(window.innerWidth <= maxWidth){
+                setTimeout(() => {
+                    document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
+                }, 1000);
+            }
+        }).catch(e => console.log(e))
+    }
+
     useEffect(() => {
         if(!hxhHistory){ getActualInfo() }
         return () => { window.clearInterval(interval.current) }
     }, [context.actual])
+
+    useEffect(() => {
+        if(userType === "admin"){
+            getAllInfo()
+        }
+    }, [context.linea, userType])
 
     useEffect(() => {
         const date = new Date()
@@ -194,23 +228,17 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         if(!hxhHistory){
             checkHour()
             isLogged().then((data) =>{
-                if(!data.Logged){ window.location.replace('/login') }
-                if(data.priv === "mantenimiento"){ history.goBack() }
-                getData().then(({ InfProd, InfGen, Linea, Andon }) => {
-                    const dataInfo = JSON.parse(InfGen)
-                    const data = JSON.parse(InfProd).map(row => row.fields)
-                    const andon = JSON.parse(Andon).map(row => row.fields)
-                    setDataFetched(data)
-                    setInfoTable(data)
-                    console.log(dataInfo)
-                    setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
-                    setAndonInfo(andon)
-                    if(window.innerWidth <= maxWidth){
-                        setTimeout(() => {
-                            document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
-                        }, 1000);
-                    }
-                }).catch(e => console.log(e))
+                /* if(!data.Logged){ window.location.replace('/login') }
+                if(data.priv === "mantenimiento"){ history.goBack() } */
+                setUserType(data.priv)
+                if(data.priv === "admin"){
+                    getLines().then(({ lineas }) => {
+                        const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                        setLines(lines)
+                        getAllInfo()
+                    }).catch(e => console.log(e))
+                }
+                else{ getAllInfo() }
             }).catch(e => {
                 console.log(e)
             })
