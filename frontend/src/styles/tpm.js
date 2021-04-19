@@ -335,6 +335,10 @@ export const Table = styled.div`
 
     .table-mobile{ display: none; }
 
+    ${props => props.mp && props.history && `
+        min-height: ${props.mpHeight}; 
+    `}
+
     @media ${device.tablet} {
         background-color: transparent;
         width: 85vw;
