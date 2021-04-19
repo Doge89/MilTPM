@@ -251,7 +251,6 @@ function Form({ children, location }){
                 <label>Linea</label>
                 <input 
                     value={line}
-                    type="password"
                     placeholder="Linea de producción"
                     disabled={true}
                 />
