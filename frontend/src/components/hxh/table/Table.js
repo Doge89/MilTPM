@@ -238,6 +238,10 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 setUserType(data.priv)
                 setInfoUserType(data.priv)
                 if(data.priv === "production"){ context.dispatchLinea({ type: 'SET', value: data.Linea }) }
+                else{
+                    window.localStorage.clear() 
+                    window.localStorage.setItem('slidePosition', 'right')
+                }
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
