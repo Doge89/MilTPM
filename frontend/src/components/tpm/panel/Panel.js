@@ -98,12 +98,7 @@ function Panel({ setMachine, machines, machine, activities, state, machineState,
                             usuario: user,
                             area: 'Ensamble',
                             localizacion: line,
-                            descripcion: description.split(',').map((item, idx) => (
-                                <React.Fragment key={idx}>
-                                    {item}
-                                    <br/>
-                                </React.Fragment>
-                            ))
+                            descripcion: description
                         }}
                     />
                 )}

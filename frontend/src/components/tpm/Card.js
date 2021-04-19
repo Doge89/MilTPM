@@ -88,7 +88,14 @@ function Card({ info, edit, history, updateHistory, closeCard }){
                         <>
                         <CardInfo column>
                             <span>Descripción del Problema: </span>
-                            <div>{info?.descripcion}</div>
+                            <div>
+                                {info?.descripcion.split(',').map((item, idx) => (
+                                    <React.Fragment key={idx}>
+                                        {item}
+                                        <br/>
+                                    </React.Fragment>
+                                ))}
+                            </div>
                         </CardInfo>
                         {(history || edit) && (
                             <>
