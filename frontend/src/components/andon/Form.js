@@ -19,9 +19,13 @@ function Form({ children, location }){
     const [rerender, setRerender] = useState(false)
     const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
+    const [lines, setLines] = useState([])
+    const [line, setLine] = useState('')
 
     const handleInputPassword = e => setPassword(e.target.value)
-
+    const handleSelect = e => {
+        if(e.target.value !== 'none'){ setLine(e.target.value) }
+    }
     const handleInput = e => setDescription(e.target.value)
 
     const getData = async () => {
@@ -33,11 +37,20 @@ function Form({ children, location }){
         return res.data
     }
 
+    const getLines = async () => {
+        const res = await axios({
+            url : `${URL}/admin/lineas/`,
+            method: 'GET',
+        })
+        console.log(res.data)
+        return res.data
+    }
+
     const fetchStartTimer = async () => {
         const res = await axios({
             url: `${URL}/andon/start/`,
             method: 'POST',
-            data: querystring.stringify({ razon: type }),
+            data: querystring.stringify({ razon: type, linea: line }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
                 'X-CSRFToken' : Cookies.get('csrftoken')
@@ -52,7 +65,7 @@ function Form({ children, location }){
         const res = await axios({
             url: `${URL}/andon/pause/`,
             method: 'POST',
-            data: querystring.stringify({ razon: type, clave: password }),
+            data: querystring.stringify({ razon: type, clave: password, linea: line }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
                 'X-CSRFToken' : Cookies.get('csrftoken')
@@ -116,7 +129,7 @@ function Form({ children, location }){
 
     const endTimer = () => {
         setErr(false)
-        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)) }).then((data) => {
+        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), linea: line }).then((data) => {
             console.log(data)
             removeInfoTimer()
             window.location.reload()
@@ -215,17 +228,23 @@ function Form({ children, location }){
         isLogged().then((data) => {
             if(data.Logged){
                 if(data.priv === 'mantenimiento'){ window.location.replace('/login') }
-                const query = new URLSearchParams(location.search)
+                if(data.priv === "production"){ setLine(data.Linea) }
+                getLines().then(({ lineas }) => {
+                    const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                    setLines(lines)
+
+                    const query = new URLSearchParams(location.search)
         
-                if(!query.get('tipo')){ window.location.replace('/hxh') }
+                    if(!query.get('tipo')){ window.location.replace('/hxh') }
 
-                setType(query.get('tipo'))
+                    setType(query.get('tipo'))
 
-                const timerIsPaused = localStorage.getItem(`timerPaused${query.get('tipo')}`)
-                const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
-                if(timerIsPaused){ setTimerPaused(true) }
-                if(timerValue){ setTimerRunning(true) }
-            }//else{ window.location.replace('/login') }
+                    const timerIsPaused = localStorage.getItem(`timerPaused${query.get('tipo')}`)
+                    const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
+                    if(timerIsPaused){ setTimerPaused(true) }
+                    if(timerValue){ setTimerRunning(true) }
+                }).catch(e => console.log(e))
+            }else{ window.location.replace('/login') }
         }).catch(e => console.log(e))
 
     }, [])
@@ -234,6 +253,16 @@ function Form({ children, location }){
         <FormContainer>
             <h1>{getTitle()}</h1>
             <form> 
+                <label>Linea</label>
+                <select 
+                    value={line}
+                    onChange={handleSelect}
+                >
+                    <option value="none">Seleccionar linea</option>
+                    {lines.map(line => (
+                        <option value={line} key={line}>{line}</option>
+                    ))}
+                </select>
                 <label>Descripción</label>
                 <textarea 
                     value={descripction}

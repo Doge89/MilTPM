@@ -6,7 +6,7 @@ import { TableRow } from '../../../styles/mp'
 
 import { appContext } from '../../../reducers/ProviderMP'
 
-function TableBody({ history }){
+function TableBody({ history, machines }){
 
     const context = useContext(appContext)
     
@@ -18,12 +18,18 @@ function TableBody({ history }){
     const handleInputEndAt = e => context.dispatchEndAt({ type: 'SET', value: e.target.value })
     const handleInputFixedBy = e => context.dispatchFixedBy({ type: 'SET', value: e.target.value })
     const handleInputPartsUsed = e => context.dispatchPartsUsed({ type: 'SET', value: e.target.value })
-    const handleInputCausedBy = e => context.dispatchCausedBy({ type: 'SET', value: e.target.value })
+    const handleInputCausedBy = e => {
+        if(e.target.none !== "none"){ context.dispatchCausedBy({ type: 'SET', value: e.target.value }) }
+    }
     const handleInputTimeout = e => context.dispatchTimeout({ type: 'SET', value: e.target.value })
     const handleInputValidatedBy = e => context.dispatchValidatedBy({ type: 'SET', value: e.target.value })
     
-    const handleSelectFailType = e => context.dispatchFailType({ type: 'SET', value: e.target.value })
-    const handleSelectMachineType = e => context.dispatchMachineType({ type: 'SET', value: e.target.value })
+    const handleSelectFailType = e => {
+        if(e.target.value !== "none"){ context.dispatchFailType({ type: 'SET', value: e.target.value }) }
+    }
+    const handleSelectMachineType = e => {
+        if(e.target.value !== "none"){ context.dispatchMachineType({ type: 'SET', value: e.target.value }) }
+    }
 
     const handleButtonAffectedProductionYes = () => {
         if(!history){ context.dispatchProductionAffected({ type: 'SET', value: true }) }
@@ -52,9 +58,10 @@ function TableBody({ history }){
                 </div>
                 <div className="input-container">
                     <select value={context.machineType} onChange={handleSelectMachineType} disabled={history}>
-                        <option>Open Link</option>
-                        <option>EOL</option>
-                        <option>Grease Dispenser</option>
+                        <option value="none">Selecciona máquina</option>
+                        {machines.map((machine, idx) => (
+                            <option key={idx}>{machine.nombre}</option>
+                        ))}
                     </select>
                 </div>
             </TableRow>
@@ -88,6 +95,7 @@ function TableBody({ history }){
                 </div>
                 <div className="input-container">
                     <select value={context.failType} onChange={handleSelectFailType} disabled={history}>
+                        <option value="none">Selecciona falla</option>
                         <option>Eléctrica</option>
                         <option>Electrónica</option>
                         <option>Neumática</option>
@@ -182,6 +190,7 @@ function TableBody({ history }){
                 </div>
                 <div className="input-container">
                     <select value={context.causedBy} onChange={handleInputCausedBy} disabled={history}>
+                        <option value="none">Selecciona causa</option>
                         <option>Mala calibración</option>
                         <option>Mal ajuste</option>
                         <option>Desajuste</option>

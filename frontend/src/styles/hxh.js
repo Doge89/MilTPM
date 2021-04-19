@@ -34,6 +34,7 @@ export const InfoContainer = styled.div`
                 background-color: white;
                 border: 1px solid black;
                 width: 100%;
+                padding: 0.5vh 0;
             }
         }
 

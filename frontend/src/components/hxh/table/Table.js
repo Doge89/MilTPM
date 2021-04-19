@@ -46,9 +46,9 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         return res.data
     }
 
-    const getData = async () => {
+    const getData = async (userType) => {
         const res = await axios({
-            url: `${URL}/hxh/get/${context.linea}/`,
+            url: `${URL}/hxh/get/${userType=== 'production' ? '' : `${context.linea}/`}`,
             method: 'GET'
         })
 
@@ -57,7 +57,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
 
     const fetchActualInfo =  async () => {
         const res = await axios({
-            url: `${URL}/hxh/get/act/`,
+            url: `${URL}/hxh/get/act/${context.linea}/`,
             method: 'GET'
         })
 
@@ -193,8 +193,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         }, 1000);
     }
 
-    const getAllInfo = () => {
-        getData().then(({ InfProd, InfGen, Linea, Andon, lineas }) => {
+    const getAllInfo = (userType) => {
+        getData(userType).then(({ InfProd, InfGen, Linea, Andon, lineas }) => {
             const dataInfo = JSON.parse(InfGen)
             const data = JSON.parse(InfProd).map(row => row.fields)
             const andon = JSON.parse(Andon).map(row => row.fields)
@@ -212,12 +212,12 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     }
 
     useEffect(() => {
-        /* if(!hxhHistory){
+        if(!hxhHistory){
             if(userType === "production"){ getActualInfo() }
             else{
                 if(context.linea && context.linea !== ''){ getActualInfo() }
             }
-        } */
+        }
         return () => { window.clearInterval(interval.current) }
     }, [context.actual, userType, context.linea])
 
@@ -237,10 +237,11 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 if(data.priv === "mantenimiento"){ history.goBack() } */
                 setUserType(data.priv)
                 setInfoUserType(data.priv)
+                if(data.priv === "production"){ context.dispatchLinea({ type: 'SET', value: data.Linea }) }
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
-                    if(data.priv === "production"){ getAllInfo() }
+                    if(data.priv === "production"){ getAllInfo(data.priv) }
                 }).catch(e => console.log(e))
             }).catch(e => {
                 console.log(e)
