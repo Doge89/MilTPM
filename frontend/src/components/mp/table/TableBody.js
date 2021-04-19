@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import RadioButton from '../../common/RadioButton'
 
@@ -9,6 +9,23 @@ import { appContext } from '../../../reducers/ProviderMP'
 function TableBody({ history, machines }){
 
     const context = useContext(appContext)
+
+    const [hour, setHour] = useState('')
+    const [minute, setMinute] = useState('')
+
+    const handleInputHour = e => {
+        if(e.target.value.length <= 2){
+            setHour(e.target.value)
+            context.dispatchTimeout({ type: 'SET', value: `${e.target.value}:${minute}` })
+        }
+    }
+
+    const handleInputMinute = e => {
+        if(e.target.value.length <= 2){
+            setMinute(e.target.value)
+            context.dispatchTimeout({ type: 'SET', value: `${hour}:${e.target.value}` })
+        }
+    }
     
     const handleInputReportedBy = e => context.dispatchReportedBy({ type: 'SET', value: e.target.value })
     const handleInputMachineTag = e => context.dispatchMachineTag({ type: 'SET', value: e.target.value })
@@ -21,7 +38,6 @@ function TableBody({ history, machines }){
     const handleInputCausedBy = e => {
         if(e.target.none !== "none"){ context.dispatchCausedBy({ type: 'SET', value: e.target.value }) }
     }
-    const handleInputTimeout = e => context.dispatchTimeout({ type: 'SET', value: e.target.value })
     const handleInputValidatedBy = e => context.dispatchValidatedBy({ type: 'SET', value: e.target.value })
     
     const handleSelectFailType = e => {
@@ -204,12 +220,20 @@ function TableBody({ history, machines }){
                 <div className="label">
                     <span>Tiempo muerto total</span>
                 </div>
-                <div className="input-container">
+                <div className="input-container input-number-container">
                     <input 
-                        value={context.timeout}
-                        onChange={handleInputTimeout}
-                        type="time"
+                        value={hour}
+                        onChange={handleInputHour}
+                        type="number"
+                        className="input-number"
                         disabled={history}
+                    />
+                    :
+                    <input 
+                        value={minute}
+                        onChange={handleInputMinute}
+                        disabled={history}
+                        className="input-number"
                     />
                 </div>
             </TableRow>

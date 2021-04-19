@@ -37,8 +37,8 @@ function Mp(){
     useEffect(() => { 
         setRootStyle(true)
         isLogged().then((data) =>{
-            if(!data.Logged){ window.location.replace('/login') }
-            if(data.priv === "production"){ history.goBack() }
+            /* if(!data.Logged){ window.location.replace('/login') }
+            if(data.priv === "production"){ history.goBack() } */
             getLines().then(({ lineas }) => {
                 const lines = JSON.parse(lineas).map(item => item.fields.linea)
                 setLines(lines)
