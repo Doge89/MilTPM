@@ -161,6 +161,8 @@ function Form({ children, location }){
             getData().then(({ Andon }) => {
                 const query = new URLSearchParams(location.search)
                 const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
+
+                console.log(andon)
     
                 if(andon){
                     const date = new Date(andon?.registro)
