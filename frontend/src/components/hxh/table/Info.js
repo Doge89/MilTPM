@@ -6,7 +6,7 @@ import { InfoContainer } from '../../../styles/hxh'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-function Info({ prevInfo, history, lines, userType }){
+function Info({ prevInfo, history, lines, userType, lines }){
 
     const labels = ['Faltas', 'Linea', 'Incidencias', 'Consola', 'Bajas', 'Job', 'Entrenamiento', 'Mod']
 
