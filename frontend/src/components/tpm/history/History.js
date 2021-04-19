@@ -49,8 +49,8 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
 
     useEffect(() => {
         if(JSON.stringify(machine) !== "{}" && line !== ''){
-            getHistory().then(({ hist, userArr }) => {
-                console.log(userArr)
+            getHistory().then(({ hist, users }) => {
+                console.log(users)
                 const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), maquina: machine.nombre } })
                 setHistory(history)
             }).catch(e => console.log(e))
