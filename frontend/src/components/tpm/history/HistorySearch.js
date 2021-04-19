@@ -36,7 +36,6 @@ function HistorySearch({ setHistory, machines, notFound, line }){
         e.preventDefault()
         setErr(false)
         getCard({ data: JSON.stringify({id: id, linea: line}) }).then(({ card, usuario, mensaje }) => {
-            console.log(mensaje)
             if(mensaje){
                 setErr(true)
                 setMessage(mensaje) 
