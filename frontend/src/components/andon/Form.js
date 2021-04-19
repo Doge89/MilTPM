@@ -33,7 +33,7 @@ function Form({ children, location }){
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}/hxh/get/`,
+            url: `${URL}/hxh/get/${userType=== 'production' ? '' : `${line}/`}`,
             method: 'GET'
         })
 
