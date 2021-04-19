@@ -124,7 +124,6 @@ function Tpm(){
 
     useEffect(() => {
         if(line !== ''){
-            console.log(line)
             getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
                 const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
                 const schedule = JSON.parse(cronograma).map(item => item.fields)
@@ -155,7 +154,7 @@ function Tpm(){
 
     return(
         <MainContainer>
-            <TopBar setViewType={setViewType} viewType={viewType} user={user} />
+            <TopBar setViewType={setViewType} viewType={viewType} user={user} line={line}/>
             <Info line={line} user={user} setLine={setLine} lineUser={lineUser} />
             {viewType === 'panel' ? (
                 <Panel 
