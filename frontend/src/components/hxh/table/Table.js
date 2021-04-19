@@ -29,6 +29,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
 
     const [dataFetched, setDataFetched] = useState([])
     const [rerenderChangeSchedule, setRerenderChangeSchedule] = useState(false)
+    const [rerenderIcons, setRerenderIcons] = useState(false)
     const [userType, setUserType] = useState('')
 
     const postData = async (data) => {
@@ -228,19 +229,18 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     }, [context.linea, userType])
 
     useEffect(() => {
-        const date = new Date()
-       
         if(!hxhHistory){
             checkHour()
             isLogged().then((data) =>{
-                /* if(!data.Logged){ window.location.replace('/login') }
-                if(data.priv === "mantenimiento"){ history.goBack() } */
+                if(!data.Logged){ window.location.replace('/login') }
+                if(data.priv === "mantenimiento"){ history.goBack() }
                 setUserType(data.priv)
                 setInfoUserType(data.priv)
                 if(data.priv === "production"){ context.dispatchLinea({ type: 'SET', value: data.Linea }) }
                 else{
                     window.localStorage.clear() 
                     window.localStorage.setItem('slidePosition', 'right')
+                    setRerenderIcons(!rerenderIcons)
                 }
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
@@ -309,6 +309,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                     rerender={rerender} 
                     userType={userType}
                     linea={context.linea}
+                    rerenderIcons={rerenderIcons}
                 />
                 </>
             )}
