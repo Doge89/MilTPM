@@ -22,6 +22,7 @@ function MpHistory(){
     const [data, setData] = useState([])
     const [report, setReport] = useState({})
     const [searched, setSearched] = useState(false)
+    const [lines, setLines] = useState([])
 
     const isLogged = async () => {
         const res = await axios({
