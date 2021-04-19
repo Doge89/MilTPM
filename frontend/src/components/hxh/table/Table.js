@@ -305,7 +305,11 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                         Historial de Tablero H/H
                     </ButtonPrimary>
                 </Row>
-                <Icons rerender={rerender}/>
+                <Icons 
+                    rerender={rerender} 
+                    userType={userType}
+                    linea={context.linea}
+                />
                 </>
             )}
             

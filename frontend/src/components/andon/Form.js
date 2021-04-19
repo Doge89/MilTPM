@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import querystring from 'querystring'
 import Cookies from 'js-cookie'
+import { useHistory } from 'react-router-dom'
 
 import { FormContainer } from '../../styles/andon'
 import { ButtonPrimary, ButtonSecondary, Text } from '../../styles/common'
@@ -9,6 +10,8 @@ import { ButtonPrimary, ButtonSecondary, Text } from '../../styles/common'
 import { URL } from '../../var'
 
 function Form({ children, location }){
+
+    const history = useHistory()
 
     const [descripction, setDescription] = useState('')
     const [password, setPassword] = useState('')
@@ -232,6 +235,10 @@ function Form({ children, location }){
             if(data.Logged){
                 if(data.priv === 'mantenimiento'){ window.location.replace('/login') }
                 if(data.priv === "production"){ setLine(data.linea) }
+                else{
+                    if(!query.get('linea')){ history.goBack() }
+                    setLine(query.get('linea'))
+                }
                 setUserType(data.priv)
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
