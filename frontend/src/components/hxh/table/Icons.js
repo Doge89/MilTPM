@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 import Icon from '../../common/Icon'
 import { IconsContainer } from '../../../styles/hxh'
 
-function Icons({ rerender, userType, linea }){
+function Icons({ rerender, userType, linea, rerenderIcons }){
 
     const [materials, setMaterials] = useState(false)
     const [maintenance, setMaintenance] = useState(false)
@@ -18,6 +18,7 @@ function Icons({ rerender, userType, linea }){
     const handleDefaultClick = (type) => history.push(`/andon?tipo=${type}${userType === 'admin' ? `&linea=${linea}` : ''}`)
 
     useEffect(() => {
+        console.log(rerenderIcons)
         const timerMaterials = localStorage.getItem('timerValuemateriales')
         const timerMaintenance = localStorage.getItem('timerValuemantenimiento')
         const timerProduction = localStorage.getItem('timerValueproduccion')
@@ -43,7 +44,7 @@ function Icons({ rerender, userType, linea }){
         if(timerChange){ setChange(true) }
         else{ setChange(false) }
 
-    }, [rerender])
+    }, [rerender, rerenderIcons])
 
     return(
         <IconsContainer>
