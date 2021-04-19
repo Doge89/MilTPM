@@ -2,14 +2,14 @@ import React from 'react'
 
 import { TopBar as TopBarComponent, TopBarItem } from '../../styles/tpm'
 
-function TopBar({ setViewType, viewType, user }){
+function TopBar({ setViewType, viewType, user, line }){
 
     const gotoPanel = () => setViewType('panel')
     const gotoHistory = () => {
-        if(user === "admin"){ setViewType('history') }
+        if(user === "admin" && line !== ""){ setViewType('history') }
     }
     const gotoModify = () => {
-        if(user === "admin"){ setViewType('modify') }
+        if(user === "admin" & line !== ''){ setViewType('modify') }
     }
 
     return(
