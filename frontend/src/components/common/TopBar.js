@@ -71,6 +71,8 @@ function TopBar(){
     const handleLogout = () => {
         logout().then(() => {
             window.location.replace('/')
+            window.localStorage.clear()
+            window.localStorage.setItem('slidePosition', 'right')
         }).catch(e => {
             console.log(e)
         })
