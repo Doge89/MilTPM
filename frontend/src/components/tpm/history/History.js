@@ -88,12 +88,7 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
             )}
             {card && (
                 <Card 
-                    info={{...cardInfo, localizacion: line, descripcion: cardInfo.descripcion.split(',').map((item, idx) => (
-                        <React.Fragment key={idx}>
-                            {item}
-                            <br/>
-                        </React.Fragment>
-                    ))}} 
+                    info={{...cardInfo, localizacion: line }} 
                     history 
                     edit 
                     line={line}
