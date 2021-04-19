@@ -15,11 +15,11 @@ function HistorySearch({ setHistory, machines, notFound, line }){
     const [message, setMessage] = useState('')
     const [err, setErr] = useState(false)
 
-    const getCard = async () => {
+    const getCard = async (data) => {
         const res = await axios({
             url: `${URL}/tpm/historial/get/id/`,
             method: 'POST',
-            data: querystring.stringify(JSON.stringify({ data: {id: id, linea: line} })),
+            data: querystring.stringify(data),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
                 'X-CSRFToken' : Cookies.get('csrftoken')
@@ -35,7 +35,7 @@ function HistorySearch({ setHistory, machines, notFound, line }){
     const handleBtn = (e) => {
         e.preventDefault()
         setErr(false)
-        getCard().then(({ card, usuario, mensaje }) => {
+        getCard({ data: JSON.stringify({id: id, linea: line}) }).then(({ card, usuario, mensaje }) => {
             console.log(mensaje)
             if(mensaje){
                 setErr(true)
