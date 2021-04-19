@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState} from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Icon from '../../common/Icon'
 import { IconsContainer } from '../../../styles/hxh'
 
-function Icons({ rerender }){
+function Icons({ rerender, userType, linea }){
 
     const [materials, setMaterials] = useState(false)
     const [maintenance, setMaintenance] = useState(false)
@@ -15,7 +15,7 @@ function Icons({ rerender }){
 
     const history = useHistory();
 
-    const handleDefaultClick = (type) => history.push(`/andon?tipo=${type}`)
+    const handleDefaultClick = (type) => history.push(`/andon?tipo=${type}${userType === 'admin' ? `&linea=${linea}` : ''}`)
 
     useEffect(() => {
         const timerMaterials = localStorage.getItem('timerValuemateriales')
