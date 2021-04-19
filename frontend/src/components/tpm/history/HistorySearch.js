@@ -19,7 +19,7 @@ function HistorySearch({ setHistory, machines, notFound, line }){
         const res = await axios({
             url: `${URL}/tpm/historial/get/id/`,
             method: 'POST',
-            data: querystring.stringify(JSON.stringify({ id: id, linea: line })),
+            data: querystring.stringify(JSON.stringify({ data: {id: id, linea: line} })),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
                 'X-CSRFToken' : Cookies.get('csrftoken')
