@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import { Card as CardComponent, CardInfo } from '../../styles/tpm'
 import { ButtonPrimary, Container } from '../../styles/common'
@@ -21,7 +22,12 @@ function Card({ info, edit, history }){
         const res = await axios({
             url: `${URL}/tpm/historial/modificar/`,
             method: 'POST',
-            data: querystring.stringify(data)
+            data: querystring.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
