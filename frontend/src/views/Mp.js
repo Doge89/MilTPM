@@ -30,14 +30,13 @@ function Mp(){
             url : `${URL}/admin/lineas/`,
             method: 'GET',
         })
-        console.log(res.data)
+        
         return res.data
     }
 
     useEffect(() => { 
         setRootStyle(true)
         isLogged().then((data) =>{
-            console.log(data)
             if(!data.Logged){ window.location.replace('/login') }
             if(data.priv === "production"){ history.goBack() }
             getLines().then(({ lineas }) => {

@@ -30,6 +30,7 @@ function Tpm(){
     const [activities, setActivities] = useState([])
     const [history, setHistory] = useState([])
     const [cards, setCards] = useState([])
+    const [lines, setLines] = useState([])
     const [lineUser, setLineUser] = useState(false)
 
     const getMachines = async () => {
@@ -117,6 +118,10 @@ function Tpm(){
             setUser(Usuario)
             if(linea){ setLine(linea) }
             else{ setLineUser(false) }
+            getLines().then(({ lineas }) => {
+                const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                setLines(lines)
+            }).catch(e => console.log(e))
             
         }).catch(e => console.log(e))
 
@@ -155,7 +160,7 @@ function Tpm(){
     return(
         <MainContainer>
             <TopBar setViewType={setViewType} viewType={viewType} user={user} line={line}/>
-            <Info line={line} user={user} setLine={setLine} lineUser={lineUser} />
+            <Info line={line} user={user} setLine={setLine} lineUser={lineUser} lines={lines}/>
             {viewType === 'panel' ? (
                 <Panel 
                     machines={machinesDay}
