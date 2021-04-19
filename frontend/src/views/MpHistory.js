@@ -82,7 +82,12 @@ function MpHistory(){
     return(
         <MainContainer>
             <Searcher setData={setData} setSearched={setSearched} searched={searched} />
-            <Table searched={searched} data={data} setReport={setReport} />
+            <Table 
+                searched={searched} 
+                data={data} 
+                setReport={setReport} 
+                seeReport={JSON.stringify(report) !== "{}"}
+             />
             {JSON.stringify(report) !== "{}" && (
                 <HistoryTableContainer>
                     <TableReport isHistory lines={lines} />
