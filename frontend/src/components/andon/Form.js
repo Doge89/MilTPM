@@ -153,7 +153,6 @@ function Form({ children, location }){
     }
 
     const getTitle = () => {
-        console.log(type)
         switch(type){
             case "materiales": return 'Materiales'
             case "mantenimiento": return 'Mantenimiento'
@@ -230,10 +229,9 @@ function Form({ children, location }){
         const query = new URLSearchParams(location.search)
         if(!query.get('tipo')){ window.location.replace('/hxh') }
         isLogged().then((data) => {
-            console.log(data)
             if(data.Logged){
                 if(data.priv === 'mantenimiento'){ window.location.replace('/login') }
-                if(data.priv === "production"){ setLine(data.Linea) }
+                if(data.priv === "production"){ setLine(data.linea) }
                 setUserType(data.priv)
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
