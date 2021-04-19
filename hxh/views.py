@@ -20,12 +20,12 @@ def index(request):
 
 #OBTIENE LA INFORMACION PARA REFLEJARLA EN LA PAGINA (HXH)
 @require_http_methods(['GET'])
-def get(request):
+def get(request, linea):
     if request.method == 'GET':
         try:
             line = None
             if "Linea" in request.session: line = request.session['Linea'] 
-            else: line = request.GET.get('linea')
+            else: line = linea
             if line == 'none' or line is None: return HttpResponse(status=400)
             print('a')
             print(line)
@@ -34,7 +34,7 @@ def get(request):
                 #MODIFICAR
                 linUser = None
                 if request.session['priv'] == "admin":
-                    user = Usuarios.objects.filter(linea__exact=f"{line}")
+                    user = Usuarios.objects.filter(linea=f"{line}")
                     print(user['usuario'])
                     #linUser = Linea.objects.get(usuario_id__username__exact=f"{user}")
                 else:
@@ -53,6 +53,7 @@ def get(request):
             #MODIFICAR
             datosInfProd = _get_objects(Linea = f"{line}")
             serializedInfProd = serializers.serialize('json', list(datosInfProd))
+
             #MODIFICAR
             datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{line}").last() 
             datLinea = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
