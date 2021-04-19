@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 
 import RadioButton from '../../common/RadioButton'
 
@@ -53,6 +53,11 @@ function TableBody({ history, machines }){
     const handleButtonAffectedProductionNo = () => {
         if(!history){ context.dispatchProductionAffected({ type: 'SET', value: false }) }
     }
+
+    useEffect(() => {
+        setHour(context.timeout?.split(':')[0])
+        setMinute(context.timeout?.split(':')[1])
+    }, [context.timeout])
 
     return(
         <>
