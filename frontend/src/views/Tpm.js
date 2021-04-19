@@ -75,6 +75,15 @@ function Tpm(){
         return res.data
     }
 
+    const getLines = async () => {
+        const res = await axios({
+            url : `${URL}/admin/lineas/`,
+            method: 'GET',
+        })
+        
+        return res.data
+    }
+
     const setCurrentMachineState = (cards) => {
         if(cards.length === 0){ setMachineState('rgb(254, 13, 46)') }
         else{
