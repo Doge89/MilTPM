@@ -47,6 +47,7 @@ function Card({ info, edit, history }){
 
     const handleBtn = () => {
         updateData({ data: JSON.stringify({propuesta: proposed, implementada: implemented, id: info.id }) }).then(() => {
+            console.log(info)
         }).catch(e => console.log(e))
     }
 
