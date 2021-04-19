@@ -24,7 +24,6 @@ function Form({ children, location }){
     const [rerender, setRerender] = useState(false)
     const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
-    const [lines, setLines] = useState([])
 
     const handleInputPassword = e => setPassword(e.target.value)
     const handleSelect = e => {
@@ -38,15 +37,6 @@ function Form({ children, location }){
             method: 'GET'
         })
 
-        return res.data
-    }
-
-    const getLines = async () => {
-        const res = await axios({
-            url : `${URL}/admin/lineas/`,
-            method: 'GET',
-        })
-        console.log(res.data)
         return res.data
     }
 
@@ -240,21 +230,15 @@ function Form({ children, location }){
                     setLine(query.get('linea'))
                 }
                 setUserType(data.priv)
-                getLines().then(({ lineas }) => {
-                    const lines = JSON.parse(lineas).map(item => item.fields.linea)
-                    setLines(lines)
 
-                    const query = new URLSearchParams(location.search)
-        
-                    if(!query.get('tipo')){ window.location.replace('/hxh') }
+                if(!query.get('tipo')){ window.location.replace('/hxh') }
 
-                    setType(query.get('tipo'))
+                setType(query.get('tipo'))
 
-                    const timerIsPaused = localStorage.getItem(`timerPaused${query.get('tipo')}`)
-                    const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
-                    if(timerIsPaused){ setTimerPaused(true) }
-                    if(timerValue){ setTimerRunning(true) }
-                }).catch(e => console.log(e))
+                const timerIsPaused = localStorage.getItem(`timerPaused${query.get('tipo')}`)
+                const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
+                if(timerIsPaused){ setTimerPaused(true) }
+                if(timerValue){ setTimerRunning(true) }
             }else{ window.location.replace('/login') }
         }).catch(e => console.log(e))
 
@@ -265,16 +249,12 @@ function Form({ children, location }){
             <h1>{getTitle()}</h1>
             <form> 
                 <label>Linea</label>
-                <select 
+                <input 
                     value={line}
-                    onChange={handleSelect}
-                    disabled={userType === "production"}
-                >
-                    <option value="none">Seleccionar linea</option>
-                    {lines.map(line => (
-                        <option value={line} key={line}>{line}</option>
-                    ))}
-                </select>
+                    type="password"
+                    placeholder="Linea de producción"
+                    disabled={true}
+                />
                 <label>Descripción</label>
                 <textarea 
                     value={descripction}
