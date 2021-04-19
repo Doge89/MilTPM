@@ -70,16 +70,16 @@ function Ports(){
             <CardInfo widthLabel="20vw">
                 <label id="label-ports">Seleccione un puerto: </label>
                 <select value={port} onChange={handleSelect}>
-                    <option value="1">COM 1</option>
-                    <option value="2">COM 2</option>
-                    <option value="3">COM 3</option>
-                    <option value="4">COM 4</option>
-                    <option value="5">COM 5</option>
-                    <option value="6">COM 6</option>
-                    <option value="7">COM 7</option>
-                    <option value="8">COM 8</option>
-                    <option value="9">COM 9</option>
-                    <option value="10">COM 10</option>
+                    <option>COM1</option>
+                    <option>COM2</option>
+                    <option>COM3</option>
+                    <option>COM4</option>
+                    <option>COM5</option>
+                    <option>COM6</option>
+                    <option>COM7</option>
+                    <option>COM8</option>
+                    <option>COM9</option>
+                    <option>COM10</option>
                 </select>
             </CardInfo>
             <ButtonPrimary width="15vw" height="4vh" onClick={handleBtn}>Cambiar puerto</ButtonPrimary>
