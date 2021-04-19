@@ -32,8 +32,8 @@ export const LayoutContainer = styled.div`
 `;
 
 export const Plane = styled.div`
-    width: 75%;
-    height: 80%;
+    width: 80%;
+    height: 85%;
     background-image: ${props => `url(${props.img})`};
     background-repeat: no-repeat;
     background-size: 100% 100%;

@@ -131,9 +131,15 @@ function Plane(){
             else{
                 let newCurrentColor = [...currentColor]
                 
-                domElement.style.backgroundColor = getColor(lines[i].status[newCurrentColor[i]])
+                const color = getColor(lines[i].status[newCurrentColor[i]])
+                domElement.style.backgroundColor = color
+
+                if(color === "white"){ domElement.style.border = "1px solid black" }
+                else{ domElement.style.border = "0" }
+
                 if(newCurrentColor[i] + 1 > lines[i].status.length -1){ newCurrentColor[i] = 0 }
                 else{ newCurrentColor[i] += 1 }
+                
                 setCurrentColor(newCurrentColor)
             }
         }
