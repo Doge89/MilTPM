@@ -162,8 +162,8 @@ function Plane(){
         intervalData.current = setInterval(setLinesStatus, 5000);
         if(window.innerWidth <= maxWidth){ document.getElementById('root').style.overflowY = 'auto' }
         return () => {
-            clearInterval(interval.current) 
-            clearInterval(intervalData.current) 
+            window.clearInterval(interval.current) 
+            window.clearInterval(intervalData.current) 
         }
     }, [])
 
