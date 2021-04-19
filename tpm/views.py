@@ -273,18 +273,25 @@ def _add_production_line(request):
 @ensure_csrf_cookie
 #@csrf_exempt
 def _select_com(request):
-    if request.method == 'GET' and request.session['priv'] == 'admin':
-        pass
-    else:
-        try:
-            data = request.POST.get('com')
-            com = sel_com.objects.get(pk=1)
-            com.com = data
-            com.save()
-        except Exception as e:
-            print(e)
-            return HttpResponse(status=500)
-    return HttpResponse(status=405)
+    if request.session['priv'] == 'admin': 
+        if request.method == 'GET':
+            try:
+                com = sel_com.objects.get(pk=1)
+                return JsonResponse({'puerto': com.com}, status=201)
+            except sel_com.DoesNotExist:
+                print('No hay puertos creados')
+                sel_com.objects.create(Id= None, com="COM1")
+        else:
+            try:
+                data = request.POST.get('com')
+                com = sel_com.objects.get(pk=1)
+                com.com = data
+                com.save()
+                return HttpResponse(status=201)
+            except Exception as e:
+                print(e)
+                return HttpResponse(status=500)
+    return HttpResponse(status=401)
 
 #HISTORIAL
 @require_http_methods(['POST'])
@@ -295,11 +302,15 @@ def _machine_history(request):
         try:
             data = request.POST.get('data')
             data = ast.literal_eval(data)
-            user = Usuarios.objects.get(username__exact=f"{request.session['Usuarios']}")
+            #user = Usuarios.objects.get(username__exact=f"{request.session['Usuario']}")
             hisTarj = Tarjetas.objects.filter(localizacion_id__linea__exact=f"{data['linea']}", maquina_id__nombre__exact=f"{data['maquina']}")
+            arrTarj = list(hisTarj)
+            userArr = list()
+            for i in arrTarj:
+                userArr.append(i.usuario.username)
+            
             serializedTarj = serializers.serialize('json', list(hisTarj))
-            print(serializedTarj)
-            return JsonResponse({'hist': serializedTarj, 'Usuario': user.username}, status = 200)
+            return JsonResponse({'hist': serializedTarj, 'users': userArr}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status=500)
@@ -333,8 +344,10 @@ def _get_machine_card(request):
 def _get_machine_card_by_id(request):
     if request.method == 'POST':
         try:
-            Id = request.POST.get('id')
-            Tarj = Tarjetas.objects.get(Id__exact=Id)
+            data = request.POST.get('data')
+            data = ast.literal_eval(data)
+
+            Tarj = Tarjetas.objects.get(Id__exact=f"{data['id']}", localizacion_id__linea__exact=f"{data['linea']}")
             serializedTarj = model_to_dict(Tarj)
             
             return JsonResponse({'card': serializedTarj, "usuario": request.session['Usuario']}, status = 200)

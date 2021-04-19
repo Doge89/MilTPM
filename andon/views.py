@@ -25,16 +25,13 @@ def start_andon(request):
             data = request.POST.get('linea')
             #ahora = datetime.strftime('%H:%M:%S')
             request.session['InicioH'] = ahora.hour
-            print(request.session['InicioH'])
             request.session['Inicio'] = f"{ahora}"
-            print(type(request.session['Inicio']))
             estatus = request.POST.get('razon')
-            print(estatus)
             #MODIFICAR
             if request.session['priv'] != 'admin':
                 lineaAct = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
             else:
-                lineaAct = Linea.objects.get(usuario_id__username__exact=f"{data}")
+                lineaAct = Linea.objects.get(linea__exact=f"{data}")
             sisAnd = Andon.objects.create(Id = None, estatus = estatus, linea = lineaAct, registro= datetime.now())
             andHist = AndonHist.objects.create(Id = None, estatus = estatus, linea=lineaAct, registro = datetime.now())
             # sisAnd.linea.add(lineaAct)

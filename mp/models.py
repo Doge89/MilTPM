@@ -25,7 +25,7 @@ class mp(models.Model):
     reparacion = models.CharField(max_length=500, verbose_name = _('Reparacion'), help_text=_('Reparacion empleada'), blank=True, default='')
     refacciones = models.CharField(max_length=100, verbose_name = _('Refacciones'), help_text=_('Refacciones usadas'), blank=True, default='')
     causa = models.CharField(max_length=1000, verbose_name = _('Causa'), help_text=_('Causa probable del problema'), blank=True, default='')
-    tiempoMuerto = models.TimeField(verbose_name=_('Tiempo Muerto'), help_text=_('Tiempo muerto empleado'), auto_now=False)
+    tiempoMuerto = models.CharField(max_length=5, verbose_name=_('Tiempo Muerto'), help_text=_('Tiempo muerto empleado'))
     validado = models.CharField(max_length=50, verbose_name = _('Validado'), help_text=_('Validado por'), blank=True, default='')
 
     class Meta:
