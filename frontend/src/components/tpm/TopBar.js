@@ -5,9 +5,7 @@ import { TopBar as TopBarComponent, TopBarItem } from '../../styles/tpm'
 function TopBar({ setViewType, viewType, user, line }){
 
     const gotoPanel = () => setViewType('panel')
-    const gotoHistory = () => {
-        if(user === "admin" && line !== ""){ setViewType('history') }
-    }
+    const gotoHistory = () => setViewType('history')
     const gotoModify = () => {
         if(user === "admin" & line !== ''){ setViewType('modify') }
     }
