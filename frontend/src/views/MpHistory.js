@@ -70,8 +70,8 @@ function MpHistory(){
     useEffect(() => {
         setRootStyle(true)
         isLogged().then((data) =>{
-            if(!data.Logged){ window.location.replace('/login') }
-            if(data.priv === "production"){ history.goBack() }
+            if(!data.Logged){ return window.location.replace('/login') }
+            if(data.priv === "production"){ return history.goBack() }
             getLines().then(({ lineas }) => {
                 const lines = JSON.parse(lineas).map(item => item.fields.linea)
                 setLines(lines)
@@ -82,10 +82,10 @@ function MpHistory(){
     return(
         <MainContainer>
             <Searcher setData={setData} setSearched={setSearched} searched={searched} />
-            <Table searched={searched} data={data} setReport={setReport} lines={lines} />
+            <Table searched={searched} data={data} setReport={setReport} />
             {JSON.stringify(report) !== "{}" && (
                 <HistoryTableContainer>
-                    <TableReport isHistory />
+                    <TableReport isHistory lines={lines} />
                 </HistoryTableContainer>
             )}
         </MainContainer>
