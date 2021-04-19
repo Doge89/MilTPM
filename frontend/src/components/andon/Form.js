@@ -14,13 +14,14 @@ function Form({ children, location }){
     const [password, setPassword] = useState('')
     const [type, setType] = useState('')
     const [message, setMessage] = useState('')
+    const [line, setLine] = useState('')
+    const [userType, setUserType] = useState('')
     const [timerRunning, setTimerRunning] = useState(false)
     const [timerPaused, setTimerPaused] = useState(false)
     const [rerender, setRerender] = useState(false)
     const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
     const [lines, setLines] = useState([])
-    const [line, setLine] = useState('')
 
     const handleInputPassword = e => setPassword(e.target.value)
     const handleSelect = e => {
@@ -164,63 +165,66 @@ function Form({ children, location }){
     }
 
     useEffect(() => {
-        getData().then(({ Andon }) => {
-            const query = new URLSearchParams(location.search)
-            const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
-
-            if(andon){
-                const date = new Date(andon?.registro)
-                const periodPaused = andon.pause.split('/')
-
-                let totalTime = 0
-                let lastPausedTime = 0
-
-                if(andon.active){ totalTime = Date.now() - date.getTime() }
-            
-                for(let i = 0; i < periodPaused.length; i++){
-                    const period = periodPaused[i]
-
-                    const startedAt = new Date(period.split('\n')[0])
-                    const endAt = new Date(period.split('\n')[1])
-
-                    
-                    if(andon.active){
-                        if(!isNaN(startedAt.getTime()) && !isNaN(endAt.getTime())){ 
-                            totalTime -= endAt.getTime() - startedAt.getTime() 
+        if(line !== ""){
+            getData().then(({ Andon }) => {
+                const query = new URLSearchParams(location.search)
+                const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
+    
+                if(andon){
+                    const date = new Date(andon?.registro)
+                    const periodPaused = andon.pause.split('/')
+    
+                    let totalTime = 0
+                    let lastPausedTime = 0
+    
+                    if(andon.active){ totalTime = Date.now() - date.getTime() }
+                
+                    for(let i = 0; i < periodPaused.length; i++){
+                        const period = periodPaused[i]
+    
+                        const startedAt = new Date(period.split('\n')[0])
+                        const endAt = new Date(period.split('\n')[1])
+    
+                        
+                        if(andon.active){
+                            if(!isNaN(startedAt.getTime()) && !isNaN(endAt.getTime())){ 
+                                totalTime -= endAt.getTime() - startedAt.getTime() 
+                            }
+                        }else{
+                            if(!isNaN(startedAt.getTime())){ 
+                                if(totalTime === 0){ totalTime += startedAt.getTime() - date.getTime() }
+                                else{ totalTime += startedAt.getTime() - lastPausedTime }
+                                lastPausedTime = endAt.getTime()
+                            } 
                         }
-                    }else{
-                        if(!isNaN(startedAt.getTime())){ 
-                            if(totalTime === 0){ totalTime += startedAt.getTime() - date.getTime() }
-                            else{ totalTime += startedAt.getTime() - lastPausedTime }
-                            lastPausedTime = endAt.getTime()
-                        } 
+                        
                     }
-                    
-                }
-
-                if(!andon.active){ 
-                    window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
-                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
-                    window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`)
-                    clearInterval(intervalID) 
-                    setTimerPaused(true)
+    
+                    if(!andon.active){ 
+                        window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
+                        window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
+                        window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`)
+                        clearInterval(intervalID) 
+                        setTimerPaused(true)
+                    }else{
+                        window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
+                        window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
+                        window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
+                        setTimerPaused(false)
+                    }
                 }else{
-                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
-                    window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
-                    window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
-                    setTimerPaused(false)
+                    window.localStorage.removeItem(`timerPaused${type}`)
+                    window.localStorage.removeItem(`timerValue${type}`)
+                    window.localStorage.removeItem(`timeBeforeExit${type}`)
+                    clearInterval(intervalID)
                 }
-            }else{
-                window.localStorage.removeItem(`timerPaused${type}`)
-                window.localStorage.removeItem(`timerValue${type}`)
-                window.localStorage.removeItem(`timeBeforeExit${type}`)
-                clearInterval(intervalID)
-            }
-
-            setRerender(!rerender)
-            
-        }).catch(e => console.log(e))
-    }, [intervalID])
+    
+                setRerender(!rerender)
+                
+            }).catch(e => console.log(e))
+        }
+        
+    }, [intervalID, line])
 
     useEffect(() => {
         const query = new URLSearchParams(location.search)
@@ -229,6 +233,7 @@ function Form({ children, location }){
             if(data.Logged){
                 if(data.priv === 'mantenimiento'){ window.location.replace('/login') }
                 if(data.priv === "production"){ setLine(data.Linea) }
+                setUserType(data.priv)
                 getLines().then(({ lineas }) => {
                     const lines = JSON.parse(lineas).map(item => item.fields.linea)
                     setLines(lines)
@@ -257,6 +262,7 @@ function Form({ children, location }){
                 <select 
                     value={line}
                     onChange={handleSelect}
+                    disabled={userType === "production"}
                 >
                     <option value="none">Seleccionar linea</option>
                     {lines.map(line => (
