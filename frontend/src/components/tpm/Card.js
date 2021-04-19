@@ -8,7 +8,7 @@ import { ButtonPrimary, Container } from '../../styles/common'
 
 import { URL, maxWidth } from '../../var'
 
-function Card({ info, edit, history }){
+function Card({ info, edit, history, updateHistory }){
 
     const ref = useRef(null)
 
@@ -47,7 +47,7 @@ function Card({ info, edit, history }){
 
     const handleBtn = () => {
         updateData({ data: JSON.stringify({propuesta: proposed, implementada: implemented, id: info.id }) }).then(() => {
-            console.log(info)
+            updateHistory({...info, implementada: implemented, propuesta: proposed})
         }).catch(e => console.log(e))
     }
 

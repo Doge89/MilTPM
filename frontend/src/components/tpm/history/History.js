@@ -43,6 +43,13 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
         setCardInfo(history[idx])
     }
 
+    const updateHistory = info => {
+        let newHistory = [...history]
+        const idx = newHistory.findIndex(item => item.id === info.id)
+        newHistory.splice(idx ,1 ,info)
+        setHistory(newHistory[])
+    }
+
     useEffect(() => {
         if(card){ document.getElementById('card').scrollIntoView({ behavior: 'smooth' }) }
     }, [card])
@@ -88,6 +95,7 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
                     history 
                     edit 
                     line={line}
+                    updateHistory={updateHistory}
                 />
             )}
         </Container>
