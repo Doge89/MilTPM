@@ -32,6 +32,15 @@ function MpHistory(){
         return res.data
     }
 
+    const getLines = async () => {
+        const res = await axios({
+            url : `${URL}/admin/lineas/`,
+            method: 'GET',
+        })
+        
+        return res.data
+    }
+
     useEffect(() => {
         setRootStyle(true)
         if(JSON.stringify(report) !== "{}"){
@@ -60,8 +69,12 @@ function MpHistory(){
     useEffect(() => {
         setRootStyle(true)
         isLogged().then((data) =>{
-            //if(!data.Logged){ window.location.replace('/login') }
-            //if(data.priv === "production"){ history.goBack() }
+            if(!data.Logged){ window.location.replace('/login') }
+            if(data.priv === "production"){ history.goBack() }
+            getLines().then(({ lineas }) => {
+                const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                setLines(lines)
+            }).catch(e => console.log(e))
         }).catch(e => { console.log(e) })
     }, [])
 

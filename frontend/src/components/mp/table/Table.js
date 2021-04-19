@@ -68,7 +68,7 @@ function Table({ isHistory, lines }){
                 refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy, afectaProduccion: productionAffected ? 1 : 0, 
                 turno, tipoMaquina: machineType
             })}).then((data) => {
-                console.log(data)
+                window.location.reload();
             }).catch(e => {
                 console.log(e)
             })
@@ -92,7 +92,7 @@ function Table({ isHistory, lines }){
     useEffect(() => {
         if(window.innerWidth <= maxWidth){ document.getElementById('table-mp').scrollIntoView({ behavior: 'smooth' }) }
         getLine().then(({ linea, Logged }) => {
-            //if(!Logged){ window.location.replace('/login') }
+            if(!Logged){ window.location.replace('/login') }
             context.dispatchLine({ type: 'SET', value: linea })
         }).catch(e => {
             console.log(e)
