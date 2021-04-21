@@ -124,7 +124,10 @@ function Form({ children, location }){
 
     const endTimer = () => {
         setErr(false)
-        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), linea: line, inicio: andon.registro }).then((data) => {
+        finishTimer({ clave: password, razon: type, 
+            tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), 
+            linea: line, hrInit: new Date(andon.registro).getHours()
+        }).then((data) => {
             console.log(data)
             removeInfoTimer()
             window.location.reload()
