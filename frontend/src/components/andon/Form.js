@@ -24,6 +24,7 @@ function Form({ children, location }){
     const [rerender, setRerender] = useState(false)
     const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
+    const [andon, setAndon] = useState({})
 
     const handleInputPassword = e => setPassword(e.target.value)
     const handleSelect = e => {
@@ -123,7 +124,7 @@ function Form({ children, location }){
 
     const endTimer = () => {
         setErr(false)
-        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), linea: line }).then((data) => {
+        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), linea: line, inicio: andon.registro }).then((data) => {
             console.log(data)
             removeInfoTimer()
             window.location.reload()
@@ -163,7 +164,7 @@ function Form({ children, location }){
                 const query = new URLSearchParams(location.search)
                 const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
 
-                console.log(andon)
+                setAndon(andon)
     
                 if(andon){
                     const date = new Date(andon?.registro)
