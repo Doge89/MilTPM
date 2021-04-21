@@ -126,7 +126,7 @@ function Form({ children, location }){
         setErr(false)
         finishTimer({ clave: password, razon: type, 
             tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), 
-            linea: line, hrInit: new Date(andon.registro).getHours()
+            linea: line, hrInit: new Date(andon.registro).getHours(), inicio: andon.registro
         }).then((data) => {
             console.log(data)
             removeInfoTimer()
