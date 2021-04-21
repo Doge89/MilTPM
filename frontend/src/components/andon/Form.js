@@ -159,6 +159,7 @@ function Form({ children, location }){
     useEffect(() => {
         if(line !== ""){
             getData().then(({ Andon }) => {
+                console.log(Andon)
                 const query = new URLSearchParams(location.search)
                 const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
 
