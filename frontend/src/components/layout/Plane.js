@@ -9,12 +9,19 @@ import { URL, maxWidth } from '../../var'
 
 function Plane(){
 
+    //let colorCambio = []
+
     const interval = useRef(null)
     const intervalData = useRef()
+    const intervalStatus = useRef()
+    const colorCambio = useRef()
+    const currentColor = useRef()
+    const intervalLine = useRef()
 
-    const [colorCambio, setColorCambio] = useState('white')
+    //const [intervalLine, setIntervalLine] = useState([])
+    //const [colorCambio, setColorCambio] = useState([])
     const [lines, setLines] = useState([])
-    const [currentColor, setCurrentColor] = useState([])
+    //const [currentColor, setCurrentColor] = useState([])
 
     const fetchSession = async () => {
         const res = await axios({
@@ -63,6 +70,8 @@ function Plane(){
         getData().then(({ lineas, status }) => {
             let lines = JSON.parse(lineas).map(item => { return { ...item.fields, id: item.pk, status: [] } })
             const nStatus = JSON.parse(status).map(item => { return { ...item.fields, id: item.pk } })
+            
+            const newColorCambio = new Array(lines.length).fill('white')
 
             for(let i = 0; i < nStatus.length; i++){
                 const idx = lines.findIndex(item => item.id === nStatus[i].linea)
@@ -70,8 +79,10 @@ function Plane(){
             }
 
             lines = lines.map(item => { return { ...item, status: item.status.length === 0 ? ['ok'] : item.status } })
-            setCurrentColor(new Array(lines.length).fill(0))
             setLines(lines)
+            colorCambio.current = newColorCambio
+            currentColor.current = new Array(lines.length).fill(0)
+            intervalLine.current = new Array(lines.length).fill(null)
 
         }).catch(e => console.log(e))
     }
@@ -124,46 +135,63 @@ function Plane(){
         }
     }
 
-    const handleLineBlink = () => {
-        for(let i = 0; i < lines.length; i++){
-            const domElement = document.getElementById(`line${lines[i].linea}`)
-            if(lines[i].status.length === 1){ domElement.style.backgroundColor = getColor(lines[i].status[0]) }
-            else{
-                let newCurrentColor = [...currentColor]
-                
-                domElement.style.backgroundColor = getColor(lines[i].status[newCurrentColor[i]])
-                if(newCurrentColor[i] + 1 > lines[i].status.length -1){ newCurrentColor[i] = 0 }
-                else{ newCurrentColor[i] += 1 }
-                setCurrentColor(newCurrentColor)
+    const setLineColor = (color, i, domElement, newCurrentColor) =>{
+        let newIntervalLine = [...intervalLine.current]
+        let newColorCambio = [...colorCambio.current]
+
+        if(color === "white"){
+            newIntervalLine[i] = setInterval((domElement) => {
+                domElement.style.backgroundColor = newColorCambio[i] === 'white' ? 'red' : 'white'
+                newColorCambio[i] = newColorCambio[i] === 'white' ? 'red' : 'white'
+                colorCambio.current = newColorCambio[i]
+            }, 500, domElement);
+        }else{
+            domElement.style.backgroundColor = color
+            if(newIntervalLine[i]){
+                window.clearInterval(newIntervalLine[i])
+                newIntervalLine[i] = null
+                intervalLine.current = newIntervalLine[i]
             }
         }
+
+        if(newCurrentColor[i] + 1 > lines[i].status.length -1){ return 0 }
+        else{ return newCurrentColor[i] + 1 }
+
+    }
+
+    const handleLineBlink = () => {
+        let newCurrentColor = [...currentColor.current]
+        for(let i = 0; i < lines.length; i++){
+            const domElement = document.getElementById(`line${lines[i].linea}`)
+            if(lines[i].status.length === 1){ 
+                newCurrentColor[i] = setLineColor(getColor(lines[i].status[0]), i, domElement, newCurrentColor) 
+            }else{ 
+                console.log(getColor(lines[i].status[newCurrentColor[i]]))
+                newCurrentColor[i] = setLineColor(getColor(lines[i].status[newCurrentColor[i]]), i, domElement, newCurrentColor) 
+            }
+        }
+        currentColor.current = newCurrentColor
     }
 
     useEffect(() => {
-        if(lines.length !== 0){
-            if(lines.some(item => item.status.length > 1)){ interval.current = setInterval(handleLineBlink, 2000); }
-            else{
-                for(let i = 0; i < lines.length; i++){
-                    
-                    if(document.getElementById(`line${lines[i].linea}`)){
-                        let color = getColor(lines[i].status[0])
-                        document.getElementById(`line${lines[i].linea}`).style.backgroundColor = color
-                    }   
-                }
-            }
+        if(lines.length !== 0 ){
+            handleLineBlink()
+            if(intervalStatus.current){ window.clearInterval(intervalStatus.current) }
+            intervalStatus.current = setInterval(handleLineBlink, 1500);
         }
         
         return () => { window.clearInterval(interval.current) }
-    }, [lines, currentColor])
+    }, [lines])
 
     useEffect(() => {
         checkHour()
         setLinesStatus()
-        intervalData.current = setInterval(setLinesStatus, 5000);
+        intervalData.current = setInterval(setLinesStatus, 6000);
         if(window.innerWidth <= maxWidth){ document.getElementById('root').style.overflowY = 'auto' }
         return () => {
             window.clearInterval(interval.current) 
-            window.clearInterval(intervalData.current) 
+            window.clearInterval(intervalData.current)
+            window.clearInterval(intervalStatus.current) 
         }
     }, [])
 
