@@ -108,7 +108,7 @@ def finish_andon(request):
                 horProd.save()
                 andAct.delete()
             elif hrInit != finHr and user.clave == clave:
-                ahoraInit = datetime.strptime(ahoraInit, '%Y-%m-%d %H:%M:%S')
+                ahoraInit = datetime.strptime(ahoraInit, '%Y/%m/%d %H:%M:%S')
                 # print(ahoraInit)
                 # print(fin)
                 # print(finHr)

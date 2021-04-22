@@ -6,7 +6,7 @@ import { LayoutContainer, Plane as PlaneComponent, Indicator } from '../../style
 import layout from '../../assets/img/layout.jpg'
 
 import { URL, maxWidth } from '../../var'
-import { twoDigits } from '../../scripts'
+
 
 function Plane(){
 
