@@ -48,7 +48,7 @@ function Plane(){
         interval.current = setInterval(() => {
             const date = new Date()
             if(date.getMinutes() === 0){ refreshSession() }
-            if(date.getMinutes() % 5 === 0){ /*setLinesStatus() */ } 
+            if(date.getMinutes() % 5 === 0){ setLinesStatus() } 
         }, 1000)
     }
 
