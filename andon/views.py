@@ -80,20 +80,19 @@ def finish_andon(request):
             clave = request.POST.get('clave')
             tiempo = request.POST.get('tiempo')
             linea = request.POST.get('linea')
+            hrInit = request.POST.get('hrInit')
+            ahoraInit = request.POST.get('inicio')
+
             tiempo = int(tiempo)
-            #print(tiempo)
-            #print("%s %s" % (estatus,clave))
 
-            hrInit = request.session['InicioH']
-            print(hrInit)
+            print(ahoraInit)
             if request.session['priv'] != 'admin':
-
                 andAct = Andon.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}", estatus__exact=f"{estatus}").last()
             else: 
                 andAct = Andon.objects.filter(linea_id__linea__exact=f"{linea}", estatus__exact=f"{estatus}").last()
             #print(andAct)
             
-            ahoraInit = request.session['Inicio']
+            
             #print(type(ahoraInit))
             user = Usuarios.objects.get(clave__exact=f"{clave}")
 
@@ -109,7 +108,7 @@ def finish_andon(request):
                 horProd.save()
                 andAct.delete()
             elif hrInit != finHr and user.clave == clave:
-                ahoraInit = datetime.strptime(ahoraInit, '%Y-%m-%d %H:%M:%S.%f')
+                ahoraInit = datetime.strptime(ahoraInit, '%Y-%m-%d %H:%M:%S')
                 # print(ahoraInit)
                 # print(fin)
                 # print(finHr)
