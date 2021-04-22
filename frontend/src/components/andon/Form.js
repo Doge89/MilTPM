@@ -8,6 +8,7 @@ import { FormContainer } from '../../styles/andon'
 import { ButtonPrimary, ButtonSecondary, Text } from '../../styles/common'
 
 import { URL } from '../../var'
+import { twoDigits } from '../../scripts'
 
 function Form({ children, location }){
 
