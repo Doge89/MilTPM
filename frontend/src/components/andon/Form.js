@@ -123,7 +123,7 @@ function Form({ children, location }){
     }
 
     const getDateFormatted = (date) => {
-        return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        return `${date.getFullYear()}/${twoDigits(date.getMonth())}/${twoDigits(date.getDate())} ${twoDigits(date.getHours())}:${twoDigits(date.getMinutes())}:${twoDigits(date.getSeconds())}`
     }
 
     const endTimer = () => {
