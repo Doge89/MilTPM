@@ -1,6 +1,2 @@
-app-webpack/
-imagenes/
-server/
 frontend/node_modules/
-
-*__pycache__
+frontend/build/

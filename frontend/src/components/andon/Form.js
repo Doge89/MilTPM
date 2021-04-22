@@ -122,11 +122,18 @@ function Form({ children, location }){
         clearInterval(intervalID)
     }
 
+    const getDateFormatted = (date) => {
+        return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    }
+
     const endTimer = () => {
         setErr(false)
+        const dateRegistered = new Date(andon.registro)
+        
         finishTimer({ clave: password, razon: type, 
             tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), 
-            linea: line, hrInit: new Date(andon.registro).getHours(), inicio: andon.registro
+            linea: line, hrInit: new Date(andon.registro).getHours(), 
+            inicio: getDateFormatted(dateRegistered)
         }).then((data) => {
             console.log(data)
             removeInfoTimer()

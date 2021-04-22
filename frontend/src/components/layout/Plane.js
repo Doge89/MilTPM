@@ -18,10 +18,8 @@ function Plane(){
     const currentColor = useRef()
     const intervalLine = useRef()
 
-    //const [intervalLine, setIntervalLine] = useState([])
-    //const [colorCambio, setColorCambio] = useState([])
     const [lines, setLines] = useState([])
-    //const [currentColor, setCurrentColor] = useState([])
+    const [infoFetched, setInfoFetched] = useState(false)
 
     const fetchSession = async () => {
         const res = await axios({
@@ -70,8 +68,6 @@ function Plane(){
         getData().then(({ lineas, status }) => {
             let lines = JSON.parse(lineas).map(item => { return { ...item.fields, id: item.pk, status: [] } })
             const nStatus = JSON.parse(status).map(item => { return { ...item.fields, id: item.pk } })
-            
-            const newColorCambio = new Array(lines.length).fill('white')
 
             for(let i = 0; i < nStatus.length; i++){
                 const idx = lines.findIndex(item => item.id === nStatus[i].linea)
@@ -80,9 +76,12 @@ function Plane(){
 
             lines = lines.map(item => { return { ...item, status: item.status.length === 0 ? ['ok'] : item.status } })
             setLines(lines)
-            colorCambio.current = newColorCambio
-            currentColor.current = new Array(lines.length).fill(0)
-            intervalLine.current = new Array(lines.length).fill(null)
+            if(!infoFetched){
+                colorCambio.current = new Array(lines.length).fill('white')
+                currentColor.current = new Array(lines.length).fill(0)
+                intervalLine.current = new Array(lines.length).fill(null)
+                setInfoFetched(true)
+            }
 
         }).catch(e => console.log(e))
     }
@@ -135,16 +134,25 @@ function Plane(){
         }
     }
 
-    const setLineColor = (color, i, domElement, newCurrentColor) =>{
+    const setLineColor = (color, i, domElement, newCurrentColor, oneStatus) =>{
         let newIntervalLine = [...intervalLine.current]
         let newColorCambio = [...colorCambio.current]
 
         if(color === "white"){
-            newIntervalLine[i] = setInterval((domElement) => {
-                domElement.style.backgroundColor = newColorCambio[i] === 'white' ? 'red' : 'white'
-                newColorCambio[i] = newColorCambio[i] === 'white' ? 'red' : 'white'
-                colorCambio.current = newColorCambio[i]
-            }, 500, domElement);
+            if(oneStatus){
+                newIntervalLine[i] = setInterval((domElement) => {
+                    domElement.style.backgroundColor = newColorCambio[i] === 'white' ? 'red' : 'white'
+                    newColorCambio[i] = newColorCambio[i] === 'white' ? 'red' : 'white'
+                    colorCambio.current = newColorCambio[i]
+                }, 500, domElement);
+            }else{
+                domElement.style.backgroundColor = getColor('mantenimiento')
+                if(newIntervalLine[i]){
+                    window.clearInterval(newIntervalLine[i])
+                    newIntervalLine[i] = null
+                    intervalLine.current = newIntervalLine[i]
+                }
+            }
         }else{
             domElement.style.backgroundColor = color
             if(newIntervalLine[i]){
@@ -163,12 +171,8 @@ function Plane(){
         let newCurrentColor = [...currentColor.current]
         for(let i = 0; i < lines.length; i++){
             const domElement = document.getElementById(`line${lines[i].linea}`)
-            if(lines[i].status.length === 1){ 
-                newCurrentColor[i] = setLineColor(getColor(lines[i].status[0]), i, domElement, newCurrentColor) 
-            }else{ 
-                console.log(getColor(lines[i].status[newCurrentColor[i]]))
-                newCurrentColor[i] = setLineColor(getColor(lines[i].status[newCurrentColor[i]]), i, domElement, newCurrentColor) 
-            }
+            const oneStatus = lines[i].status.length === 1
+            newCurrentColor[i] = setLineColor(getColor(lines[i].status[newCurrentColor[i]]), i, domElement, newCurrentColor, oneStatus)
         }
         currentColor.current = newCurrentColor
     }
