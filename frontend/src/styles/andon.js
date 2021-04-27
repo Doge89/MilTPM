@@ -6,10 +6,11 @@ const red = "rgb(254, 13, 46)"
 
 export const FormContainer = styled.div`
     display: flex; 
-    height: 84%;
+    min-height: 84%;
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    padding: 2vh 0;
     
     h1{
         font-size: 1.5vw;
