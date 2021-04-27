@@ -40,7 +40,8 @@ def index(request):
                 request.session['Usuario'] = userIn
                 request.session['Pass'] = passwordIn
                 request.session['priv'] = userData['user_type']
-                #GET TOKENS
+
+                print(userData['user_type'])                #GET TOKENS
                 tokens = _get_credentials(userIn, passwordIn)
                 access = tokens['access']
                 refresh = tokens['refresh']
