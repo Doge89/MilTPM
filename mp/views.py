@@ -14,9 +14,10 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
 #INDICE DEL MP
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and request.session['priv'] == 'mantenimiento':
+    """ if 'Usuario' in request.session and 'Pass' in request.session and request.session['priv'] == 'mantenimiento':
         return render(request, 'index.html', status = 200)
-    return HttpResponse(status=401)
+    return HttpResponse(status=401) """
+    return render(request, 'index.html', status = 200)
 
 #POST DE LA INFORMACION DEL MP
 @require_http_methods(['POST'])

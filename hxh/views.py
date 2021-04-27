@@ -14,22 +14,40 @@ from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 # Create your views here.
 
 def index(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production':
+    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session and request.session['priv'] == 'production' or request.session['priv'] == 'admin':
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
 #OBTIENE LA INFORMACION PARA REFLEJARLA EN LA PAGINA (HXH)
 @require_http_methods(['GET'])
-def get(request):
+def get(request, linea = None):
     if request.method == 'GET':
         try:
-            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{request.session['Linea']}", fecha__exact=datetime.date(datetime.now()))) == 0:
+            line = None
+            if "Linea" in request.session: line = request.session['Linea'] 
+            else: line = linea
+            if line == 'none' or line is None: return HttpResponse(status=400)
+            #print('a')
+            print(line)
+            lineaProd = Linea.objects.get(linea__exact=f"{line}")
+            user = Usuarios.objects.get(pk=f"{lineaProd.usuario_id}")
+            if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{line}", fecha__exact=datetime.date(datetime.now()))) == 0:
+                #print('b')
                 #MODIFICAR
-                linUser = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
+                linUser = None
+                print("---------------------")
+                if request.session['priv'] == "admin":
+                    linUser = Linea.objects.get(usuario_id__id__exact=f"{lineaProd.usuario_id}")
+                    print(user.username)
+                    #linUser = Linea.objects.get(usuario_id__username__exact=f"{user}")
+                else:
+                    
+                    linUser = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
+                    
                 dataInfGeneral = infoGeneral.objects.create(Id = None, linea = linUser, consola = '', job='', mod='')
                 general = infoGeneral.objects.last()
                 print("NO EXISTEN REGISTROS")
-                print("CREANDO REGISTROS...")
+                print("CREANDO REGISTROS...") 
                 time.sleep(1)
 
                 for x in range(24):
@@ -38,22 +56,29 @@ def get(request):
                     else:
                         datosInfProd = infoProduccion.objects.create(Id = None, inicio=f'{x}:00:00', final=f'{x+1}:00:00', plan=0, actual=0, diferencia=0, tiempoMuerto='', codigo='', cantidad='', descripcion='', contramedida='', comentarios='', turno='', info = general, fecha=datetime.date(datetime.now()))
             #MODIFICAR
-            datosInfProd = _get_objects(Linea = f"{request.session['Linea']}")
+            datosInfProd = _get_objects(Linea = f"{line}")
             serializedInfProd = serializers.serialize('json', list(datosInfProd))
+
             #MODIFICAR
-            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last() 
-            datLinea = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
+            datInfGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{line}").last()
+            datLinea = None
+            if request.session['priv'] != 'admin':
+                datLinea = Linea.objects.get(usuario_id__username__exact=f"{request.session['Usuario']}")
+            else:
+                datLinea = Linea.objects.get(usuario_id__id__exact=f"{user.id}")
             datInfGen = model_to_dict(datInfGen)
 
             serializedInfGen = json.dumps(datInfGen)
             datLinea = model_to_dict(datLinea)
             serializedLinea = json.dumps(datLinea)
-            print(serializedInfProd)
-            print(serializedInfGen)
-            print(serializedLinea)
-
+            # print(serializedInfProd)
+            # print(serializedInfGen)
+            # print(serializedLinea)
             try:
-                andon = Andon.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}")
+                if request.session['priv'] != 'admin':
+                    andon = Andon.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}")
+                else:
+                    andon = Andon.objects.filter(linea_id__linea__exact=f"{line}")
                 serializedAndon = serializers.serialize('json', list(andon))
             except Exception as e:
                 print(e)
@@ -70,13 +95,13 @@ def get(request):
 #ACTUALIZA LA INFORMACION EN LA BD
 @require_http_methods(['POST'])
 @ensure_csrf_cookie
-def post(request):
+def post(request, linea = None):
     if request.method == 'POST':
         try:
             data = request.POST.get('data')
             data = ast.literal_eval(data)
             print(data)
-            dataProd = _get_objects(Linea = request.session['Linea'])
+            dataProd = _get_objects(Linea = data['linea'])
             general = infoGeneral.objects.last()
             j = 0
             for i in dataProd:
@@ -105,10 +130,14 @@ def post(request):
     return HttpResponse(status = 401)
 
 @require_http_methods(['GET'])
-def _get_actual(request):
+def _get_actual(request, linea = None):
     if request.method == 'GET':
         try:
-            actual = infoProduccion.objects.get(fecha__exact=datetime.date(datetime.now()), inicio__exact=f"{datetime.now().hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}")
+            #actual = None
+            if request.session['priv'] != 'admin': 
+                actual = infoProduccion.objects.get(fecha__exact=datetime.date(datetime.now()), inicio__exact=f"{datetime.now().hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}")
+            else:
+                actual = infoProduccion.objects.get(fecha__exact=datetime.date(datetime.now()), inicio__exact=f"{datetime.now().hour}:00:00", info_id__linea_id__linea__exact=f"{linea}")
             print(actual.actual)
             return JsonResponse({'actual': actual.actual})
         except Exception as e:

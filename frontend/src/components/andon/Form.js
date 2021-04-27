@@ -2,31 +2,40 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import querystring from 'querystring'
 import Cookies from 'js-cookie'
+import { useHistory } from 'react-router-dom'
 
 import { FormContainer } from '../../styles/andon'
 import { ButtonPrimary, ButtonSecondary, Text } from '../../styles/common'
 
 import { URL } from '../../var'
+import { twoDigits } from '../../scripts'
 
 function Form({ children, location }){
+
+    const history = useHistory()
 
     const [descripction, setDescription] = useState('')
     const [password, setPassword] = useState('')
     const [type, setType] = useState('')
     const [message, setMessage] = useState('')
+    const [line, setLine] = useState('')
+    const [userType, setUserType] = useState('')
     const [timerRunning, setTimerRunning] = useState(false)
     const [timerPaused, setTimerPaused] = useState(false)
     const [rerender, setRerender] = useState(false)
     const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
+    const [andon, setAndon] = useState({})
 
     const handleInputPassword = e => setPassword(e.target.value)
-
+    const handleSelect = e => {
+        if(e.target.value !== 'none'){ setLine(e.target.value) }
+    }
     const handleInput = e => setDescription(e.target.value)
 
     const getData = async () => {
         const res = await axios({
-            url: `${URL}/hxh/get/`,
+            url: `${URL}/hxh/get/${userType=== 'production' ? '' : `${line}/`}`,
             method: 'GET'
         })
 
@@ -37,7 +46,7 @@ function Form({ children, location }){
         const res = await axios({
             url: `${URL}/andon/start/`,
             method: 'POST',
-            data: querystring.stringify({ razon: type }),
+            data: querystring.stringify({ razon: type, linea: line }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
                 'X-CSRFToken' : Cookies.get('csrftoken')
@@ -52,7 +61,7 @@ function Form({ children, location }){
         const res = await axios({
             url: `${URL}/andon/pause/`,
             method: 'POST',
-            data: querystring.stringify({ razon: type, clave: password }),
+            data: querystring.stringify({ razon: type, clave: password, linea: line }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
                 'X-CSRFToken' : Cookies.get('csrftoken')
@@ -114,9 +123,19 @@ function Form({ children, location }){
         clearInterval(intervalID)
     }
 
+    const getDateFormatted = (date) => {
+        return `${date.getFullYear()}/${twoDigits(date.getMonth())}/${twoDigits(date.getDate())} ${twoDigits(date.getHours())}:${twoDigits(date.getMinutes())}:${twoDigits(date.getSeconds())}`
+    }
+
     const endTimer = () => {
         setErr(false)
-        finishTimer({ clave: password, razon: type, tiempo: Number(window.localStorage.getItem(`timerValue${type}`)) }).then((data) => {
+        const dateRegistered = new Date(andon.registro)
+        
+        finishTimer({ clave: password, razon: type, 
+            tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), 
+            linea: line, hrInit: new Date(andon.registro).getHours(), 
+            inicio: getDateFormatted(dateRegistered)
+        }).then((data) => {
             console.log(data)
             removeInfoTimer()
             window.location.reload()
@@ -139,7 +158,6 @@ function Form({ children, location }){
     }
 
     const getTitle = () => {
-        console.log(type)
         switch(type){
             case "materiales": return 'Materiales'
             case "mantenimiento": return 'Mantenimiento'
@@ -151,72 +169,83 @@ function Form({ children, location }){
     }
 
     useEffect(() => {
-        getData().then(({ Andon }) => {
-            const query = new URLSearchParams(location.search)
-            const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
+        if(line !== ""){
+            getData().then(({ Andon }) => {
+                console.log(Andon)
+                const query = new URLSearchParams(location.search)
+                const andon = JSON.parse(Andon).map(row => row.fields).find(andon => andon.estatus === query.get('tipo'))
 
-            if(andon){
-                const date = new Date(andon?.registro)
-                const periodPaused = andon.pause.split('/')
-
-                let totalTime = 0
-                let lastPausedTime = 0
-
-                if(andon.active){ totalTime = Date.now() - date.getTime() }
-            
-                for(let i = 0; i < periodPaused.length; i++){
-                    const period = periodPaused[i]
-
-                    const startedAt = new Date(period.split('\n')[0])
-                    const endAt = new Date(period.split('\n')[1])
-
-                    
-                    if(andon.active){
-                        if(!isNaN(startedAt.getTime()) && !isNaN(endAt.getTime())){ 
-                            totalTime -= endAt.getTime() - startedAt.getTime() 
+                setAndon(andon)
+    
+                if(andon){
+                    const date = new Date(andon?.registro)
+                    const periodPaused = andon.pause.split('/')
+    
+                    let totalTime = 0
+                    let lastPausedTime = 0
+    
+                    if(andon.active){ totalTime = Date.now() - date.getTime() }
+                
+                    for(let i = 0; i < periodPaused.length; i++){
+                        const period = periodPaused[i]
+    
+                        const startedAt = new Date(period.split('\n')[0])
+                        const endAt = new Date(period.split('\n')[1])
+    
+                        
+                        if(andon.active){
+                            if(!isNaN(startedAt.getTime()) && !isNaN(endAt.getTime())){ 
+                                totalTime -= endAt.getTime() - startedAt.getTime() 
+                            }
+                        }else{
+                            if(!isNaN(startedAt.getTime())){ 
+                                if(totalTime === 0){ totalTime += startedAt.getTime() - date.getTime() }
+                                else{ totalTime += startedAt.getTime() - lastPausedTime }
+                                lastPausedTime = endAt.getTime()
+                            } 
                         }
-                    }else{
-                        if(!isNaN(startedAt.getTime())){ 
-                            if(totalTime === 0){ totalTime += startedAt.getTime() - date.getTime() }
-                            else{ totalTime += startedAt.getTime() - lastPausedTime }
-                            lastPausedTime = endAt.getTime()
-                        } 
+                        
                     }
-                    
-                }
-
-                if(!andon.active){ 
-                    window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
-                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
-                    window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`)
-                    clearInterval(intervalID) 
-                    setTimerPaused(true)
+    
+                    if(!andon.active){ 
+                        window.localStorage.setItem(`timerPaused${andon?.estatus}`, true)
+                        window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
+                        window.localStorage.removeItem(`timeBeforeExit${andon?.estatus}`)
+                        clearInterval(intervalID) 
+                        setTimerPaused(true)
+                    }else{
+                        window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
+                        window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
+                        window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
+                        setTimerPaused(false)
+                    }
                 }else{
-                    window.localStorage.setItem(`timerValue${andon?.estatus}`, Math.floor(totalTime /1000))
-                    window.localStorage.setItem(`timeBeforeExit${andon?.estatus}`, Date.now())
-                    window.localStorage.removeItem(`timerPaused${andon?.estatus}`)
-                    setTimerPaused(false)
+                    window.localStorage.removeItem(`timerPaused${type}`)
+                    window.localStorage.removeItem(`timerValue${type}`)
+                    window.localStorage.removeItem(`timeBeforeExit${type}`)
+                    clearInterval(intervalID)
                 }
-            }else{
-                window.localStorage.removeItem(`timerPaused${type}`)
-                window.localStorage.removeItem(`timerValue${type}`)
-                window.localStorage.removeItem(`timeBeforeExit${type}`)
-                clearInterval(intervalID)
-            }
-
-            setRerender(!rerender)
-            
-        }).catch(e => console.log(e))
-    }, [intervalID])
+    
+                setRerender(!rerender)
+                
+            }).catch(e => console.log(e))
+        }
+        
+    }, [intervalID, line])
 
     useEffect(() => {
         const query = new URLSearchParams(location.search)
         if(!query.get('tipo')){ window.location.replace('/hxh') }
         isLogged().then((data) => {
             if(data.Logged){
-                if(data.priv !== 'production'){ window.location.replace('/login') }
-                const query = new URLSearchParams(location.search)
-        
+                if(data.priv === 'mantenimiento'){ window.location.replace('/login') }
+                if(data.priv === "production"){ setLine(data.linea) }
+                else{
+                    if(!query.get('linea')){ history.goBack() }
+                    setLine(query.get('linea'))
+                }
+                setUserType(data.priv)
+
                 if(!query.get('tipo')){ window.location.replace('/hxh') }
 
                 setType(query.get('tipo'))
@@ -225,7 +254,7 @@ function Form({ children, location }){
                 const timerValue = localStorage.getItem(`timerValue${query.get('tipo')}`)
                 if(timerIsPaused){ setTimerPaused(true) }
                 if(timerValue){ setTimerRunning(true) }
-            }//else{ window.location.replace('/login') }
+            }else{ window.location.replace('/login') }
         }).catch(e => console.log(e))
 
     }, [])
@@ -234,6 +263,12 @@ function Form({ children, location }){
         <FormContainer>
             <h1>{getTitle()}</h1>
             <form> 
+                <label>Linea</label>
+                <input 
+                    value={line}
+                    placeholder="Linea de producción"
+                    disabled={true}
+                />
                 <label>Descripción</label>
                 <textarea 
                     value={descripction}

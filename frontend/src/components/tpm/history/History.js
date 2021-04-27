@@ -43,14 +43,24 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
         setCardInfo(history[idx])
     }
 
+    const updateHistory = info => {
+        let newHistory = [...history]
+        const idx = newHistory.findIndex(item => item.id === info.id)
+        newHistory.splice(idx ,1 ,info)
+        setHistory(newHistory)
+    }
+
+    const closeCard = () => setCard(false)
+
     useEffect(() => {
         if(card){ document.getElementById('card').scrollIntoView({ behavior: 'smooth' }) }
     }, [card])
 
     useEffect(() => {
         if(JSON.stringify(machine) !== "{}" && line !== ''){
-            getHistory().then(({ hist, Usuario }) => {
-                const history = JSON.parse(hist).map(item => { return { ...item.fields, id: item.pk, fecha: getDate(item.fields.fecha), usuario: Usuario, maquina: machine.nombre } })
+            getHistory().then(({ hist, users }) => {
+                
+                const history = JSON.parse(hist).map((item, idx) => { return { ...item.fields, id: item.pk, usuario: users[idx], fecha: getDate(item.fields.fecha), maquina: machine.nombre } })
                 setHistory(history)
             }).catch(e => console.log(e))
         }
@@ -78,15 +88,12 @@ function History({ machines, setMachine, machine, history, setHistory, line }){
             )}
             {card && (
                 <Card 
-                    info={{...cardInfo, localizacion: line, descripcion: cardInfo.descripcion.split(',').map((item, idx) => (
-                        <React.Fragment key={idx}>
-                            {item}
-                            <br/>
-                        </React.Fragment>
-                    ))}} 
+                    info={{...cardInfo, localizacion: line }} 
                     history 
                     edit 
                     line={line}
+                    updateHistory={updateHistory}
+                    closeCard={closeCard}
                 />
             )}
         </Container>

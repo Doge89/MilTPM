@@ -15,6 +15,30 @@ export const InfoContainer = styled.div`
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+
+        .select-container{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+
+            label{
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 1vw;
+                margin-right: 0.5vw;
+            }
+
+            select{
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 1vw;
+                background-color: white;
+                border: 1px solid black;
+                width: 100%;
+                padding: 0.5vh 0;
+            }
+        }
+
+        
     }
 
     @media ${device.tablet} {
@@ -37,6 +61,31 @@ export const InfoContainer = styled.div`
                 }
 
                 input{
+                    background-color: transparent;
+                    font-size: 3.5vw;
+                    color: white;
+                    border: 0;
+                    border-bottom: 1px solid white;
+                    padding: 2.5vw 2vw;
+                    outline: none;
+                }
+            }
+
+            .select-container{
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+
+                label{
+                    color: white;
+                    font-size: 3.5vw;
+                    width: 40vw;
+                    text-align: end;
+                    margin-right: 5vw;
+                }
+
+                select{
                     background-color: transparent;
                     font-size: 3.5vw;
                     color: white;

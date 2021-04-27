@@ -16,7 +16,7 @@ import { appContext } from '../../../reducers/ProviderHXH'
 import { columns, scheduleA, scheduleB, scheduleC, URL, allDay, maxWidth, andonReason } from '../../../var'
 import { twoDigits } from '../../../scripts'
  
-function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
+function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLines, setInfoUserType }){
 
     let timeout
     const interval = useRef()
@@ -28,6 +28,9 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     const history = useHistory()
 
     const [dataFetched, setDataFetched] = useState([])
+    const [rerenderChangeSchedule, setRerenderChangeSchedule] = useState(false)
+    const [rerenderIcons, setRerenderIcons] = useState(false)
+    const [userType, setUserType] = useState('')
 
     const postData = async (data) => {
         const res = await axios({
@@ -44,9 +47,9 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         return res.data
     }
 
-    const getData = async () => {
+    const getData = async (userType) => {
         const res = await axios({
-            url: `${URL}/hxh/get/`,
+            url: `${URL}/hxh/get/${userType=== 'production' ? '' : `${context.linea}/`}`,
             method: 'GET'
         })
 
@@ -55,7 +58,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
 
     const fetchActualInfo =  async () => {
         const res = await axios({
-            url: `${URL}/hxh/get/act/`,
+            url: `${URL}/hxh/get/act/${context.linea}/`,
             method: 'GET'
         })
 
@@ -68,6 +71,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
             method: 'GET',
         })
 
+        return res.data
+    }
+
+    const getLines = async () => {
+        const res = await axios({
+            url : `${URL}/admin/lineas/`,
+            method: 'GET',
+        })
+        console.log(res.data)
         return res.data
     }
 
@@ -96,7 +108,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
     const checkHour = () => {
         const date = new Date()
         if((date.getHours() === 6 ||  date.getHours() === 13 || date.getHours() === 23) && date.getMinutes() === 0){
-            setRerender(!rerender)
+            setRerenderChangeSchedule(!rerenderChangeSchedule)
         }
         timeout = setTimeout(checkHour, 1000 * 60)
     }
@@ -182,32 +194,58 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
         }, 1000);
     }
 
-    useEffect(() => {
-        if(!hxhHistory){ getActualInfo() }
-        return () => { window.clearInterval(interval.current) }
-    }, [context.actual])
+    const getAllInfo = (userType) => {
+        getData(userType).then(({ InfProd, InfGen, Linea, Andon, lineas }) => {
+            const dataInfo = JSON.parse(InfGen)
+            const data = JSON.parse(InfProd).map(row => row.fields)
+            const andon = JSON.parse(Andon).map(row => row.fields)
+            setDataFetched(data)
+            setInfoTable(data)
+            console.log(dataInfo)
+            setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
+            setAndonInfo(andon)
+            if(window.innerWidth <= maxWidth){
+                setTimeout(() => {
+                    document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
+                }, 1000);
+            }
+        }).catch(e => console.log(e))
+    }
 
     useEffect(() => {
-        const date = new Date()
-       
+        if(!hxhHistory){
+            if(userType === "production"){ getActualInfo() }
+            else{
+                if(context.linea && context.linea !== ''){ getActualInfo() }
+            }
+        }
+        return () => { window.clearInterval(interval.current) }
+    }, [context.actual, userType, context.linea])
+
+    useEffect(() => {
+        if(userType === "admin" && context.linea && context.linea !== ''){
+            getAllInfo()
+        }
+    }, [context.linea, userType])
+
+    useEffect(() => {
         if(!hxhHistory){
             checkHour()
             isLogged().then((data) =>{
-                //if(!data.Logged){ window.location.replace('/login') }
-                getData().then(({ InfProd, InfGen, Linea, Andon }) => {
-                    const dataInfo = JSON.parse(InfGen)
-                    const data = JSON.parse(InfProd).map(row => row.fields)
-                    const andon = JSON.parse(Andon).map(row => row.fields)
-                    setDataFetched(data)
-                    setInfoTable(data)
-                    console.log(dataInfo)
-                    setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
-                    setAndonInfo(andon)
-                    if(window.innerWidth <= maxWidth){
-                        setTimeout(() => {
-                            document.getElementById(`${twoDigits(date.getHours())}:00:00`)?.scrollIntoView({ behavior: 'smooth' })
-                        }, 1000);
-                    }
+                if(!data.Logged){ window.location.replace('/login') }
+                if(data.priv === "mantenimiento"){ history.goBack() }
+                setUserType(data.priv)
+                setInfoUserType(data.priv)
+                if(data.priv === "production"){ context.dispatchLinea({ type: 'SET', value: data.Linea }) }
+                else{
+                    window.localStorage.clear() 
+                    window.localStorage.setItem('slidePosition', 'right')
+                    setRerenderIcons(!rerenderIcons)
+                }
+                getLines().then(({ lineas }) => {
+                    const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                    setLines(lines)
+                    if(data.priv === "production"){ getAllInfo(data.priv) }
                 }).catch(e => console.log(e))
             }).catch(e => {
                 console.log(e)
@@ -215,7 +253,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
            
         }
         return () => { clearTimeout(timeout) }
-    }, [rerender])
+    }, [rerenderChangeSchedule])
 
     useEffect(() => {
         if(hxhHistory){ setInfoTable(data) }
@@ -267,7 +305,12 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo }){
                         Historial de Tablero H/H
                     </ButtonPrimary>
                 </Row>
-                <Icons rerender={rerender}/>
+                <Icons 
+                    rerender={rerender} 
+                    userType={userType}
+                    linea={context.linea}
+                    rerenderIcons={rerenderIcons}
+                />
                 </>
             )}
             

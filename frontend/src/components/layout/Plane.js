@@ -7,14 +7,18 @@ import layout from '../../assets/img/layout.jpg'
 
 import { URL, maxWidth } from '../../var'
 
+
 function Plane(){
 
     const interval = useRef(null)
-    const intervalColor = useRef()
+    const intervalData = useRef()
+    const intervalStatus = useRef()
+    const colorCambio = useRef()
+    const currentColor = useRef()
+    const intervalLine = useRef()
 
-    const [colorCambio, setColorCambio] = useState('white')
     const [lines, setLines] = useState([])
-    const [currentColor, setCurrentColor] = useState([])
+    const [infoFetched, setInfoFetched] = useState(false)
 
     const fetchSession = async () => {
         const res = await axios({
@@ -43,7 +47,7 @@ function Plane(){
         interval.current = setInterval(() => {
             const date = new Date()
             if(date.getMinutes() === 0){ refreshSession() }
-            if(date.getMinutes() % 5 === 0){ /*setLinesStatus() */ } 
+            if(date.getMinutes() % 5 === 0){ setLinesStatus() } 
         }, 1000)
     }
 
@@ -70,8 +74,13 @@ function Plane(){
             }
 
             lines = lines.map(item => { return { ...item, status: item.status.length === 0 ? ['ok'] : item.status } })
-            setCurrentColor(new Array(lines.length).fill(0))
             setLines(lines)
+            if(!infoFetched){
+                colorCambio.current = new Array(lines.length).fill('white')
+                currentColor.current = new Array(lines.length).fill(0)
+                intervalLine.current = new Array(lines.length).fill(null)
+                setInfoFetched(true)
+            }
 
         }).catch(e => console.log(e))
     }
@@ -83,20 +92,20 @@ function Plane(){
             case "MXC003": return "69.5%"
             case "MXC004": return "65.75%"
             case "MXC005": return "24.5%"
-            case "MXC006": return "83.5%"
-            case "MXC007": return "76.5%"
-            case "MXC008": return "69.5%"
+            case "MXC006": return "75.5%"
+            case "MXC007": return "70%"
+            case "MXC008": return "64.75%"
             case "MXC009": return "42.5%"
             case "MXC010": return "83.5%"
-            case "MXC011": return "72.25%"
-            case "MXC012": return "14.75%"
-            case "MXC013": return "31.5%"
+            case "MXC011": return "69%"
+            case "MXC012": return "23.5%"
+            case "MXC013": return "36%"
             case "MXC014": return "69%"
-            case "MXC015": return "17.5%"
-            case "MXC016": return "32.5%"
-            case "MXC017": return "23%"
-            case "MXC018": return "27.5%"
-            case "MXC019": return "66.75%"
+            case "MXC015": return "25.5%"
+            case "MXC016": return "36.75%"
+            case "MXC017": return "29.75%"
+            case "MXC018": return "33%"
+            case "MXC019": return "62.5%"
         }
     }
 
@@ -107,61 +116,85 @@ function Plane(){
             case "MXC003": return "75%"
             case "MXC004": return "75%"
             case "MXC005": return "61%"
-            case "MXC006": return "45%"
-            case "MXC007": return "45%"
-            case "MXC008": return "45%"
-            case "MXC009": return "40%"
-            case "MXC010": return "23%"
-            case "MXC011": return "23%"
-            case "MXC012": return "23%"
-            case "MXC013": return "23%"
-            case "MXC014": return "23%"
-            case "MXC015": return "74%"
-            case "MXC016": return "74%"
+            case "MXC006": return "59%"
+            case "MXC007": return "59%"
+            case "MXC008": return "59%"
+            case "MXC009": return "45%"
+            case "MXC010": return "45%"
+            case "MXC011": return "45%"
+            case "MXC012": return "45%"
+            case "MXC013": return "45%"
+            case "MXC014": return "45%"
+            case "MXC015": return "77%"
+            case "MXC016": return "77%"
             case "MXC017": return "23%"
-            case "MXC018": return "74%"
+            case "MXC018": return "77%"
             case "MXC019": return "23%"
         }
     }
 
-    const handleLineBlink = () => {
-        for(let i = 0; i < lines.length; i++){
-            const domElement = document.getElementById(`line${lines[i].linea}`)
-            if(lines[i].status.length === 1){ domElement.style.backgroundColor = getColor(lines[i].status[0]) }
-            else{
-                let newCurrentColor = [...currentColor]
-                
-                domElement.style.backgroundColor = getColor(lines[i].status[newCurrentColor[i]])
-                if(newCurrentColor[i] + 1 > lines[i].status.length -1){ newCurrentColor[i] = 0 }
-                else{ newCurrentColor[i] += 1 }
-                setCurrentColor(newCurrentColor)
+    const setLineColor = (color, i, domElement, newCurrentColor, oneStatus) =>{
+        let newIntervalLine = [...intervalLine.current]
+        let newColorCambio = [...colorCambio.current]
+
+        if(color === "white"){
+            if(oneStatus){
+                newIntervalLine[i] = setInterval((domElement) => {
+                    domElement.style.backgroundColor = newColorCambio[i] === 'white' ? 'red' : 'white'
+                    newColorCambio[i] = newColorCambio[i] === 'white' ? 'red' : 'white'
+                    colorCambio.current = newColorCambio[i]
+                }, 500, domElement);
+            }else{
+                domElement.style.backgroundColor = getColor('mantenimiento')
+                if(newIntervalLine[i]){
+                    window.clearInterval(newIntervalLine[i])
+                    newIntervalLine[i] = null
+                    intervalLine.current = newIntervalLine[i]
+                }
+            }
+        }else{
+            domElement.style.backgroundColor = color
+            if(newIntervalLine[i]){
+                window.clearInterval(newIntervalLine[i])
+                newIntervalLine[i] = null
+                intervalLine.current = newIntervalLine[i]
             }
         }
+
+        if(newCurrentColor[i] + 1 > lines[i].status.length -1){ return 0 }
+        else{ return newCurrentColor[i] + 1 }
+
+    }
+
+    const handleLineBlink = () => {
+        let newCurrentColor = [...currentColor.current]
+        for(let i = 0; i < lines.length; i++){
+            const domElement = document.getElementById(`line${lines[i].linea}`)
+            const oneStatus = lines[i].status.length === 1
+            newCurrentColor[i] = setLineColor(getColor(lines[i].status[newCurrentColor[i]]), i, domElement, newCurrentColor, oneStatus)
+        }
+        currentColor.current = newCurrentColor
     }
 
     useEffect(() => {
-        if(lines.length !== 0){
-            if(lines.some(item => item.status.length > 1)){ interval.current = setInterval(handleLineBlink, 2000); }
-            else{
-                for(let i = 0; i < lines.length; i++){
-                    
-                    if(document.getElementById(`line${lines[i].linea}`)){
-                        let color = getColor(lines[i].status[0])
-                        document.getElementById(`line${lines[i].linea}`).style.backgroundColor = color
-                    }   
-                }
-            }
+        if(lines.length !== 0 ){
+            handleLineBlink()
+            if(intervalStatus.current){ window.clearInterval(intervalStatus.current) }
+            intervalStatus.current = setInterval(handleLineBlink, 1500);
         }
         
         return () => { window.clearInterval(interval.current) }
-    }, [lines, currentColor])
+    }, [lines])
 
     useEffect(() => {
         checkHour()
         setLinesStatus()
+        intervalData.current = setInterval(setLinesStatus, 6000);
         if(window.innerWidth <= maxWidth){ document.getElementById('root').style.overflowY = 'auto' }
         return () => {
-            clearInterval(interval.current) 
+            window.clearInterval(interval.current) 
+            window.clearInterval(intervalData.current)
+            window.clearInterval(intervalStatus.current) 
         }
     }, [])
 
@@ -180,7 +213,7 @@ function Plane(){
                 <PlaneComponent img={layout}>
                     {lines.map((line, idx) => (
                         <Indicator top={getTopLine(line.linea)} left={getLeftLine(line.linea)} key={idx} id={`line${line.linea}`}/>
-                        //<Indicator top="61%" left="24.25%" key={idx} id={`line${line.linea}`}/>  
+                        //<Indicator top="45%" left="62.5%" key={idx} id={`line${line.linea}`}/>  
                     ))}
                 </PlaneComponent>
             )}

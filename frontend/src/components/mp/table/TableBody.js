@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 
 import RadioButton from '../../common/RadioButton'
 
@@ -6,9 +6,26 @@ import { TableRow } from '../../../styles/mp'
 
 import { appContext } from '../../../reducers/ProviderMP'
 
-function TableBody({ history }){
+function TableBody({ history, machines }){
 
     const context = useContext(appContext)
+
+    const [hour, setHour] = useState('')
+    const [minute, setMinute] = useState('')
+
+    const handleInputHour = e => {
+        if(e.target.value.length <= 2){
+            setHour(e.target.value)
+            context.dispatchTimeout({ type: 'SET', value: `${e.target.value}:${minute}` })
+        }
+    }
+
+    const handleInputMinute = e => {
+        if(e.target.value.length <= 2){
+            setMinute(e.target.value)
+            context.dispatchTimeout({ type: 'SET', value: `${hour}:${e.target.value}` })
+        }
+    }
     
     const handleInputReportedBy = e => context.dispatchReportedBy({ type: 'SET', value: e.target.value })
     const handleInputMachineTag = e => context.dispatchMachineTag({ type: 'SET', value: e.target.value })
@@ -18,12 +35,17 @@ function TableBody({ history }){
     const handleInputEndAt = e => context.dispatchEndAt({ type: 'SET', value: e.target.value })
     const handleInputFixedBy = e => context.dispatchFixedBy({ type: 'SET', value: e.target.value })
     const handleInputPartsUsed = e => context.dispatchPartsUsed({ type: 'SET', value: e.target.value })
-    const handleInputCausedBy = e => context.dispatchCausedBy({ type: 'SET', value: e.target.value })
-    const handleInputTimeout = e => context.dispatchTimeout({ type: 'SET', value: e.target.value })
+    const handleInputCausedBy = e => {
+        if(e.target.none !== "none"){ context.dispatchCausedBy({ type: 'SET', value: e.target.value }) }
+    }
     const handleInputValidatedBy = e => context.dispatchValidatedBy({ type: 'SET', value: e.target.value })
     
-    const handleSelectFailType = e => context.dispatchFailType({ type: 'SET', value: e.target.value })
-    const handleSelectMachineType = e => context.dispatchMachineType({ type: 'SET', value: e.target.value })
+    const handleSelectFailType = e => {
+        if(e.target.value !== "none"){ context.dispatchFailType({ type: 'SET', value: e.target.value }) }
+    }
+    const handleSelectMachineType = e => {
+        if(e.target.value !== "none"){ context.dispatchMachineType({ type: 'SET', value: e.target.value }) }
+    }
 
     const handleButtonAffectedProductionYes = () => {
         if(!history){ context.dispatchProductionAffected({ type: 'SET', value: true }) }
@@ -31,6 +53,11 @@ function TableBody({ history }){
     const handleButtonAffectedProductionNo = () => {
         if(!history){ context.dispatchProductionAffected({ type: 'SET', value: false }) }
     }
+
+    useEffect(() => {
+        setHour(context.timeout?.split(':')[0])
+        setMinute(context.timeout?.split(':')[1])
+    }, [context.timeout])
 
     return(
         <>
@@ -52,9 +79,10 @@ function TableBody({ history }){
                 </div>
                 <div className="input-container">
                     <select value={context.machineType} onChange={handleSelectMachineType} disabled={history}>
-                        <option>Open Link</option>
-                        <option>EOL</option>
-                        <option>Grease Dispenser</option>
+                        <option value="none">Selecciona máquina</option>
+                        {machines.map((machine, idx) => (
+                            <option key={idx}>{machine.nombre}</option>
+                        ))}
                     </select>
                 </div>
             </TableRow>
@@ -88,6 +116,7 @@ function TableBody({ history }){
                 </div>
                 <div className="input-container">
                     <select value={context.failType} onChange={handleSelectFailType} disabled={history}>
+                        <option value="none">Selecciona falla</option>
                         <option>Eléctrica</option>
                         <option>Electrónica</option>
                         <option>Neumática</option>
@@ -182,6 +211,7 @@ function TableBody({ history }){
                 </div>
                 <div className="input-container">
                     <select value={context.causedBy} onChange={handleInputCausedBy} disabled={history}>
+                        <option value="none">Selecciona causa</option>
                         <option>Mala calibración</option>
                         <option>Mal ajuste</option>
                         <option>Desajuste</option>
@@ -195,12 +225,20 @@ function TableBody({ history }){
                 <div className="label">
                     <span>Tiempo muerto total</span>
                 </div>
-                <div className="input-container">
+                <div className="input-container input-number-container">
                     <input 
-                        value={context.timeout}
-                        onChange={handleInputTimeout}
-                        type="time"
+                        value={hour}
+                        onChange={handleInputHour}
+                        type="number"
+                        className="input-number"
                         disabled={history}
+                    />
+                    :
+                    <input 
+                        value={minute}
+                        onChange={handleInputMinute}
+                        disabled={history}
+                        className="input-number"
                     />
                 </div>
             </TableRow>

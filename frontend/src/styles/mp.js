@@ -150,7 +150,7 @@ export const SelectContainer = styled.div`
     }
 
     select{
-        width: 10vw;
+        width: ${props => props.width || '10vw'};
         background-color: white;
         padding: 0.5vh 1vw;
         border: 0;
@@ -224,6 +224,20 @@ export const TableRow = styled.div`
         align-items: center;
         justify-content: space-around;
 
+        .input-number{
+            width: 2vw;
+            appearance: textfield;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+
+        .input-number:first-child{
+            margin-left: 1vw;
+        }
+
         input{
             border: 0;
             border-bottom: 1px solid black;
@@ -243,6 +257,10 @@ export const TableRow = styled.div`
             font-family: Arial, Helvetica, sans-serif;
             font-size: 1vw;
         }
+    }
+
+    .input-number-container{
+        justify-content: flex-start;
     }
 
     @media ${device.tablet} {
@@ -291,6 +309,7 @@ export const SearcherContainer = styled.div`
     width: 90%;
     padding: 0 5%;
     margin-top: 2vh;
+    margin-bottom: ${props => props.marginb};
 
     h1{
         font-family: Arial, Helvetica, sans-serif;

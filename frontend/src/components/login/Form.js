@@ -52,7 +52,6 @@ function Form(){
             setErr(false)
             login({ user, password }).then(({ priv }) =>{
                 isLogged().then((data) => {
-                    console.log('a')
                     console.log(data)
                     if(data.Logged){
                         if(data.priv === 'mantenimiento'){ window.location.replace('/mp') }
@@ -70,7 +69,7 @@ function Form(){
 
     const resize = () => {
         if(window.screen.width > maxWidth){ setisMobile(false) }
-        else{ setisMobile(true); console.log('a') }
+        else{ setisMobile(true) }
     }
 
     const handleOpenKeyboard = () => {

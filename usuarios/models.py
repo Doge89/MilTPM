@@ -62,7 +62,7 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD='username'
 
-    REQUIRED_FIELDS = ['email', 'linea', 'clave', 'user_type']
+    REQUIRED_FIELDS = ['email', 'clave', 'user_type']
 
     objects = UsuariosManager()
 
@@ -95,10 +95,13 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
     
         return token.decode('utf-8')
 
+    def __del__(self):
+        del self
+
 class Linea(models.Model):
     Id = models.AutoField(primary_key=True)
     linea = models.CharField(max_length=50, blank=False, help_text=_('Linea de Produccion'), verbose_name=_('Linea'))
-    usuario = models.OneToOneField(Usuarios, on_delete=models.CASCADE, related_name='usuario')
+    usuario = models.OneToOneField(Usuarios, on_delete=models.CASCADE, related_name='usuario', related_query_name='production')
 
     class Meta:
         db_table = 'Linea'

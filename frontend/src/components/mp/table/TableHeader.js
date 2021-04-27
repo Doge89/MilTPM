@@ -12,11 +12,17 @@ import { twoDigits } from '../../../scripts'
 
 const date = `${twoDigits(new Date().getDate())}/${twoDigits(new Date().getMonth() +1)}/${new Date().getFullYear()}`
 
-function TableHeader({ history }){
+function TableHeader({ history, lines }){
 
     const context = useContext(appContext) 
 
+    console.log(context.line)
+    console.log(lines)
+
     const handleSelect = e => context.dispatchTurno({ type: 'SET', value: e.target.value })
+    const handleSelectLine = e => {
+        if(e.target.value !== "none"){ context.dispatchLine({ type: 'SET', value: e.target.value }) }
+    }
 
     const handleButtonMotores = () => {
         if(!history){ context.dispatchType({ type: 'SET', value: 'motores' }) }
@@ -31,7 +37,7 @@ function TableHeader({ history }){
         if(!history){ context.dispatchType({ type: 'SET', value: 'switch' }) }
     }
 
-    const handleInputLine = e => context.dispatchLine({ type: 'SET', value: e.target.value })
+    
     const handleInputTechnicianChief = e => context.dispatchTechnicianChief({ type: 'SET', value: e.target.value })
     const handleInputSuperMTTO = e => context.dispatchSuperMTTO({ type: 'SET', value: e.target.value })
     const handleInputSuperPRDN = e => context.dispatchSuperPRDN({ type: 'SET', value: e.target.value })
@@ -82,12 +88,15 @@ function TableHeader({ history }){
                     width="100%"
                     justifyContent="space-between"
                 >
-                    <Input 
-                        value={context.line}
-                        onChange={handleInputLine}
-                        label="Línea"
-                        labelColor="white"
-                    />
+                    <SelectContainer width="15vw">
+                        <label>Línea:</label>
+                        <select onChange={handleSelectLine} value={context.line} disabled={history}> 
+                            <option value="none">Seleccionar linea</option>
+                            {lines.map(line => (
+                                <option value={line} key={line}>{line}</option>
+                            ))}
+                        </select>
+                    </SelectContainer>
                     <Text color="white" id="fecha">Fecha: {date}</Text>
                 </Container>
                 <Container

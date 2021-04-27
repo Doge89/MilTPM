@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
 import Cookies from 'js-cookie'
+import { useHistory } from 'react-router-dom'
 
 import MainContainer from '../components/common/MainContainer'
 import TopBar from '../components/tpm/TopBar'
@@ -15,6 +16,8 @@ import { setRootStyle } from '../scripts'
 
 function Tpm(){
 
+    const historyBrowser = useHistory()
+
     const [viewType, setViewType] = useState('panel')
     const [line, setLine] = useState('')
     const [user, setUser] = useState('')
@@ -27,6 +30,7 @@ function Tpm(){
     const [activities, setActivities] = useState([])
     const [history, setHistory] = useState([])
     const [cards, setCards] = useState([])
+    const [lines, setLines] = useState([])
     const [lineUser, setLineUser] = useState(false)
 
     const getMachines = async () => {
@@ -71,6 +75,15 @@ function Tpm(){
         return res.data
     }
 
+    const getLines = async () => {
+        const res = await axios({
+            url : `${URL}/admin/lineas/`,
+            method: 'GET',
+        })
+        
+        return res.data
+    }
+
     const setCurrentMachineState = (cards) => {
         if(cards.length === 0){ setMachineState('rgb(254, 13, 46)') }
         else{
@@ -108,11 +121,16 @@ function Tpm(){
 
     useEffect(() => {
         setRootStyle(true)
-        isLogged().then(({ Logged, linea, Usuario }) => {
-            //if(!Logged){ window.location.replace('/login') }
+        isLogged().then(({ Logged, linea, Usuario, priv }) => {
+            if(!Logged){ window.location.replace('/login') }
+            if(priv === "mantenimiento"){ historyBrowser.goBack() }
             setUser(Usuario)
             if(linea){ setLine(linea) }
             else{ setLineUser(false) }
+            getLines().then(({ lineas }) => {
+                const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                setLines(lines)
+            }).catch(e => console.log(e))
             
         }).catch(e => console.log(e))
 
@@ -120,7 +138,6 @@ function Tpm(){
 
     useEffect(() => {
         if(line !== ''){
-            console.log(line)
             getMachines().then(({ maquinas, cronograma, linea, usuario }) =>{
                 const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
                 const schedule = JSON.parse(cronograma).map(item => item.fields)
@@ -151,8 +168,8 @@ function Tpm(){
 
     return(
         <MainContainer>
-            <TopBar setViewType={setViewType} viewType={viewType}/>
-            <Info line={line} user={user} setLine={setLine} lineUser={lineUser} />
+            <TopBar setViewType={setViewType} viewType={viewType} user={user} line={line}/>
+            <Info line={line} user={user} setLine={setLine} lineUser={lineUser} lines={lines}/>
             {viewType === 'panel' ? (
                 <Panel 
                     machines={machinesDay}

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
+import axios from 'axios'
+import { useHistory } from 'react-router-dom'
 
 import MainContainer from '../components/common/MainContainer'
 import Searcher from '../components/mp/history/Searcher'
@@ -9,15 +11,36 @@ import { HistoryTableContainer } from '../styles/mp'
 
 import { appContext } from '../reducers/ProviderMP'
 
+import { URL } from '../var'
 import { setRootStyle } from '../scripts'
 
 function MpHistory(){
 
+    const history = useHistory()
     const context = useContext(appContext)
 
     const [data, setData] = useState([])
     const [report, setReport] = useState({})
     const [searched, setSearched] = useState(false)
+    const [lines, setLines] = useState([])
+
+    const isLogged = async () => {
+        const res = await axios({
+            url : `${URL}/login/validate/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
+
+    const getLines = async () => {
+        const res = await axios({
+            url : `${URL}/admin/lineas/`,
+            method: 'GET',
+        })
+        
+        return res.data
+    }
 
     useEffect(() => {
         setRootStyle(true)
@@ -44,13 +67,30 @@ function MpHistory(){
         }
     }, [report])
 
+    useEffect(() => {
+        setRootStyle(true)
+        isLogged().then((data) =>{
+            if(!data.Logged){ return window.location.replace('/login') }
+            if(data.priv === "production"){ return history.goBack() }
+            getLines().then(({ lineas }) => {
+                const lines = JSON.parse(lineas).map(item => item.fields.linea)
+                setLines(lines)
+            }).catch(e => console.log(e))
+        }).catch(e => { console.log(e) })
+    }, [])
+
     return(
         <MainContainer>
-            <Searcher setData={setData} setSearched={setSearched} />
-            <Table searched={searched} data={data} setReport={setReport} />
+            <Searcher setData={setData} setSearched={setSearched} searched={searched} />
+            <Table 
+                searched={searched} 
+                data={data} 
+                setReport={setReport} 
+                seeReport={JSON.stringify(report) !== "{}"}
+             />
             {JSON.stringify(report) !== "{}" && (
                 <HistoryTableContainer>
-                    <TableReport isHistory />
+                    <TableReport isHistory lines={lines} />
                 </HistoryTableContainer>
             )}
         </MainContainer>

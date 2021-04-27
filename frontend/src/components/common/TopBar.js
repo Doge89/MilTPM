@@ -60,7 +60,7 @@ function TopBar(){
     }
     const gotoTPM = () => {
         if(!logged){ return window.location.replace('/login') }
-        history.push('/tpm')
+        if(userType !== 'mantenimiento'){ history.push('/tpm') }
     }
     const gotoMP = () => {
         if(!logged){ return window.location.replace('/login') }
@@ -71,6 +71,8 @@ function TopBar(){
     const handleLogout = () => {
         logout().then(() => {
             window.location.replace('/')
+            window.localStorage.clear()
+            window.localStorage.setItem('slidePosition', 'right')
         }).catch(e => {
             console.log(e)
         })

@@ -14,8 +14,11 @@ urlpatterns = [
     path('modificar/usuarios/', views.usuarios),
     path('modificar/usuarios/del/', views._del_user),
     path('modificar/usuarios/modify/', views._modify_user),
+    path('modificar/linea/', views._add_production_line),
+    path('modificar/puerto/', views._select_com),
     path('historial/', views._machine_history),
     path('historial/maquina/', views._get_machine_card),
     path('historial/get/id/', views._get_machine_card_by_id),
-    path('historial/modificar/', views._modify_card)
+    path('historial/modificar/', views._modify_card),
+    
 ]

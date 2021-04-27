@@ -13,15 +13,25 @@ import { ButtonPrimary, Container, Text } from '../../../styles/common'
 import { URL, maxWidth } from '../../../var'
 import { appContext } from '../../../reducers/ProviderMP'
 
-function Table({ isHistory }){
+function Table({ isHistory, lines }){
 
     const history = useHistory()
     const context = useContext(appContext)
 
     const [err, setErr] = useState(false)
     const [message, setMessage] = useState('')
+    const [machines, setMachines] = useState([])
 
     const gotoHistory = () => history.push('/mp/historial')
+    
+    const getMachines = async () => {
+        const res = await axios({
+            url: `${URL}/tpm/modificar/cronograma/get/${context.line}/`,
+            method: 'GET',
+        })
+
+        return res.data
+    }
 
     const postData = async (data) => {
         const res = await axios({
@@ -58,7 +68,7 @@ function Table({ isHistory }){
                 refacciones: partsUsed, causa: causedBy, tiempoMuerto: timeout, validadoPor: validatedBy, afectaProduccion: productionAffected ? 1 : 0, 
                 turno, tipoMaquina: machineType
             })}).then((data) => {
-                console.log(data)
+                window.location.reload();
             }).catch(e => {
                 console.log(e)
             })
@@ -82,17 +92,26 @@ function Table({ isHistory }){
     useEffect(() => {
         if(window.innerWidth <= maxWidth){ document.getElementById('table-mp').scrollIntoView({ behavior: 'smooth' }) }
         getLine().then(({ linea, Logged }) => {
-            //if(!Logged){ window.location.replace('/login') }
+            if(!Logged){ window.location.replace('/login') }
             context.dispatchLine({ type: 'SET', value: linea })
         }).catch(e => {
             console.log(e)
         })
     }, [])
 
+    useEffect(() => {
+        if(context.line && context.line !== ""){
+            getMachines().then(({ maquinas }) => {
+                const machines = JSON.parse(maquinas).map(item => { return { ...item.fields, id: item.pk } })
+                setMachines(machines)
+            }).catch(e => console.log(e))
+        }
+    }, [context.line])
+
     return(
         <TableComponent id="table-mp">
-            <TableHeader history={isHistory}/>
-            <TableBody history={isHistory} />
+            <TableHeader history={isHistory} lines={lines}/>
+            <TableBody history={isHistory} machines={machines} />
             {err && <Text color="rgb(254, 13, 46)" size="1.5vw" weight="bold" margin="2vh auto 0 auto">{message}</Text>}
             {!isHistory && (
                 <Container

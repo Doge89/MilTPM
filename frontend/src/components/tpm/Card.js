@@ -1,13 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
 import querystring from 'querystring'
+import Cookies from 'js-cookie'
 
 import { Card as CardComponent, CardInfo } from '../../styles/tpm'
 import { ButtonPrimary, Container } from '../../styles/common'
 
 import { URL, maxWidth } from '../../var'
 
-function Card({ info, edit, history }){
+function Card({ info, edit, history, updateHistory, closeCard }){
 
     const ref = useRef(null)
 
@@ -21,7 +22,12 @@ function Card({ info, edit, history }){
         const res = await axios({
             url: `${URL}/tpm/historial/modificar/`,
             method: 'POST',
-            data: querystring.stringify(data)
+            data: querystring.stringify(data),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', 
+                'X-CSRFToken' : Cookies.get('csrftoken')
+            },
+            withCredentials: true
         })
 
         return res.data
@@ -41,6 +47,8 @@ function Card({ info, edit, history }){
 
     const handleBtn = () => {
         updateData({ data: JSON.stringify({propuesta: proposed, implementada: implemented, id: info.id }) }).then(() => {
+            updateHistory({...info, implementada: implemented, propuesta: proposed})
+            closeCard()
         }).catch(e => console.log(e))
     }
 
@@ -80,7 +88,14 @@ function Card({ info, edit, history }){
                         <>
                         <CardInfo column>
                             <span>Descripción del Problema: </span>
-                            <div>{info?.descripcion}</div>
+                            <div>
+                                {info?.descripcion.split(',').map((item, idx) => (
+                                    <React.Fragment key={idx}>
+                                        {item}
+                                        <br/>
+                                    </React.Fragment>
+                                ))}
+                            </div>
                         </CardInfo>
                         {(history || edit) && (
                             <>
