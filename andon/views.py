@@ -7,8 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
-URL = 'http://192.168.100.22:8000/api/token/verify/'
-# Create your views here.
+URL = 'http://10.134.35.11:8000/api/token/verify/'# Create your views here.
 
 #CARGA DEL SISTEMA ANDON
 def index(request):
