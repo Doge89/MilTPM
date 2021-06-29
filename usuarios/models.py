@@ -62,7 +62,7 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD='username'
 
-    REQUIRED_FIELDS = ['email', 'clave', 'user_type']
+    REQUIRED_FIELDS = ['email','linea', 'clave', 'user_type']
 
     objects = UsuariosManager()
 

@@ -15,6 +15,8 @@ function TableDataProduction({ getWidthCell, idx, history }){
     
     const [timeoutHxh, setTimeoutHxh] = useState('00:00:00')
     const [diferencia, setDiferencia] = useState('')
+    const [color, setColor] = useState('')
+    const [inputcolor, setInputColor] = useState('')
 
     const handleInputActual = e => {
         let newActual = [...context.actual]
@@ -27,6 +29,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
         let newDiferencia = [...context.diferencia]
         newDiferencia[idx] = e.target.value
         context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
+        
     }
 
     const getCurrentActual = () => {
@@ -43,6 +46,15 @@ function TableDataProduction({ getWidthCell, idx, history }){
         if(newDiferencia.length !== 0){
             newDiferencia[idx] = dif.toString()
             context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
+            if(dif < 0){
+                console.log(dif)
+                setColor('rgb(255, 13, 47)')
+                setInputColor('rgb(255, 49 ,76)')
+                console.log(color)
+            }else{
+                setColor('green')
+            }
+            
         }
         
     }
@@ -101,6 +113,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
             <Cell
                 width={getWidthCell()}
                 borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+                backgroundColor="white"
             >
                 <Input 
                     width="80%"
@@ -124,6 +137,8 @@ function TableDataProduction({ getWidthCell, idx, history }){
             <Cell
                 width={getWidthCell()}
                 borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+                backgroundColor={color}
+                //style={{backgroundColor: color}}
             >
                 <Input 
                     width="80%"
@@ -133,11 +148,13 @@ function TableDataProduction({ getWidthCell, idx, history }){
                     onChange={handleInputDifference}
                     type="number"
                     disabled={history}
+                    backgroundColor={inputcolor}
                 />
             </Cell>
             <Cell
                 width={getWidthCell()}
                 borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
+                backgroundColor="white"
             >
                 <Input 
                     width="90%"

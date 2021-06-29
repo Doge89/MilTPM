@@ -146,7 +146,7 @@ def _get_actual(request, linea = None):
     return HttpResponse(status=405)
 @require_http_methods(['GET'])
 def historial(request):
-    if 'Usuario' in request.session and 'Pass' in request.session and 'Linea' in request.session:
+    if 'Usuario' in request.session and 'Pass' in request.session:
         return render(request, 'index.html', status = 200)
     return HttpResponse(status=401)
 
@@ -176,7 +176,7 @@ def _actual_pieces(request, linea=None):
             ahora = datetime.now()
             linea = infoProduccion.objects.filter(info_id__linea_id__linea__exact=f"{linea}", inicio__exact=f"{ahora.hour}:00:00").last()
             print(linea)
-            linea.actual = data
+            linea.actual += int(data)
             linea.save()
             return HttpResponse(status=200)
         except Exception as e:

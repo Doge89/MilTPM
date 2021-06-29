@@ -21,7 +21,7 @@ function Icon({ name, label, margin, onClick, active }){
             case "cambio": return colorCambio
             case "ingenieria": return 'cyan'
             case "mantenimiento": return 'rgb(254, 13, 46)'
-            case "materiales": return 'blue'
+            case "materiales": return 'yellow'
             case "milwaukee": return milwaukee
             case "produccion": return 'purple'
             default: return '#FF7000'

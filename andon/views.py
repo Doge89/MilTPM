@@ -16,7 +16,7 @@ def index(request):
     return HttpResponse(status=401)
 
 @require_http_methods(['POST'])
-@ensure_csrf_cookie
+@csrf_exempt
 def start_andon(request):
     if request.method == 'POST':
         try:
@@ -41,6 +41,23 @@ def start_andon(request):
             return HttpResponse(status=500)
     return HttpResponse(status=405)
 
+@csrf_exempt
+def _start_andon_micro(request):
+    if request.method == "POST":
+        try:
+            linea = request.POST.get('linea')
+            status = request.POST.get('tipo')
+            if type(linea) and type(status) == str:
+                lineaAct = Linea.objects.get(linea__exact=f"{linea}")
+                sisAnd = Andon.objects.create(Id = None, estatus = status, linea = lineaAct, registro = datetime.now())
+                andHist = AndonHist.objects.create(Id= None, estatus = status, linea = lineaAct, registro = datetime.now())
+                print(sisAnd)
+                print(andHist)
+                return HttpResponse(status = 201)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
 #SUJETO A CAMBIOS
 @require_http_methods(['POST'])
 @ensure_csrf_cookie
@@ -75,13 +92,15 @@ def finish_andon(request):
         try:
             fin = datetime.now()
             finHr = fin.hour
+
             estatus = request.POST.get('razon')
             clave = request.POST.get('clave')
             tiempo = request.POST.get('tiempo')
             linea = request.POST.get('linea')
             hrInit = request.POST.get('hrInit')
             ahoraInit = request.POST.get('inicio')
-
+            descrip = request.POST.get('descrip')
+            descrip = descrip if descrip != None else ""
             tiempo = int(tiempo)
 
             print(ahoraInit)
@@ -96,14 +115,14 @@ def finish_andon(request):
             user = Usuarios.objects.get(clave__exact=f"{clave}")
 
             #ASIGNACION DEL TIEMPO MUERTO
-            if hrInit == finHr and user.clave == clave:
+            if int(hrInit) == finHr and user.clave == clave:
                 hora =_calc_time(tiempo)
                 #print(hora)
                 if request.session['priv'] != 'admin':
                     horProd = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{request.session['Linea']}", inicio__exact=f"{hrInit}:00:00", fecha__exact=datetime.date(datetime.now()))
                 else:
                     horProd = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{linea}", inicio__exact=f"{hrInit}:00:00", fecha__exact=datetime.date(datetime.now()))
-                horProd.comentarios = str(horProd.comentarios) + "\n" + f"{estatus}: {hora}"
+                horProd.comentarios = str(horProd.comentarios) + "\n" + f"{estatus}: {hora}" + f"\n{descrip}"
                 horProd.save()
                 andAct.delete()
             elif hrInit != finHr and user.clave == clave:

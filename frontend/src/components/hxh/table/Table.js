@@ -298,6 +298,13 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                         Actualizar
                     </ButtonPrimary>
                     <ButtonPrimary
+                        width='14vw'
+                        height="3vw"
+                        onClick={modalResume}
+                    >
+                        Resumen
+                    </ButtonPrimary>
+                    <ButtonPrimary
                         width="14vw"
                         height="3vw"
                         onClick={gotoHistory}

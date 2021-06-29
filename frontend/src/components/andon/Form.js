@@ -134,7 +134,8 @@ function Form({ children, location }){
         finishTimer({ clave: password, razon: type, 
             tiempo: Number(window.localStorage.getItem(`timerValue${type}`)), 
             linea: line, hrInit: new Date(andon.registro).getHours(), 
-            inicio: getDateFormatted(dateRegistered)
+            inicio: getDateFormatted(dateRegistered),
+            descrip: descripction
         }).then((data) => {
             console.log(data)
             removeInfoTimer()

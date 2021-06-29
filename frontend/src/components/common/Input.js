@@ -4,7 +4,7 @@ import { Container, Label, Input as InputComponent, Textarea } from '../../style
 
 function Input({ label, value, setValue, type, id, className, width, woLabel, inputClassName, textarea, 
                 disabled, onChange, flexDirection, margin, borderInput, labelSize, labelColor, labelMargin, labelWidth,
-                inputSize, inputPadding, inputRadius, inputHeight, }){
+                inputSize, inputPadding, inputRadius, inputHeight, backgroundColor }){
 
     const handleInput = e => {
         if(setValue){ setValue(e.target.value) }
@@ -53,6 +53,7 @@ function Input({ label, value, setValue, type, id, className, width, woLabel, in
                     size={inputSize}
                     padding={inputPadding}
                     borderRadius={inputRadius}
+                    backgroundColor={backgroundColor}
                 />
             )}
             

@@ -128,6 +128,7 @@ export const Cell = styled.div`
     border-left: 1px solid rgb(83, 83, 83);
     border-top: ${props => props.borderTop};
     width: ${props => props.width};
+    background-color: ${props => props.backgroundColor ? props.backgroundColor : "white"};
 
     &.no-border-left{ border-left: 0 }
 

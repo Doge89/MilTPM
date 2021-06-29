@@ -56,7 +56,7 @@ function Plane(){
             case "cambio": return 'white'
             case "ingenieria": return 'cyan'
             case "mantenimiento": return 'rgb(254, 13, 46)'
-            case "materiales": return 'blue' 
+            case "materiales": return 'yellow' 
             case "produccion": return 'purple'
             case "materiales": return '#FF7000'
             default: return 'green'

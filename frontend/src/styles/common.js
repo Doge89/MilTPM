@@ -99,6 +99,7 @@ export const Input = styled.input`
     margin: ${props => props.margin || '0'};
     border: ${props => props.border || '0'};
     border-radius: ${props => props.borderRadius || '0'};
+    background-color: ${props => props.backgroundColor ? props.backgroundColor : "white"}
     appearance: none;
     font-family: Arial, Helvetica, sans-serif;
     
