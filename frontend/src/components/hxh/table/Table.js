@@ -7,6 +7,7 @@ import Cookies from 'js-cookie'
 import TableHeadRow from './TableHeadRow'
 import TableRow from './TableRow'
 import Icons from './Icons'
+import Resume from '../resume/Resume'
 
 import { TableContainer, Row } from '../../../styles/hxh'
 import { ButtonPrimary } from '../../../styles/common'
@@ -31,6 +32,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     const [rerenderChangeSchedule, setRerenderChangeSchedule] = useState(false)
     const [rerenderIcons, setRerenderIcons] = useState(false)
     const [userType, setUserType] = useState('')
+    const [openModal, setOpenModal] = useState(false)
+    const [dataLine, setDataLine] = useState('')
 
     const postData = async (data) => {
         const res = await axios({
@@ -92,6 +95,14 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
             consola: context.consola, contramedida: context.contramedida, job: context.job, cantidad: context.cantidad
         })
     }
+
+    const modalResume = () => {
+        isLogged().then(() => {
+            setOpenModal(true)
+        })
+    }
+
+    const closeModal = () => {setOpenModal(false)}
 
     const handleBtn = () => {
         const data = {
@@ -203,6 +214,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
             setInfoTable(data)
             console.log(dataInfo)
             setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
+            setDataLine(JSON.parse(Linea).linea)
             setAndonInfo(andon)
             if(window.innerWidth <= maxWidth){
                 setTimeout(() => {
@@ -258,6 +270,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     useEffect(() => {
         if(hxhHistory){ setInfoTable(data) }
     }, [data])
+
 
     return(
         <TableContainer>
@@ -320,6 +333,14 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 />
                 </>
             )}
+
+            <Resume
+                open={openModal}
+                close={closeModal}
+                line={context.linea}
+                data={dataLine}
+            >
+            </Resume>
             
         </TableContainer>
     )

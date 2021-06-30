@@ -50,7 +50,6 @@ function TableDataProduction({ getWidthCell, idx, history }){
                 console.log(dif)
                 setColor('rgb(255, 13, 47)')
                 setInputColor('rgb(255, 49 ,76)')
-                console.log(color)
             }else{
                 setColor('green')
             }

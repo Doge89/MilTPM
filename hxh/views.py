@@ -2,7 +2,7 @@ import ast, json, time
 from itertools import chain
 from datetime import datetime
 from .models import infoGeneral, infoProduccion
-from usuarios.models import Usuarios, Linea, Andon
+from usuarios.models import Usuarios, Linea, Andon, AndonHist
 from django.shortcuts import render
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, JsonResponse
@@ -183,6 +183,30 @@ def _actual_pieces(request, linea=None):
             print(e)
             return HttpResponse(status=500)
     return HttpResponse(status=405)
+
+@require_http_methods(['GET'])
+def _get_all_hxh(request, Linea = None):
+    if request.method == 'GET':
+        try:
+            if Linea != None:
+                table = infoProduccion.objects.filter(info_id__linea_id__linea__exact=f"{Linea}", fecha__exact=f"{datetime.date(datetime.now())}")
+                andHist = AndonHist.objects.filter(registro__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
+                serializedData = {
+                    'piecesOk': [i.actual for i in table],
+                    'pieces': [i.plan for i in table],
+                    'andon': {
+                        'deadTime': [i.tiempoM for i in andHist],
+                        'status': [i.estatus for i in andHist]
+                    }
+                }
+                return JsonResponse({'data': serializedData}, status = 200)
+            return HttpResponse(status = 400)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
+
+
  
 #METODOS SIN VISTAS 
 def _get_objects(Linea = None):

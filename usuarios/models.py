@@ -136,6 +136,8 @@ class AndonHist(models.Model):
     estatus = models.CharField(max_length=15, blank=False, help_text=_('Estado de la linea en ese momento'), verbose_name=_('Estatus'))
     linea = models.ForeignKey(Linea, on_delete=models.CASCADE, related_name='histLin', default=None)
     registro = models.DateTimeField(verbose_name=_('Fecha de reporte'), auto_now_add=False)
+    razon = models.CharField(max_length=50, verbose_name=_("Razon de la falla"), help_text=_("Razon de la falla"), blank = False, default = '')
+    tiempoM = models.CharField(max_length=50, verbose_name=_("Tiempo Muerto"), blank = True, default = '', help_text=_("Tiempo Muerto"))
 
     class Meta:
         db_table = 'AndonHist'
@@ -144,7 +146,7 @@ class AndonHist(models.Model):
         verbose_name_plural ='HistorialAndones'
 
     def __unicode__(self):
-        return "%s %s " % (self.estatus, self.registro)
+        return "%s %s %s" % (self.estatus, self.registro, self.tiempoM)
 
     def __repr__(self):
         return self.__unicode__()
