@@ -32,7 +32,7 @@ def start_andon(request):
             else:
                 lineaAct = Linea.objects.get(linea__exact=f"{data}")
             sisAnd = Andon.objects.create(Id = None, estatus = estatus, linea = lineaAct, registro= datetime.now())
-            andHist = AndonHist.objects.create(Id = None, estatus = estatus, linea=lineaAct, registro = datetime.now())
+            andHist = AndonHist.objects.create(Id = None, estatus = estatus, linea=lineaAct, registro = datetime.now(), razon = f"{estatus}")
             # sisAnd.linea.add(lineaAct)
             # print(sisAnd.estatus)
             return HttpResponse(status=201)
@@ -123,7 +123,10 @@ def finish_andon(request):
                 else:
                     horProd = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{linea}", inicio__exact=f"{hrInit}:00:00", fecha__exact=datetime.date(datetime.now()))
                 horProd.comentarios = str(horProd.comentarios) + "\n" + f"{estatus}: {hora}" + f"\n{descrip}"
+                andHist = AndonHist.objects.last()
+                andHist.tiempoM = f"{hora}"
                 horProd.save()
+                andHist.save()
                 andAct.delete()
             elif hrInit != finHr and user.clave == clave:
                 ahoraInit = datetime.strptime(ahoraInit, '%Y/%m/%d %H:%M:%S')

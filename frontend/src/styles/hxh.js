@@ -306,5 +306,65 @@ export const SearcherContainer = styled.div`
     }
 `;
 
+export const ResumeRowContainer = styled.div`
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-flow: row nowrap;
+    font-family: Arial, sans-serif;
+
+    div{
+        width: 35%;
+        padding: 5px;
+        text-align: center;
+        box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+
+        h1{
+            text-transform: uppercase;
+            letter-spacing: normal;
+            word-spacing: 0.01em;
+            margin-bottom: 25px;
+        }
+
+        span{
+            color: rgb(255, 13, 76);
+            font-weight: bold;
+            margin-bottom: 25px;
+            font-size: 36px;
+        }
+
+    }
+
+`
+
+export const DeadTimeContainer = styled.div`
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    font-family: Arial, sans-serif;
+
+
+    h1{
+        letter-spacing: normal;
+        word-spacing: 0.01em;
+        word-wrap: break-word;
+        color: rgb(255, 13, 76);
+        text-transform: uppercase;
+    }
+
+    span{
+        font-size: 26px;
+        font-variant: small-caps;
+        letter-spacing: normal;
+        font-weight: 500;
+    }
+
+`
 
 
