@@ -44,7 +44,7 @@ function Resume( { open, close, line, dataLine } ){
     const fetchData = async () =>{
         let response = await axios({
             method: 'GET',
-            url: `${URL}/hxh/get/all/${data}/`
+            url: `${URL}/hxh/get/all/`
         })
         return response.data
     }
@@ -61,9 +61,30 @@ function Resume( { open, close, line, dataLine } ){
         return {'reazon': reazon, 'values': val}
     }
 
+    const setDeadTime = (reazon, value) => {
+        switch(reazon){
+            case "mantenimiento": return setDeadMant(value)
+            case "produccion" : return setDeadProduction(value)
+            case "calidad" : return setDeadQuality(value)
+            case "ingenieria" : return setDeadEngineering(value)
+            case "cambio de modelo": return setDeadChange(value)
+            case "materiales": return setDeadMaterial(value)
+        }
+    }
+
+    const handleClose = () =>{
+        setAllData({})
+        setDeadMaterial('00:00:00')
+        setDeadQuality('00:00:00')
+        setDeadChange('00:00:00')
+        setDeadEngineering('00:00:00')
+        setDeadMant('00:00:00')
+        setDeadProduction('00:00:00')
+        close()
+    }
+
     const fillResume = () => {
         fetchData().then((info) => {
-            //console.log(info.data)
             const information = info
             let tempPiecesOk = 0, tempPiecesBad = 0
             let arr = [], allData = []
@@ -81,28 +102,33 @@ function Resume( { open, close, line, dataLine } ){
             arr.forEach(e => allData[k++] = CalcDeadTime(e, info.data.andon.status, info.data.andon.deadTime))
             allData.forEach((e) => {
                 //console.log(e)
-                e.values.reduce((curr, next) => {
-                    var hourAct = curr.split(":"), nextHour = next.split(":")
-                    let hour = parseInt(hourAct[0]) + parseInt(nextHour[0])
-                    let min = parseInt(hourAct[1]) + parseInt(nextHour[1])
-                    let seg = parseInt(hourAct[2]) + parseInt(nextHour[2])
-                    hour = Math.floor(hour + min / 60)
-                    min = Math.floor(min % 60)
-                    seg = Math.floor(seg % 60)
-                    //console.log(seg)
-                    console.log(e.reazon)
-                    console.log(`${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`)
-                    let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
-                    switch(e.reazon){
-                        case "mantenimiento": console.log("a"); return setDeadMant(chain)
-                        case "produccion": console.log("b"); return setDeadProduction(chain)
-                        case "materiales": console.log("c"); return setDeadMaterial(chain)
-                        case "ingenieria": console.log("d"); return setDeadEngineering(chain)
-                        case "calidad":  console.log("e"); return setDeadQuality(chain)
-                        case "cambio modelo": console.log("f"); return setDeadChange(chain); 
-                    }
 
-                })
+                if(e.values > 1){
+                    e.values.reduce((curr, next) => {
+                        var hourAct = curr.split(":"), nextHour = next.split(":")
+                        let hour = parseInt(hourAct[0]) + parseInt(nextHour[0])
+                        let min = parseInt(hourAct[1]) + parseInt(nextHour[1])
+                        let seg = parseInt(hourAct[2]) + parseInt(nextHour[2])
+                        hour = Math.floor(hour + min / 60)
+                        min = Math.floor(min % 60)
+                        seg = Math.floor(seg % 60)
+                        //console.log(seg)
+                        console.log(e.reazon)
+                        console.log(`${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`)
+                        let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
+                        // switch(e.reazon){
+                        //     case "mantenimiento": console.log("a"); return setDeadMant(chain)
+                        //     case "produccion": console.log("b"); return setDeadProduction(chain)
+                        //     case "materiales": console.log("c"); return setDeadMaterial(chain)
+                        //     case "ingenieria": console.log("d"); return setDeadEngineering(chain)
+                        //     case "calidad":  console.log("e"); return setDeadQuality(chain)
+                        //     case "cambio modelo": console.log("f"); return setDeadChange(chain); 
+                        // }
+                        setDeadTime(e.reazon, chain)
+                    })
+                }else{
+                    setDeadTime(e.reazon, e.values)
+                }
             })
             setAllData(information.data.andon)      
             setOkPieces(tempPiecesOk)
@@ -112,10 +138,11 @@ function Resume( { open, close, line, dataLine } ){
     }
 
     useEffect(() => {
-        if(line){
+        if(line && line !== "" && line !== " "){
             setData(line)
-            fillResume()
-            console.log(allData)
+            setInterval(() =>{
+                fillResume()
+            }, 2000)
         }
     }, [context.linea])
 
@@ -123,7 +150,7 @@ function Resume( { open, close, line, dataLine } ){
 
         <Modal
             isOpen={open}
-            onRequestClose={close}
+            onRequestClose={handleClose}
             style={styles}
         >   
             <ModalContainer>
