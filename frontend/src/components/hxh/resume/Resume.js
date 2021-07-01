@@ -103,7 +103,7 @@ function Resume( { open, close, line, dataLine } ){
             allData.forEach((e) => {
                 //console.log(e)
 
-                if(e.values > 1){
+                if(e.values.length > 1){
                     e.values.reduce((curr, next) => {
                         var hourAct = curr.split(":"), nextHour = next.split(":")
                         let hour = parseInt(hourAct[0]) + parseInt(nextHour[0])
@@ -116,15 +116,15 @@ function Resume( { open, close, line, dataLine } ){
                         console.log(e.reazon)
                         console.log(`${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`)
                         let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
-                        // switch(e.reazon){
-                        //     case "mantenimiento": console.log("a"); return setDeadMant(chain)
-                        //     case "produccion": console.log("b"); return setDeadProduction(chain)
-                        //     case "materiales": console.log("c"); return setDeadMaterial(chain)
-                        //     case "ingenieria": console.log("d"); return setDeadEngineering(chain)
-                        //     case "calidad":  console.log("e"); return setDeadQuality(chain)
-                        //     case "cambio modelo": console.log("f"); return setDeadChange(chain); 
-                        // }
-                        setDeadTime(e.reazon, chain)
+                        switch(e.reazon){
+                            case "mantenimiento": console.log("a"); return setDeadMant(chain)
+                            case "produccion": console.log("b"); return setDeadProduction(chain)
+                            case "materiales": console.log("c"); return setDeadMaterial(chain)
+                            case "ingenieria": console.log("d"); return setDeadEngineering(chain)
+                            case "calidad":  console.log("e"); return setDeadQuality(chain)
+                            case "cambio modelo": console.log("f"); return setDeadChange(chain); 
+                        }
+                        //setDeadTime(e.reazon, chain)
                     })
                 }else{
                     setDeadTime(e.reazon, e.values)
