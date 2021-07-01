@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios'
 import querystring from 'querystring'
 import Cookies from 'js-cookie'
 import { useHistory } from 'react-router-dom'
+import { appContext } from '../../reducers/ProviderMP';
 
 import { FormContainer } from '../../styles/andon'
 import { ButtonPrimary, ButtonSecondary, Text } from '../../styles/common'
+import RadioButton from '../common/RadioButton';
 
 import { URL } from '../../var'
 import { twoDigits } from '../../scripts'
 
 function Form({ children, location }){
+
+    const context = useContext(appContext)
 
     const history = useHistory()
 
@@ -26,6 +30,8 @@ function Form({ children, location }){
     const [err, setErr] = useState(false)
     const [intervalID, setIntervalID] = useState(null)
     const [andon, setAndon] = useState({})
+    const [reazon, setReazon] = useState('')
+    const [affectProd, setAffectProd] = useState(true)  
 
     const handleInputPassword = e => setPassword(e.target.value)
     const handleSelect = e => {
@@ -95,6 +101,10 @@ function Form({ children, location }){
 
         return res.data
     }
+
+    const handleAffectedProductionYes = () => {if(!affectProd){setAffectProd(true)}}
+
+    const handleAffectedProductionNo = () => {if(affectProd){setAffectProd(false)}}
 
     const pauseTimer = (e) => {
         e.preventDefault()
@@ -245,6 +255,7 @@ function Form({ children, location }){
                     if(!query.get('linea')){ history.goBack() }
                     setLine(query.get('linea'))
                 }
+                setReazon(query.get('tipo'))
                 setUserType(data.priv)
 
                 if(!query.get('tipo')){ window.location.replace('/hxh') }
@@ -275,6 +286,23 @@ function Form({ children, location }){
                     value={descripction}
                     onChange={handleInput}
                 />
+                {reazon === "mantenimiento" && (
+                    <>
+                        <h1>¿Afecta a producción?</h1>
+                        <div style={{display: 'flex'}, {flexDirection: 'row'}}>
+                            <RadioButton
+                                label="Si"
+                                checked={affectProd}
+                                setChecked={handleAffectedProductionYes}
+                            />
+                            <RadioButton
+                                label="No"
+                                checked={!affectProd}
+                                setChecked={handleAffectedProductionNo}
+                            />
+                        </div>
+                    </>                    
+                )}
                 {React.cloneElement(children, { timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer, rerender })}
                 {timerRunning && (
                     <>
