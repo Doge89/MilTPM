@@ -36,6 +36,7 @@ def index(request):
                 print("Coinciden")
                 if userData['user_type'] == 'production':
                     request.session['Linea'] = userData['linea']
+                else: request.session['admin_line'] = ''
 
                 request.session['Usuario'] = userIn
                 request.session['Pass'] = passwordIn

@@ -34,6 +34,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     const [userType, setUserType] = useState('')
     const [openModal, setOpenModal] = useState(false)
     const [dataLine, setDataLine] = useState('')
+    const [line, setLine] = useState('')
 
     const postData = async (data) => {
         const res = await axios({
@@ -238,6 +239,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         if(userType === "admin" && context.linea && context.linea !== ''){
             getAllInfo()
         }
+        
     }, [context.linea, userType])
 
     useEffect(() => {
@@ -269,6 +271,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
 
     useEffect(() => {
         if(hxhHistory){ setInfoTable(data) }
+        
     }, [data])
 
 

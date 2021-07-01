@@ -1,4 +1,5 @@
 import ast, json, time
+from icecream import ic
 from itertools import chain
 from datetime import datetime
 from .models import infoGeneral, infoProduccion
@@ -10,6 +11,7 @@ from django.core import serializers
 from django.utils.dateparse import parse_date
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+
 
 # Create your views here.
 
@@ -25,10 +27,13 @@ def get(request, linea = None):
         try:
             line = None
             if "Linea" in request.session: line = request.session['Linea'] 
-            else: line = linea
+            else: line = linea; request.session['admin_line'] = line
             if line == 'none' or line is None: return HttpResponse(status=400)
             #print('a')
-            print(line)
+            
+            #ic(line)
+            ic(line)
+            ic(request.session['admin_line'])
             lineaProd = Linea.objects.get(linea__exact=f"{line}")
             user = Usuarios.objects.get(pk=f"{lineaProd.usuario_id}")
             if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{line}", fecha__exact=datetime.date(datetime.now()))) == 0:
@@ -138,7 +143,7 @@ def _get_actual(request, linea = None):
                 actual = infoProduccion.objects.get(fecha__exact=datetime.date(datetime.now()), inicio__exact=f"{datetime.now().hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}")
             else:
                 actual = infoProduccion.objects.get(fecha__exact=datetime.date(datetime.now()), inicio__exact=f"{datetime.now().hour}:00:00", info_id__linea_id__linea__exact=f"{linea}")
-            print(actual.actual)
+            #print(actual.actual)
             return JsonResponse({'actual': actual.actual})
         except Exception as e:
             print(e)
@@ -172,10 +177,10 @@ def _actual_pieces(request, linea=None):
     if request.method == 'POST':
         try:
             data = request.POST.get('value')
-            print(data)
+            #print(data)
             ahora = datetime.now()
             linea = infoProduccion.objects.filter(info_id__linea_id__linea__exact=f"{linea}", inicio__exact=f"{ahora.hour}:00:00").last()
-            print(linea)
+            #print(linea)
             linea.actual += int(data)
             linea.save()
             return HttpResponse(status=200)
@@ -185,12 +190,20 @@ def _actual_pieces(request, linea=None):
     return HttpResponse(status=405)
 
 @require_http_methods(['GET'])
-def _get_all_hxh(request, Linea = None):
+def _get_all_hxh(request):
+    
+    def __get_And_Hist(Linea = None):
+        now = datetime.now()
+        return AndonHist.objects.filter(registro__range=(f"{datetime.date(now)} 06:00:00", f"{now.date()} 15:00:00"), linea_id__linea__exact=f"{Linea}") if now.hour >= 6 and now.hour <= 15 \
+            else AndonHist.objects.filter(registro__range=(f"{now.date()} 15:00:00", f"{now.date()} 23:00:00"), linea_id__linea__exact=f"{Linea}") if now.hour >= 15 and now.hour < 23 else \
+                AndonHist.objects.filter(registro__range=(f"{now.date()} 23:00:00", f"{now.date()} 06:00:00"), linea_id__linea__exact=f"{Linea}")
+    
     if request.method == 'GET':
         try:
-            if Linea != None:
-                table = infoProduccion.objects.filter(info_id__linea_id__linea__exact=f"{Linea}", fecha__exact=f"{datetime.date(datetime.now())}")
-                andHist = AndonHist.objects.filter(registro__range=(f"{datetime.date(datetime.now())}", f"{datetime.now()}"))
+            if 'Linea' in request.session or 'admin_line' in request.session:
+                table = _get_objects(request.session['Linea'] if 'Linea' in request.session else request.session['admin_line'])
+                #print(table)
+                andHist = __get_And_Hist(request.session['Linea'] if 'Linea' in request.session else request.session['admin_line'])
                 serializedData = {
                     'piecesOk': [i.actual for i in table],
                     'pieces': [i.plan for i in table],
@@ -199,12 +212,17 @@ def _get_all_hxh(request, Linea = None):
                         'status': [i.estatus for i in andHist]
                     }
                 }
+                #ic(request.session['Linea'])
+                ic(serializedData['piecesOk'])
+                ic(serializedData['andon'])
                 return JsonResponse({'data': serializedData}, status = 200)
             return HttpResponse(status = 400)
         except Exception as e:
             print(e)
             return HttpResponse(status = 500)
     return HttpResponse(status = 405)
+
+    
 
 
  
