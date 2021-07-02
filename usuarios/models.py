@@ -8,18 +8,18 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 # Create your models here.
 class UsuariosManager(BaseUserManager):
 
-    def create_user(self, username, email, password=None, linea = None, clave = None, user_type = None):
+    def create_user(self, username, email, password=None, linea = None, clave = None, user_type = None, dep = None):
 
         if username is None:
             raise TypeError("Los usuarios deben tener un nombre de Usuario")
 
-        user = self.model(username = username, email = self.normalize_email(email), linea = linea, clave = clave, user_type = user_type)
+        user = self.model(username = username, email = self.normalize_email(email), linea = linea, clave = clave, user_type = user_type, dep = dep)
         user.set_password(password)
         user.save()
 
         return user
 
-    def create_superuser(self, username, email, password, linea, clave, user_type):
+    def create_superuser(self, username, email, password, linea, clave, user_type, dep):
         #print(clave)
         if password is None:
             raise TypeError("Superusuarios deben tener una contrasena")
@@ -30,7 +30,7 @@ class UsuariosManager(BaseUserManager):
         if clave is None:
             raise TypeError("Superusuarios deben de tener una clave")
 
-        user = self.create_user(username, email, password, linea, clave, user_type)
+        user = self.create_user(username, email, password, linea, clave, user_type, dep)
         user.is_superuser = True
         user.is_staff = True
         user.save()
@@ -52,6 +52,8 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     user_type = models.CharField(max_length=50, blank=False, default=None)
 
+    dep = models.CharField(max_length=50, blank=True, default = None)
+
     is_active = models.BooleanField(default=True)
 
     is_staff = models.BooleanField(default=False)
@@ -62,12 +64,12 @@ class Usuarios(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD='username'
 
-    REQUIRED_FIELDS = ['email','linea', 'clave', 'user_type']
+    REQUIRED_FIELDS = ['email','linea', 'clave', 'user_type', 'dep']
 
     objects = UsuariosManager()
 
     def __unicode__(self):
-        return "%s %s %s %s %s" % (self.id, self.username, self.email, self.linea, self.user_type)
+        return "%s %s %s %s %s %s" % (self.id, self.username, self.email, self.linea, self.user_type, self.dep)
 
     def __repr__(self):
         return self.__unicode__()
@@ -133,11 +135,12 @@ class Andon(models.Model):
 
 class AndonHist(models.Model):
     Id = models.AutoField(primary_key=True)
-    estatus = models.CharField(max_length=15, blank=False, help_text=_('Estado de la linea en ese momento'), verbose_name=_('Estatus'))
+    estatus = models.CharField(max_length=15, blank=False, help_text=_('Estado inicial de la linea en ese momento'), verbose_name=_('Estatus'))
     linea = models.ForeignKey(Linea, on_delete=models.CASCADE, related_name='histLin', default=None)
-    registro = models.DateTimeField(verbose_name=_('Fecha de reporte'), auto_now_add=False)
-    razon = models.CharField(max_length=50, verbose_name=_("Razon de la falla"), help_text=_("Razon de la falla"), blank = False, default = '')
+    registro = models.DateTimeField(verbose_name=_('Fecha y hora de reporte'), auto_now_add=False)
+    finishDep = models.CharField(max_length=50, verbose_name=_("Razon de la falla"), help_text=_("Razon de la falla"), blank = False, default = '')
     tiempoM = models.CharField(max_length=50, verbose_name=_("Tiempo Muerto"), blank = True, default = '', help_text=_("Tiempo Muerto"))
+    finishReg = models.DateTimeField(verbose_name=_("Fin Tiempo Muerto"), auto_now_add=False, help_text=_("Fecha y hora exacta de finalizacion"), default=datetime.now())
 
     class Meta:
         db_table = 'AndonHist'

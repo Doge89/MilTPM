@@ -33,7 +33,7 @@ def get(request, linea = None):
             
             #ic(line)
             ic(line)
-            ic(request.session['admin_line'])
+            #ic(request.session['admin_line'])
             lineaProd = Linea.objects.get(linea__exact=f"{line}")
             user = Usuarios.objects.get(pk=f"{lineaProd.usuario_id}")
             if len(infoProduccion.objects.filter(info_id__linea__linea__exact=f"{line}", fecha__exact=datetime.date(datetime.now()))) == 0:
@@ -194,7 +194,8 @@ def _get_all_hxh(request):
     
     def __get_And_Hist(Linea = None):
         now = datetime.now()
-        return AndonHist.objects.filter(registro__range=(f"{datetime.date(now)} 06:00:00", f"{now.date()} 15:00:00"), linea_id__linea__exact=f"{Linea}") if now.hour >= 6 and now.hour <= 15 \
+        data = None
+        return AndonHist.objects.filter(registro__range=(f"{datetime.date(now)} 06:00:00", f"{now.date()} 15:00:00"), linea_id__linea__exact=f"{Linea}") if now.hour >= 6 and now.hour < 15 \
             else AndonHist.objects.filter(registro__range=(f"{now.date()} 15:00:00", f"{now.date()} 23:00:00"), linea_id__linea__exact=f"{Linea}") if now.hour >= 15 and now.hour < 23 else \
                 AndonHist.objects.filter(registro__range=(f"{now.date()} 23:00:00", f"{now.date()} 06:00:00"), linea_id__linea__exact=f"{Linea}")
     
@@ -209,7 +210,7 @@ def _get_all_hxh(request):
                     'pieces': [i.plan for i in table],
                     'andon': {
                         'deadTime': [i.tiempoM for i in andHist],
-                        'status': [i.estatus for i in andHist]
+                        'status': [i.finishDep for i in andHist]
                     }
                 }
                 #ic(request.session['Linea'])

@@ -93,6 +93,11 @@ export const InfoContainer = styled.div`
                     border-bottom: 1px solid white;
                     padding: 2.5vw 2vw;
                     outline: none;
+
+                    option{
+                        background-color: rgba(0, 0, 0, 0.6);
+                    }
+
                 }
             }
         }
@@ -211,7 +216,8 @@ export const Row = styled.div`
             }            
 
             div{
-                border: 0
+                border: 0;
+                background-color: rgba(0, 0, 0, 0);
             }
         }
 
@@ -349,13 +355,13 @@ export const DeadTimeContainer = styled.div`
     flex-flow: row wrap;
     font-family: Arial, sans-serif;
 
-
     h1{
         letter-spacing: normal;
         word-spacing: 0.01em;
         word-wrap: break-word;
         color: rgb(255, 13, 76);
         text-transform: uppercase;
+        width: 50%;
     }
 
     span{
@@ -364,6 +370,8 @@ export const DeadTimeContainer = styled.div`
         letter-spacing: normal;
         font-weight: 500;
     }
+
+
 
 `
 

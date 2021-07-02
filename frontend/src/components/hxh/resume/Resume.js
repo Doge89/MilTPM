@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import Pieces from './Pieces'
 import DeadTime from './DeadTime'
 import { maxWidth, URL } from '../../../var'
@@ -24,13 +24,13 @@ const styles = {
     }
 }
 
-function Resume( { open, close, line, dataLine } ){
+function Resume( { open, close, line} ){
 
     //VARS
     const [okPieces, setOkPieces] = useState(NaN)
     const [badPieces, setBadPieces] = useState(NaN)
     const [data, setData] = useState('')
-    const [allData, setAllData] = useState({})
+    const interval = useRef()
 
     const [deadMaterial, setDeadMaterial] = useState('00:00:00')
     const [deadProduction, setDeadProduction] = useState('00:00:00')
@@ -72,78 +72,80 @@ function Resume( { open, close, line, dataLine } ){
         }
     }
 
-    const handleClose = () =>{
-        setAllData({})
+    const handleClose = () => {
         setDeadMaterial('00:00:00')
         setDeadQuality('00:00:00')
         setDeadChange('00:00:00')
         setDeadEngineering('00:00:00')
         setDeadMant('00:00:00')
         setDeadProduction('00:00:00')
+        console.log("Closing Modal")
         close()
     }
 
     const fillResume = () => {
-        fetchData().then((info) => {
-            const information = info
-            let tempPiecesOk = 0, tempPiecesBad = 0
-            let arr = [], allData = []
-            let j = 0, k = 0;
-            for(let i = 0; i < info.data.piecesOk.length; i++){
-                tempPiecesOk += info.data.piecesOk[i]
-                tempPiecesBad += info.data.pieces[i] - info.data.piecesOk[i]
-            }
-
-            (new Set(info.data.andon.status)).forEach((idx) => {
-                arr[j++] = idx
-                return arr;
-            })
-
-            arr.forEach(e => allData[k++] = CalcDeadTime(e, info.data.andon.status, info.data.andon.deadTime))
-            allData.forEach((e) => {
-                //console.log(e)
-
-                if(e.values.length > 1){
-                    e.values.reduce((curr, next) => {
-                        var hourAct = curr.split(":"), nextHour = next.split(":")
-                        let hour = parseInt(hourAct[0]) + parseInt(nextHour[0])
-                        let min = parseInt(hourAct[1]) + parseInt(nextHour[1])
-                        let seg = parseInt(hourAct[2]) + parseInt(nextHour[2])
-                        hour = Math.floor(hour + min / 60)
-                        min = Math.floor(min % 60)
-                        seg = Math.floor(seg % 60)
-                        //console.log(seg)
-                        console.log(e.reazon)
-                        console.log(`${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`)
-                        let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
-                        switch(e.reazon){
-                            case "mantenimiento": console.log("a"); return setDeadMant(chain)
-                            case "produccion": console.log("b"); return setDeadProduction(chain)
-                            case "materiales": console.log("c"); return setDeadMaterial(chain)
-                            case "ingenieria": console.log("d"); return setDeadEngineering(chain)
-                            case "calidad":  console.log("e"); return setDeadQuality(chain)
-                            case "cambio modelo": console.log("f"); return setDeadChange(chain); 
-                        }
-                        //setDeadTime(e.reazon, chain)
-                    })
-                }else{
-                    setDeadTime(e.reazon, e.values)
+        interval.current = setInterval(() =>{
+            fetchData().then((info) => {
+                let tempPiecesOk = 0, tempPiecesBad = 0
+                let arr = [], allData = []
+                let j = 0, k = 0;
+                for(let i = 0; i < info.data.piecesOk.length; i++){
+                    tempPiecesOk += info.data.piecesOk[i]
+                    tempPiecesBad += info.data.pieces[i] - info.data.piecesOk[i]
                 }
-            })
-            setAllData(information.data.andon)      
-            setOkPieces(tempPiecesOk)
-            setBadPieces(tempPiecesBad)  
-            
-        }).catch(error => console.error(error)) 
+    
+                (new Set(info.data.andon.status)).forEach((idx) => {
+                    arr[j++] = idx
+                    return arr;
+                })
+                console.log(info.data.andon.deadTime)
+                console.log(context.linea)
+                arr.forEach(e => allData[k++] = CalcDeadTime(e, info.data.andon.status, info.data.andon.deadTime))
+                allData.forEach((e) => {
+                    //console.log(e)
+    
+                    if(e.values.length > 1){
+                        e.values.reduce((curr, next) => {
+                            var hourAct = curr.split(":"), nextHour = next.split(":")
+                            let hour = parseInt(hourAct[0]) + parseInt(nextHour[0])
+                            let min = parseInt(hourAct[1]) + parseInt(nextHour[1])
+                            let seg = parseInt(hourAct[2]) + parseInt(nextHour[2])
+                            hour = Math.floor(hour + min / 60)
+                            min = Math.floor(min % 60)
+                            seg = Math.floor(seg % 60)
+                            //console.log(seg)
+                            //console.log(e.reazon)
+                            //console.log(`${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`)
+                            let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
+                            switch(e.reazon){
+                                case "mantenimiento": console.log("a"); return setDeadMant(chain);            
+                                case "produccion": console.log("b"); return setDeadProduction(chain); 
+                                case "materiales": console.log("c"); return setDeadMaterial(chain); 
+                                case "ingenieria": console.log("d"); return setDeadEngineering(chain); 
+                                case "calidad":  console.log("e"); return setDeadQuality(chain); 
+                                case "cambio modelo": console.log("f"); return setDeadChange(chain);
+                            }
+                            //setDeadTime(e.reazon, chain)
+                        })
+                    }else{
+                        setDeadTime(e.reazon, e.values)
+                    }
+                })   
+                setOkPieces(tempPiecesOk)
+                setBadPieces(tempPiecesBad)  
+                
+            }).catch(error => console.error(error))
+        }, 1000)
+         
     }
 
     useEffect(() => {
         if(line && line !== "" && line !== " "){
+            //console.log(context.linea)
             setData(line)
-            setInterval(() =>{
-                fillResume()
-            }, 2000)
+            fillResume()
         }
+        return () => {clearInterval(interval.current)}
     }, [context.linea])
 
     return(
