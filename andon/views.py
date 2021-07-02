@@ -1,4 +1,5 @@
 import math, requests
+from icecream import ic
 from datetime import datetime, timedelta
 from django.shortcuts import render
 from usuarios.models import Andon, Linea, Usuarios, AndonHist
@@ -32,7 +33,7 @@ def start_andon(request):
             else:
                 lineaAct = Linea.objects.get(linea__exact=f"{data}")
             sisAnd = Andon.objects.create(Id = None, estatus = estatus, linea = lineaAct, registro= datetime.now())
-            andHist = AndonHist.objects.create(Id = None, estatus = estatus, linea=lineaAct, registro = datetime.now(), razon = f"{estatus}")
+            andHist = AndonHist.objects.create(Id = None, estatus = estatus, linea=lineaAct, registro = datetime.now())
             # sisAnd.linea.add(lineaAct)
             # print(sisAnd.estatus)
             return HttpResponse(status=201)
@@ -68,10 +69,11 @@ def _pause_andon(request):
             clave = request.POST.get('clave')
             linea = request.POST.get('linea')
             user = Usuarios.objects.get(clave__exact=f"{clave}")
+            ic(user)
             if request.session['priv'] != 'admin':
-                andon = Andon.objects.get(linea_id__linea__exact=f"{request.session['Linea']}", estatus=f"{razon}")
+                andon = Andon.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}", estatus=f"{razon}").last()
             else:
-                andon = Andon.objects.get(linea_id__linea__exact=f"{linea}", estatus=f"{razon}")
+                andon = Andon.objects.filter(linea_id__linea__exact=f"{linea}", estatus=f"{razon}").last()
             if andon.active == 1 and user.clave == clave:
                 andon.active = False
                 andon.pause = andon.pause + f"{datetime.now()}" + "\n"
@@ -108,12 +110,10 @@ def finish_andon(request):
                 andAct = Andon.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}", estatus__exact=f"{estatus}").last()
             else: 
                 andAct = Andon.objects.filter(linea_id__linea__exact=f"{linea}", estatus__exact=f"{estatus}").last()
-            #print(andAct)
-            
-            
+            #print(andAct)          
             #print(type(ahoraInit))
             user = Usuarios.objects.get(clave__exact=f"{clave}")
-
+            ic(user)
             #ASIGNACION DEL TIEMPO MUERTO
             if int(hrInit) == finHr and user.clave == clave:
                 hora =_calc_time(tiempo)
@@ -122,9 +122,12 @@ def finish_andon(request):
                     horProd = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{request.session['Linea']}", inicio__exact=f"{hrInit}:00:00", fecha__exact=datetime.date(datetime.now()))
                 else:
                     horProd = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{linea}", inicio__exact=f"{hrInit}:00:00", fecha__exact=datetime.date(datetime.now()))
-                horProd.comentarios = str(horProd.comentarios) + "\n" + f"{estatus}: {hora}" + f"\n{descrip}"
+                horProd.comentarios = str(horProd.comentarios) + "\n" + f"{user.dep}: {hora}" + f"\n{descrip}"
                 andHist = AndonHist.objects.last()
                 andHist.tiempoM = f"{hora}"
+                andHist.descrip = f"{descrip}"
+                andHist.finishReg = datetime.now()
+                andHist.finishDep = user.dep
                 horProd.save()
                 andHist.save()
                 andAct.delete()

@@ -105,6 +105,11 @@ export const InfoContainer = styled.div`
             font-size: 5vw;
             width: fit-content;
             text-align: right;
+
+            option{
+                background-color: rgba(0, 0, 0, 0.9);
+            }
+
         }
 
     }
@@ -742,6 +747,11 @@ export const CardInfo = styled.div`
             color: white;
             font-size: 4vw;
             margin: 1vh 0;
+
+            option{
+                background-color: rgba(0, 0, 0, 0.9)
+            }
+
         }
 
         .select-schedule{
