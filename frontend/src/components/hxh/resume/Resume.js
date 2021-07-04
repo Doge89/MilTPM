@@ -73,6 +73,7 @@ function Resume( { open, close, line} ){
     }
 
     const handleClose = () => {
+        
         setDeadMaterial('00:00:00')
         setDeadQuality('00:00:00')
         setDeadChange('00:00:00')
@@ -98,6 +99,7 @@ function Resume( { open, close, line} ){
                     arr[j++] = idx
                     return arr;
                 })
+                               
                 console.log(info.data.andon.deadTime)
                 console.log(context.linea)
                 arr.forEach(e => allData[k++] = CalcDeadTime(e, info.data.andon.status, info.data.andon.deadTime))
@@ -140,7 +142,7 @@ function Resume( { open, close, line} ){
     }
 
     useEffect(() => {
-        if(line && line !== "" && line !== " "){
+        if(context.linea && context.linea !== "" && context.linea !== " "){
             //console.log(context.linea)
             setData(line)
             fillResume()
