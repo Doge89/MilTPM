@@ -108,46 +108,46 @@ function Resume( { open, close, line} ){
                 allData.forEach((e) => {
                     //console.warn(typeof e)
                     if(e.values.length > 1){
-                        let hour = ""
-                        console.log(e.values)
+                        // let hour = ""
+                        // console.log(e.values)
 
-                        let i = -1
-                        //?WHILE LOOP
-                        do{
-                            i += 1
-                            console.debug(i)
-                            if(e.values[i] === undefined){
-                                console.error("BREAK")
-                                break;
-                            }
+                        // let i = -1
+                        // //?WHILE LOOP
+                        // do{
+                        //     i += 1
+                        //     console.debug(i)
+                        //     if(e.values[i] === undefined){
+                        //         console.error("BREAK")
+                        //         break;
+                        //     }
                             
-                            if(i === 0){hour = e.values[i]; console.warn(i); continue}
+                        //     if(i === 0){hour = e.values[i]; console.warn(i); continue}
                             
-                            var hourPrev = hour.split(":"), hourAct = e.values[i].split(":")
-                            let hourD = Number(hourPrev[0]) + Number(hourAct[0])
-                            let min = Number(hourPrev[1]) + Number(hourAct[1])
-                            let seg = Number(hourPrev[2]) + Number(hourAct[2])
+                        //     var hourPrev = hour.split(":"), hourAct = e.values[i].split(":")
+                        //     let hourD = Number(hourPrev[0]) + Number(hourAct[0])
+                        //     let min = Number(hourPrev[1]) + Number(hourAct[1])
+                        //     let seg = Number(hourPrev[2]) + Number(hourAct[2])
 
-                            hourD = (Math.floor(hourD + min / 60))
-                            min = (Math.floor(min % 60)) + Math.floor(seg + min / 60)
-                            seg = Math.floor(seg % 60)
+                        //     hourD = (Math.floor(hourD + min / 60))
+                        //     min = (Math.floor(min % 60)) + Math.floor(seg + min / 60)
+                        //     seg = Math.floor(seg % 60)
 
-                            //console.debug(hourD, min, seg)
+                        //     //console.debug(hourD, min, seg)
 
-                            let chain = `${hourD < 10 ? `0${hourD}` : hourD}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`
-                            hour = chain
-                            switch(e.reazon){
-                                case "mantenimiento": return setDeadMant(chain);            
-                                case "produccion": return setDeadProduction(chain); 
-                                case "materiales": return setDeadMaterial(chain); 
-                                case "ingenieria": return setDeadEngineering(chain); 
-                                case "calidad":  return setDeadQuality(chain); 
-                                case "cambio modelo": return setDeadChange(chain);
-                            }
+                        //     let chain = `${hourD < 10 ? `0${hourD}` : hourD}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`
+                        //     hour = chain
+                        //     switch(e.reazon){
+                        //         case "mantenimiento": return setDeadMant(chain);            
+                        //         case "produccion": return setDeadProduction(chain); 
+                        //         case "materiales": return setDeadMaterial(chain); 
+                        //         case "ingenieria": return setDeadEngineering(chain); 
+                        //         case "calidad":  return setDeadQuality(chain); 
+                        //         case "cambio modelo": return setDeadChange(chain);
+                        //     }
                             
                             
-                        }while(i < e.values.length)
-                        console.info("END DO-WHILE LOOP")
+                        // }while(i < e.values.length)
+                        // console.info("END DO-WHILE LOOP")
                         //? FOR LOOP
                         // for(let i = 0; i < e.values.length; i++){
                         //     debugger;
@@ -174,31 +174,34 @@ function Resume( { open, close, line} ){
                         //     }
                             
                         // }
-                        // e.values.reduce((curr, next) => {
-                        //     console.log(curr, next)
-                        //     var hourAct = curr.split(":"), nextHour = next.split(":")
-                        //     let hour = Number(hourAct[0]) + Number(nextHour[0])
-                        //     let min = Number(hourAct[1]) + Number(nextHour[1])
-                        //     let seg = Number(hourAct[2]) + Number(nextHour[2])
-                        //     hour = Math.floor(hour + min / 60)
-                        //     min = (Math.floor(min % 60)) + Math.floor(seg / 60)
-                        //     seg = Math.floor(seg % 60)
-                        //     //console.debug(hour, min, seg)
-                        //     //console.log(seg)
-                        //     //console.log(e.reazon)
-                        //     let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
-                        //     console.info(chain)
-                        //     switch(e.reazon){
-                        //         case "mantenimiento": return setDeadMant(chain);            
-                        //         case "produccion": return setDeadProduction(chain); 
-                        //         case "materiales": return setDeadMaterial(chain); 
-                        //         case "ingenieria": return setDeadEngineering(chain); 
-                        //         case "calidad":  return setDeadQuality(chain); 
-                        //         case "cambio modelo": return setDeadChange(chain);
-                        //     }
-                        //     //setDeadTime(e.reazon, chain)
-                        //     return chain
-                        // })
+                        let response = e.values.reduce((curr, next) => {
+                            console.log(curr, next)
+                            var hourAct = curr.split(":"), nextHour = next.split(":")
+                            let hour = Number(hourAct[0]) + Number(nextHour[0])
+                            let min = Number(hourAct[1]) + Number(nextHour[1])
+                            let seg = Number(hourAct[2]) + Number(nextHour[2])
+                            hour = Math.floor(hour + min / 60)
+                            min = (Math.floor(min % 60)) + Math.floor(seg / 60)
+                            seg = Math.floor(seg % 60)
+                            //console.debug(hour, min, seg)
+                            //console.log(seg)
+                            //console.log(e.reazon)
+                            let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
+                            console.info(chain)
+                            // switch(e.reazon){
+                            //     case "mantenimiento": return setDeadMant(chain);            
+                            //     case "produccion": return setDeadProduction(chain); 
+                            //     case "materiales": return setDeadMaterial(chain); 
+                            //     case "ingenieria": return setDeadEngineering(chain); 
+                            //     case "calidad":  return setDeadQuality(chain); 
+                            //     case "cambio modelo": return setDeadChange(chain);
+                            // }
+                            //setDeadTime(e.reazon, chain)
+                            return chain
+                            
+                        })
+                        console.log(response)
+                        setDeadTime(e.reazon, response)
                     }else{
                         setDeadTime(e.reazon, e.values)
                     }
