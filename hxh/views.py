@@ -160,16 +160,33 @@ def historial(request):
 def historial_get(request):
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
-        print(fecha)
-        dataProd = infoProduccion.objects.filter(fecha__exact=parse_date(f'{fecha}'), info_id__linea_id__linea__exact=f"{request.session['Linea']}")
-        dataGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last()
-        dataLinea = Linea.objects.filter(usuario_id__username__exact=f"{request.session['Usuario']}")
+        line = request.POST.get('linea')
+        ic(fecha)
+        ic(line)
+        ic(request.session['Usuario'])
+        dataProd = infoProduccion.objects.filter(fecha__exact=parse_date(f'{fecha}'), info_id__linea_id__linea__exact=f"MXC002")
+        dataGen = infoGeneral.objects.filter(linea_id__linea__exact=f"MXC002").last()
+        dataLinea = Linea.objects.filter(usuario_id__username__exact=f"{request.session['Usuario']}") \
+            if len(Linea.objects.filter(usuario_id__username__exact=f"{request.session['Usuario']}")) != 0 else \
+                Linea.objects.filter(linea__exact=f"{line}")
+        ic(dataLinea)
         serializedData = serializers.serialize('json', list(dataProd))
         serializedDataGen = json.dumps(model_to_dict(dataGen))
         serializedDataLinea = serializers.serialize('json', list(dataLinea))
-        
+        ic(serializedDataLinea)
         return JsonResponse({'InfProd': serializedData, 'InfGen': serializedDataGen, 'Linea': serializedDataLinea}, status = 200)
     return HttpResponse(status=405)
+
+@csrf_exempt
+def _get_all_lines(request):
+    if request.method == "GET":
+        try:
+            allLines = Linea.objects.all()
+            return JsonResponse({'lineas': [i.linea for i in allLines]}, status = 200)
+        except Exception as e:
+            ic(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
 
 @require_http_methods(['POST'])
 @csrf_exempt

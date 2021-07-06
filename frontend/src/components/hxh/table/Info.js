@@ -6,7 +6,7 @@ import { InfoContainer } from '../../../styles/hxh'
 
 import { appContext } from '../../../reducers/ProviderHXH'
 
-function Info({ prevInfo, history, lines, userType }){
+function Info({ prevInfo, history, lines, userType, selDisable }){
 
     const labels = ['Faltas', 'Linea', 'Incidencias', 'Consola', 'Bajas', 'Job', 'Entrenamiento', 'Mod']
 
@@ -65,11 +65,12 @@ function Info({ prevInfo, history, lines, userType }){
                         borderInput="1px solid black"
                         disabled={history || labels[i * 2] === 'Linea'}
                     />
+                    
                     {labels[(i * 2) + 1] && (
                         labels[(i * 2) + 1] === "Linea" ? (
                             <div className="select-container">
                                 <label>Linea: </label>
-                                <select onChange={e => handleInput(e, (i * 2) + 1)} value={getValue([(i * 2) + 1])} disabled={userType === "production"}>
+                                <select onChange={e => handleInput(e, (i * 2) + 1)} value={getValue([(i * 2) + 1])} disabled={userType === "production" || selDisable}>
                                     <option value="none">Seleccionar linea</option>
                                     {lines.map(line => (
                                         <option value={line} key={line}>{line}</option>
