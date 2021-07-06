@@ -37,8 +37,9 @@ function Tpm(){
         const res = await axios({
             url: `${URL}/tpm/modificar/cronograma/get/${line}/`,
             method: 'GET',
+          
         })
-
+        console.log(res.data)
         return res.data
     }
 

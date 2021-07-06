@@ -303,7 +303,9 @@ function Form({ children, location }){
                         </div>
                     </>                    
                 )}
-                {React.cloneElement(children, { timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer, rerender })}
+                {
+                    
+                React.cloneElement(children, { timerPaused, timerRunning, setTimerRunning, intervalID, setIntervalID, type, startTimer, rerender })}
                 {timerRunning && (
                     <>
                     <label>Ingrese una contraseña</label>

@@ -62,7 +62,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
 
     const fetchActualInfo =  async () => {
         const res = await axios({
-            url: `${URL}/hxh/get/act/${context.linea}/`,
+            url: `${URL}/hxh/get/act/${userType === 'production' ? '0' : `${context.linea}`}/`,
             method: 'GET'
         })
 
@@ -250,6 +250,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 if(data.priv === "mantenimiento"){ history.goBack() }
                 setUserType(data.priv)
                 setInfoUserType(data.priv)
+                console.log(data.priv)
                 if(data.priv === "production"){ context.dispatchLinea({ type: 'SET', value: data.Linea }) }
                 else{
                     window.localStorage.clear() 

@@ -12,6 +12,8 @@ urlpatterns = [
     path('post/', views.post),
     path('post/pz/<linea>/', views._actual_pieces),
     path('historial/', views.historial, name='Historial'),
-    path('historial/get/', views.historial_get)
+    path('historial/get/', views.historial_get),
+
+    path('all/lines/', views._get_all_lines)
 
 ]

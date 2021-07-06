@@ -162,7 +162,7 @@ def finish_andon(request):
                 andAct.delete()            
                 
 
-            return HttpResponse(status=200)
+            return HttpResponse(status=204)
         except Exception as e:
             print(e)
             return HttpResponse(status=401)
