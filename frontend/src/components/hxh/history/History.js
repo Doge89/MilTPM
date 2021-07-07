@@ -34,6 +34,7 @@ function History(){
     useEffect(() =>{
         getLines().then((data) =>{
             setLines(data.lineas)
+            console.log(data.lineas)
         })
     }, [])
 

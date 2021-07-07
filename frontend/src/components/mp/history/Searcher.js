@@ -18,7 +18,7 @@ function Searcher({ setData, setSearched, searched }){
     const [turno, setTurno] = useState('A')
     const [date, setDate] = useState('')
 
-    const handleSelectLine = e => console.log(e.target.value)
+    const handleSelectLine = (e) => {setLine(e.target.value); console.log(e.target.value)}
     const handleSelectTurno = e => setTurno(e.target.value)
     const handleInputDate = e => setDate(e.target.value) 
 
@@ -75,7 +75,7 @@ function Searcher({ setData, setSearched, searched }){
             <div className="inputs-container">
                 <CardInfo widthLabel="28vw" width="25vw">
                     <label>Seleccione una línea:</label>
-                    <select value={line} onChange={handleSelectLine}>
+                    <select onChange={handleSelectLine}>
                         <option>MXC001</option>
                         <option>MXC002</option>
                         <option>MXC003</option>
@@ -86,7 +86,7 @@ function Searcher({ setData, setSearched, searched }){
                 </CardInfo>
                 <CardInfo widthLabel="28vw" width="25vw">
                     <label>Seleccione el turno</label>
-                    <select value={turno} onChange={handleSelectTurno}>
+                    <select onChange={handleSelectTurno}>
                         <option>A</option>
                         <option>B</option>
                         <option>C</option>

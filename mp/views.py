@@ -1,6 +1,7 @@
 #IMPORTACIONES
 import ast, json
 from .models import mp
+from icecream import ic
 from datetime import datetime
 from usuarios.models import Linea
 from django.shortcuts import render
@@ -54,11 +55,10 @@ def _get_mp(request):
         try:
             data = request.POST.get('data')
             data = ast.literal_eval(data)
-            print(data)
+            ic(data)
             infMP = mp.objects.filter(fecha__exact=f"{data['fecha']}", turno__exact=f"{data['turno']}", linea_id__linea__exact=f"{data['linea']}")
             serializedMP = serializers.serialize('json', list(infMP))
-            print(serializedMP)
-            print(type(serializedMP))
+            ic(serializedMP, type(serializedMP))
 
             linAct = Linea.objects.get(linea__exact=f"{data['linea']}")
             linAct = model_to_dict(linAct)

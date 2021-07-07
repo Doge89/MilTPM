@@ -376,8 +376,7 @@ export const ModalContainer = styled.div`
             border: 1px solid black;
         }
 
-        
-
+    
         span{
             font-size: 4vw;
             text-align: center;

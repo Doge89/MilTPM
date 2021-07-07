@@ -857,6 +857,7 @@ export const CreateUserForm = styled.form`
             font-size: 5vw;
             color: black;
             font-weight: bold;
+            width: 100%;
         }
 
         select{ color: black; }
@@ -872,6 +873,21 @@ export const CreateUserForm = styled.form`
             font-size: 3vw; 
             margin-bottom: 2vh;
             margin-top: 0.5vh;
+        }
+
+        div{
+            display: block;
+
+            .numberPieces{
+                width: 100%;
+                margin: 10px 0;
+            
+                span{
+                    color: black;
+                }
+
+            }
+
         }
 
     } 
