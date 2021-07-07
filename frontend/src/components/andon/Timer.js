@@ -70,9 +70,15 @@ function Timer({ timerPaused, timerRunning, setTimerRunning, intervalID, setInte
     }, [timerPaused, intervalID, timer, timerRunning])
 
     return(
+        
         <>
-        <ButtonPrimary height="4vh" onClick={startTimeOut} >Empezar</ButtonPrimary>
-        <span>{timer ? getCurrentTime() : '00:00:00'}</span>
+            {timer === 0 && (
+                <>
+                <ButtonPrimary height="4vh" onClick={startTimeOut} >Empezar</ButtonPrimary>
+                
+                </>
+            )}
+            <span>{timer ? getCurrentTime() : '00:00:00'}</span>
         </>
     )
 }

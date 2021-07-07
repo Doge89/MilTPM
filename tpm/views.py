@@ -134,6 +134,7 @@ def cronograma(request, linea=None):
             serializedCronograma = serializers.serialize('json', list(cronograma))
             print(serializedMaquinas)
             print(serializedCronograma)
+            
             if 'Linea' in request.session:
                 return JsonResponse({'maquinas': serializedMaquinas, "cronograma": serializedCronograma, "linea": request.session['Linea'], "usuario": request.session['Usuario']}, status = 200)
             else:

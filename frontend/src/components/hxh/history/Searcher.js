@@ -6,23 +6,27 @@ import Cookies from 'js-cookie'
 
 import { SearcherContainer } from '../../../styles/hxh'
 import { Text } from '../../../styles/common'
+import LineSearcher from './LineSearcher';
 
 import { URL } from '../../../var'
 
-function Searcher({ setData, setFound }){
+function Searcher({ setData, setFound, machLines, setLines }){
 
     const [date, setDate] = useState('')
     const [loading, setLoading] = useState(false)
     const [err, setErr] = useState(false)
     const [message, setMessage] = useState('')
+    const [selLine, SetSelLine] = useState('')
 
-    const handleInput = e => setDate(e.target.value)
+    const handleLine = e => SetSelLine(e.target.value)
+
+    const handleInput = (e) => {setDate(e.target.value)}
 
     const getData = async () => {
         const res = await axios({
             url: `${URL}/hxh/historial/get/`,
             method: 'POST',
-            data: querystring.stringify({ fecha: date }),
+            data: querystring.stringify({ fecha: date, linea: selLine }),
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded', 
                 'X-CSRFToken' : Cookies.get('csrftoken')
@@ -33,6 +37,16 @@ function Searcher({ setData, setFound }){
         return res.data
     }
 
+    const getLines = async () =>{
+        const response = await axios({
+            url: `${URL}/hxh/all/lines/`,
+            method: 'GET'
+        })
+
+        return response.data
+    }
+
+
     const search = () => {
         setLoading(true)
         setErr(false)
@@ -40,11 +54,12 @@ function Searcher({ setData, setFound }){
             console.log(data)
             setLoading(false)
             setFound(true)
-
+            console.log(JSON.parse(data.Linea)[0].fields.linea)
             const infGen = JSON.parse(data.InfGen)
             const infProd = JSON.parse(data.InfProd).map(item => item.fields)
-
-            setData({ InfGen: { infGen, linea: JSON.parse(data.Linea).linea }, InfProd: infProd })
+            console.log(infGen)
+            console.log(infProd)
+            setData({ InfGen: { infGen, linea: JSON.parse(data.Linea)[0].fields.linea}, InfProd: infProd })
         }).catch(e => {
             setLoading(false)
             setFound(false)
@@ -55,17 +70,36 @@ function Searcher({ setData, setFound }){
     }
 
     useEffect(() => {
-        if(new Date(date).getFullYear() > 1000){ search() }
-    }, [date])
+        if(new Date(date).getFullYear() > 1000 && selLine !== ""){ search() }
+    }, [date, selLine])
+
+    useEffect(() =>{
+        console.log(selLine)
+    }, [selLine])
+
+
 
     return(
         <SearcherContainer>
             <h1>Consulte el historial de JOBs</h1>
+            <select
+                onChange={handleLine}
+            >
+                <option value = ""
+                >
+                    Seleccione una opcion
+                    
+                </option>
+                {machLines.map((line, idx) => (
+                    <option value={line}>{line}</option>
+                ))}
+            </select>
             <input 
                 type="date"
                 value={date}
                 onChange={handleInput}
             />
+           
             {err && <Text color="rgb(254, 13, 46)" size="1.2vw">{message}</Text>}
             {loading && (
                 <Loader

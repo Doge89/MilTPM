@@ -8,6 +8,7 @@ import { Text } from '../../../styles/common'
 import { appContext } from '../../../reducers/ProviderHXH'
 
 import { twoDigits } from '../../../scripts'
+import { maxWidth } from '../../../var'
 
 function TableDataProduction({ getWidthCell, idx, history }){
 
@@ -17,6 +18,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
     const [diferencia, setDiferencia] = useState('')
     const [color, setColor] = useState('')
     const [inputcolor, setInputColor] = useState('')
+    const [respInputColor, setRespInputColor] = useState('')
 
     const handleInputActual = e => {
         let newActual = [...context.actual]
@@ -50,8 +52,10 @@ function TableDataProduction({ getWidthCell, idx, history }){
                 console.log(dif)
                 setColor('rgb(255, 13, 47)')
                 setInputColor('rgb(255, 49 ,76)')
+                setRespInputColor("rgb(255, 13, 47)")
             }else{
                 setColor('green')
+                setRespInputColor("green")
             }
             
         }
@@ -138,7 +142,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
                 borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
                 backgroundColor={color}
                 //style={{backgroundColor: color}}
-            >
+            >   {console.debug(respInputColor)}
                 <Input 
                     width="80%"
                     woLabel
@@ -148,6 +152,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
                     type="number"
                     disabled={history}
                     backgroundColor={inputcolor}
+                    inputColorResp={window.innerWidth < maxWidth ? respInputColor : "white"}
                 />
             </Cell>
             <Cell
