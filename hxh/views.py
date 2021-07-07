@@ -161,17 +161,25 @@ def historial_get(request):
     if request.method == 'POST':
         fecha = request.POST.get('fecha')
         line = request.POST.get('linea')
-        ic(fecha)
-        ic(line)
-        ic(request.session['Usuario'])
-        dataProd = infoProduccion.objects.filter(fecha__exact=parse_date(f'{fecha}'), info_id__linea_id__linea__exact=f"MXC002")
-        dataGen = infoGeneral.objects.filter(linea_id__linea__exact=f"MXC002").last()
+        ic("%s %s %s",(fecha, line, request.session['Usuario']))
+        
+        dataProd = infoProduccion.objects.filter(fecha__exact=parse_date(f'{fecha}'), info_id__linea_id__linea__exact=f"{request.session['Linea']}") if "Linea" in request.session \
+            else infoProduccion.objects.filter(fecha__exact=parse_date(f'{fecha}'), info_id__linea_id__linea__exact=f"{line}")
+        #ic(dataProd)
+        
+        dataGen = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea']}").last() if 'Linea' in request.session else \
+            infoGeneral.objects.filter(linea_id__linea__exact=f"{line}").last()
+
+        #ic(dataGen)
+
         dataLinea = Linea.objects.filter(usuario_id__username__exact=f"{request.session['Usuario']}") \
             if len(Linea.objects.filter(usuario_id__username__exact=f"{request.session['Usuario']}")) != 0 else \
                 Linea.objects.filter(linea__exact=f"{line}")
-        ic(dataLinea)
+
+        #ic(dataLinea)
         serializedData = serializers.serialize('json', list(dataProd))
         serializedDataGen = json.dumps(model_to_dict(dataGen))
+        ic(serializedDataGen)
         serializedDataLinea = serializers.serialize('json', list(dataLinea))
         ic(serializedDataLinea)
         return JsonResponse({'InfProd': serializedData, 'InfGen': serializedDataGen, 'Linea': serializedDataLinea}, status = 200)

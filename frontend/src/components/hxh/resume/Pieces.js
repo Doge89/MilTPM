@@ -5,7 +5,6 @@ import { ResumeRowContainer } from '../../../styles/hxh'
 function Pieces( { noPieces, title } ){
 
     //VARIABLES
-
     return (
 
         <div

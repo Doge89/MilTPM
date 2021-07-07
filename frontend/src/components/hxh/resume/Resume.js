@@ -5,6 +5,7 @@ import { maxWidth, URL } from '../../../var'
 import axios from 'axios'
 import Modal from 'react-modal'
 import { ModalContainer } from '../../../styles/common'
+import { CreateUserForm } from '../../../styles/tpm'
 import { ResumeRowContainer } from '../../../styles/hxh'
 import { appContext } from '../../../reducers/ProviderHXH'
 
@@ -108,72 +109,6 @@ function Resume( { open, close, line} ){
                 allData.forEach((e) => {
                     //console.warn(typeof e)
                     if(e.values.length > 1){
-                        // let hour = ""
-                        // console.log(e.values)
-
-                        // let i = -1
-                        // //?WHILE LOOP
-                        // do{
-                        //     i += 1
-                        //     console.debug(i)
-                        //     if(e.values[i] === undefined){
-                        //         console.error("BREAK")
-                        //         break;
-                        //     }
-                            
-                        //     if(i === 0){hour = e.values[i]; console.warn(i); continue}
-                            
-                        //     var hourPrev = hour.split(":"), hourAct = e.values[i].split(":")
-                        //     let hourD = Number(hourPrev[0]) + Number(hourAct[0])
-                        //     let min = Number(hourPrev[1]) + Number(hourAct[1])
-                        //     let seg = Number(hourPrev[2]) + Number(hourAct[2])
-
-                        //     hourD = (Math.floor(hourD + min / 60))
-                        //     min = (Math.floor(min % 60)) + Math.floor(seg + min / 60)
-                        //     seg = Math.floor(seg % 60)
-
-                        //     //console.debug(hourD, min, seg)
-
-                        //     let chain = `${hourD < 10 ? `0${hourD}` : hourD}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`
-                        //     hour = chain
-                        //     switch(e.reazon){
-                        //         case "mantenimiento": return setDeadMant(chain);            
-                        //         case "produccion": return setDeadProduction(chain); 
-                        //         case "materiales": return setDeadMaterial(chain); 
-                        //         case "ingenieria": return setDeadEngineering(chain); 
-                        //         case "calidad":  return setDeadQuality(chain); 
-                        //         case "cambio modelo": return setDeadChange(chain);
-                        //     }
-                            
-                            
-                        // }while(i < e.values.length)
-                        // console.info("END DO-WHILE LOOP")
-                        //? FOR LOOP
-                        // for(let i = 0; i < e.values.length; i++){
-                        //     debugger;
-                        //     console.info(i, e.values[i], e.reazon)
-                        //     if(i == 0){
-                        //         hour = e.values[i]
-                        //         continue
-                        //     }
-                        //     var hourPrev = hour.split(":"), hourAct = e.values[i].split(":")
-                        //     let hour = Number(hourPrev[0]) + Number(hourAct[0])
-                        //     let min = Number(hourPrev[1]) + Number(hourAct[1])
-                        //     let seg = Number(hourPrev[2]) + Number(hourAct[2])
-                        //     hour = (Math.floor(hour + min / 60))
-                        //     min = (Math.floor(min % 60)) + Math.floor(seg / 60)
-                        //     seg = Math.floor(seg % 60)
-                        //     let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`
-                        //     switch(e.reazon){
-                        //         case "mantenimiento": return setDeadMant(chain);            
-                        //         case "produccion": return setDeadProduction(chain); 
-                        //         case "materiales": return setDeadMaterial(chain); 
-                        //         case "ingenieria": return setDeadEngineering(chain); 
-                        //         case "calidad":  return setDeadQuality(chain); 
-                        //         case "cambio modelo": return setDeadChange(chain);
-                        //     }
-                            
-                        // }
                         let response = e.values.reduce((curr, next) => {
                             console.log(curr, next)
                             var hourAct = curr.split(":"), nextHour = next.split(":")
@@ -188,17 +123,7 @@ function Resume( { open, close, line} ){
                             //console.log(e.reazon)
                             let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
                             console.info(chain)
-                            // switch(e.reazon){
-                            //     case "mantenimiento": return setDeadMant(chain);            
-                            //     case "produccion": return setDeadProduction(chain); 
-                            //     case "materiales": return setDeadMaterial(chain); 
-                            //     case "ingenieria": return setDeadEngineering(chain); 
-                            //     case "calidad":  return setDeadQuality(chain); 
-                            //     case "cambio modelo": return setDeadChange(chain);
-                            // }
-                            //setDeadTime(e.reazon, chain)
-                            return chain
-                            
+                            return chain      
                         })
                         console.log(response)
                         setDeadTime(e.reazon, response)
@@ -219,9 +144,21 @@ function Resume( { open, close, line} ){
             //console.log(context.linea)
             setData(line)
             fillResume()
+            
         }
         return () => {clearInterval(interval.current)}
     }, [context.linea])
+
+    useEffect(() => {
+        if(open){
+            setDeadMaterial('00:00:00')
+            setDeadQuality('00:00:00')
+            setDeadChange('00:00:00')
+            setDeadEngineering('00:00:00')
+            setDeadMant('00:00:00')
+            setDeadProduction('00:00:00')
+        }
+    }, [open])
 
     return(
 
@@ -230,47 +167,115 @@ function Resume( { open, close, line} ){
             onRequestClose={handleClose}
             style={styles}
         >   
-            <ModalContainer>
-                <h1 style={{fontFamily: 'Arial', color: 'rgb(255, 13, 47)'}}>Resumen: {line}</h1>
-                <ResumeRowContainer>
-                    <Pieces
-                        title="Piezas Ok"
-                        noPieces={okPieces}
-                    >
-                    </Pieces>
-                    <Pieces
-                        title="Piezas Bad"
-                        noPieces={badPieces}
-                    >
-                    </Pieces>
-                </ResumeRowContainer>
-                <div>
-                    <DeadTime
-                        title={"Mantenimiento"}
-                        time={deadMant}
-                    />
-                    <DeadTime
-                        title={"Produccion"}
-                        time={deadProduction}
-                    />
-                    <DeadTime
-                        title={"Materiales"}
-                        time={deadMaterial}
-                    />
-                    <DeadTime
-                        title={"Calidad"}
-                        time={deadQuality}
-                    />
-                    <DeadTime
-                        title={"Ingenieria"}
-                        time={deadEngineering}
-                    />
-                    <DeadTime
-                        title={"Cambio de Modelo"}
-                        time={deadChange}
-                    />
-                </div>
-            </ModalContainer>
+            {(window.innerWidth <= maxWidth ? (
+                <CreateUserForm>
+                    <h1 style={{fontFamily: 'Arial', color: 'rgb(255, 13, 47)'}}>Resumen: {line}</h1>
+                    <ResumeRowContainer>
+                        <Pieces
+                            title="Piezas Ok"
+                            noPieces={okPieces}
+                        >
+                        </Pieces>
+                        <Pieces
+                            title="Piezas Bad"
+                            noPieces={badPieces}
+                        >
+                        </Pieces>
+                    </ResumeRowContainer>
+                    <div>
+                        <DeadTime
+                            title={"Mantenimiento"}
+                            time={deadMant}
+                            isOpened={open}
+                            setDeadMant={setDeadMant}
+                        />
+                        <DeadTime
+                            title={"Produccion"}
+                            time={deadProduction}
+                            isOpened={open}
+                            setDeadProduction={setDeadProduction}
+                        />
+                        <DeadTime
+                            title={"Materiales"}
+                            time={deadMaterial}
+                            isOpened={open}
+                            setDeadMaterial={setDeadMaterial}
+                        />
+                        <DeadTime
+                            title={"Calidad"}
+                            time={deadQuality}
+                            isOpened={open} 
+                            setDeadQuality={setDeadQuality}
+                        />
+                        <DeadTime
+                            title={"Ingenieria"}
+                            time={deadEngineering}
+                            isOpened={open}
+                            setDeadEngineering={setDeadEngineering}
+                        />
+                        <DeadTime
+                            title={"Cambio de Modelo"}
+                            time={deadChange}
+                            isOpened={open}
+                            setDeadChange={setDeadChange}
+                        />
+                    </div>
+                </CreateUserForm>
+            ) : (
+                <ModalContainer>
+                    <h1 style={{fontFamily: 'Arial', color: 'rgb(255, 13, 47)'}}>Resumen: {line}</h1>
+                    <ResumeRowContainer>
+                        <Pieces
+                            title="Piezas Ok"
+                            noPieces={okPieces}
+                        >
+                        </Pieces>
+                        <Pieces
+                            title="Piezas Bad"
+                            noPieces={badPieces}
+                        >
+                        </Pieces>
+                    </ResumeRowContainer>
+                    <div>
+                        <DeadTime
+                            title={"Mantenimiento"}
+                            time={deadMant}
+                            setDeadMant={setDeadMant}
+                            isOpened={open}
+                        />
+                        <DeadTime
+                            title={"Produccion"}
+                            time={deadProduction}
+                            setDeadProduction={setDeadProduction}
+                            isOpened={open}
+                        />
+                        <DeadTime
+                            title={"Materiales"}
+                            time={deadMaterial}
+                            setDeadMaterial={setDeadMaterial}
+                            isOpened={open}
+                        />
+                        <DeadTime
+                            title={"Calidad"}
+                            time={deadQuality}
+                            setDeadQuality={setDeadQuality}
+                            isOpened={open}
+                        />
+                        <DeadTime
+                            title={"Ingenieria"}
+                            time={deadEngineering}
+                            setDeadEngineering={setDeadEngineering}
+                            isOpened={open}
+                        />
+                        <DeadTime
+                            title={"Cambio de Modelo"}
+                            time={deadChange}
+                            setDeadChange={setDeadChange}
+                            isOpened={open}
+                        />
+                    </div>
+                </ModalContainer>
+            ) )}
             
         </Modal>
 
