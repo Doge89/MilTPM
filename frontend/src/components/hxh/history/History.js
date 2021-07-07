@@ -23,30 +23,32 @@ function History(){
         return response.data
     }
 
-    const handleLines = () => {
-        getLines().then((data) => {
-            console.log(data.lineas)
-            setLines(data.lineas)
-        })
-    }
 
     //? VERIFICATION PURPOSE
     useEffect(() =>{
+        console.info(data)
         console.log(data.InfProd) // CAN BE linea PROPERTY
         console.log(data.InfGen)
-        handleLines()
     }, [data])
+
+    useEffect(() =>{
+        getLines().then((data) =>{
+            setLines(data.lineas)
+        })
+    }, [])
 
     return(
         <TableContainer padding="0 0 5vh 0">
             <Searcher 
                 setFound={setFound}
                 setData={setData}
+                machLines={lines}
+                setLines={setLines}
             />
             {found && (
                 <>
-                <Info selDisable={true} prevInfo={data.InfGen} lines={lines} history/>
-                <Table HxhHistory data={data.InfProd}/>
+                <Info selDisable={true} prevInfo={data.InfGen !== undefined && "infGen" in data.InfGen ? data.InfGen.infGen : {}} lines={lines} history={true}/>
+                <Table hxhHistory={true} data={data.InfProd}/>
                 </>
             )}
         </TableContainer>

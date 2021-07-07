@@ -30,6 +30,7 @@ function Info({ prevInfo, history, lines, userType, selDisable }){
     }
 
     const getValue = i => {
+        console.debug(context)
         switch(labels[i]){
             case 'Faltas': return context.faltas
             case 'Linea': return context.linea
@@ -43,6 +44,10 @@ function Info({ prevInfo, history, lines, userType, selDisable }){
     }
 
     useEffect(() => {
+        // if(prevInfo !== undefined && "infGen" in prevInfo){
+        //     console.info(prevInfo.infGen)
+        // }
+        // console.info(prevInfo)
         if(prevInfo?.faltas){ context.dispatchFaltas({ type: 'SET', value: prevInfo.faltas }) }
         if(prevInfo?.linea){ context.dispatchLinea({ type: 'SET', value: prevInfo.linea }) }
         if(prevInfo?.incidencias){ context.dispatchIncidencias({ type: 'SET', value: prevInfo.incidencias }) }

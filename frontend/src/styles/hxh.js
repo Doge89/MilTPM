@@ -150,7 +150,9 @@ export const Cell = styled.div`
         .second-input{
             display: none;
         }
-
+        input{
+            color: ${props => props.inputColor};
+        }
         input, textarea{
             color: white;
             font-size: 4vw;
@@ -309,6 +311,36 @@ export const SearcherContainer = styled.div`
         height: 3vh;
         margin-right: 1vw;
         margin-bottom: 2vh;
+    }
+
+    select{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1vw;
+        background-color: white;
+        border: 1px solid black;
+        padding: 0.5vh 1vw;
+        margin: 1vh 0;
+    }
+
+    @media ${device.tablet} {
+        h1{
+            font-size: 20px;
+            color: white;
+        }
+        input{
+            background-color: transparent;
+            color: white;
+            font-size: 15px;
+            width: initial;
+        }
+        select{
+            background-color: transparent;
+            color: white;
+            font-size: 15px;
+        }
+        select > option {
+            background-color: rgba(0, 0, 0, 0.7)
+        }
     }
 `;
 

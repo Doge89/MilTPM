@@ -10,13 +10,12 @@ import LineSearcher from './LineSearcher';
 
 import { URL } from '../../../var'
 
-function Searcher({ setData, setFound }){
+function Searcher({ setData, setFound, machLines, setLines }){
 
     const [date, setDate] = useState('')
     const [loading, setLoading] = useState(false)
     const [err, setErr] = useState(false)
     const [message, setMessage] = useState('')
-    const [lines, setLines] = useState([])
     const [selLine, SetSelLine] = useState('')
 
     const handleLine = e => SetSelLine(e.target.value)
@@ -47,11 +46,6 @@ function Searcher({ setData, setFound }){
         return response.data
     }
 
-    const handleGetLines = () =>{
-        getLines().then((data) => {
-            setLines(data.lineas)
-        }).catch(e => console.error(e))
-    }
 
     const search = () => {
         setLoading(true)
@@ -59,7 +53,7 @@ function Searcher({ setData, setFound }){
         getData().then((data) => {
             console.log(data)
             setLoading(false)
-            setFound(true) //! ERROR LINE yes 
+            setFound(true)
             console.log(JSON.parse(data.Linea)[0].fields.linea)
             const infGen = JSON.parse(data.InfGen)
             const infProd = JSON.parse(data.InfProd).map(item => item.fields)
@@ -76,13 +70,14 @@ function Searcher({ setData, setFound }){
     }
 
     useEffect(() => {
-        if(new Date(date).getFullYear() > 1000){ search() }
-        handleGetLines()
-    }, [date])
+        if(new Date(date).getFullYear() > 1000 && selLine !== ""){ search() }
+    }, [date, selLine])
 
     useEffect(() =>{
         console.log(selLine)
     }, [selLine])
+
+
 
     return(
         <SearcherContainer>
@@ -95,7 +90,9 @@ function Searcher({ setData, setFound }){
                     Seleccione una opcion
                     
                 </option>
-                <option value="MXC001">MXC001</option>
+                {machLines.map((line, idx) => (
+                    <option value={line}>{line}</option>
+                ))}
             </select>
             <input 
                 type="date"
