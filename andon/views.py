@@ -1,10 +1,11 @@
 import math, requests
 from icecream import ic
-from datetime import datetime, timedelta
+from django.db.models import Max
 from django.shortcuts import render
-from usuarios.models import Andon, Linea, Usuarios, AndonHist
+from datetime import datetime, timedelta
 from hxh.models import infoProduccion, infoGeneral
 from django.http import HttpResponse, JsonResponse
+from usuarios.models import Andon, Linea, Usuarios, AndonHist
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
@@ -90,6 +91,12 @@ def _pause_andon(request):
 @require_http_methods(['POST'])
 @ensure_csrf_cookie
 def finish_andon(request):
+
+    def _get_AndHist(status, linea):
+        aH = AndonHist.objects.filter(linea_id__linea__exact=f"{linea}", estatus__exact=f"{status}")
+        aH = AndonHist.objects.get(registro__exact=f"{aH.aggregate(Max('registro'))['registro__max']}")
+        return aH
+
     if request.method == 'POST':
         try:
             fin = datetime.now()
@@ -113,8 +120,10 @@ def finish_andon(request):
             #print(andAct)          
             #print(type(ahoraInit))
             user = Usuarios.objects.get(clave__exact=f"{clave}")
+            andHist = _get_AndHist(status=estatus, linea= request.session['Linea'] if 'Linea' in request.session else linea)
+            
             ic(user)
-            #ASIGNACION DEL TIEMPO MUERTO
+            
             if int(hrInit) == finHr and user.clave == clave:
                 hora =_calc_time(tiempo)
                 #print(hora)
@@ -123,7 +132,7 @@ def finish_andon(request):
                 else:
                     horProd = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{linea}", inicio__exact=f"{hrInit}:00:00", fecha__exact=datetime.date(datetime.now()))
                 horProd.comentarios = str(horProd.comentarios) + "\n" + f"{user.dep}: {hora}" + f"\n{descrip}"
-                andHist = AndonHist.objects.last()
+                        
                 andHist.tiempoM = f"{hora}"
                 andHist.descrip = f"{descrip}"
                 andHist.finishReg = datetime.now()
@@ -131,6 +140,7 @@ def finish_andon(request):
                 horProd.save()
                 andHist.save()
                 andAct.delete()
+                
             elif hrInit != finHr and user.clave == clave:
                 ahoraInit = datetime.strptime(ahoraInit, '%Y/%m/%d %H:%M:%S')
                 # print(ahoraInit)
@@ -151,15 +161,24 @@ def finish_andon(request):
                     hrProduccion1 = infoProduccion.objects.filter(inicio__exact=f"{ahoraInit.hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}").last()
                 else:
                     hrProduccion1 = infoProduccion.objects.filter(inicio__exact=f"{ahoraInit.hour}:00:00", info_id__linea_id__linea__exact=f"{linea}").last()
+                
                 hrProduccion1.comentarios = hrProduccion1.comentarios + "\n" + f"{estatus}: " + str(t2)
                 hrProduccion1.save()
+                
                 if request.session['priv'] != 'admin':
                     hrProduccion2 = infoProduccion.objects.filter(inicio__exact=f"{fin.hour}:00:00", info_id__linea_id__linea__exact=f"{request.session['Linea']}").last()
                 else:
                     hrProduccion2 = infoProduccion.objects.filter(inicio__exact=f"{fin.hour}:00:00", info_id__linea_id__linea__exact=f"{linea}").last()
+                
                 hrProduccion2.comentarios = hrProduccion2.comentarios + "\n" + f"{estatus}: " + str(t1)
                 hrProduccion2.save()  
-                andAct.delete()            
+                andAct.delete()   
+
+                andHist.tiempoM = _calc_time(Tiempo=hora)        
+                andHist.descrip = descrip
+                andHist.finishReg = datetime.now()
+                andHist.finishDep = f"{user.dep}" 
+                andHist.save()
                 
 
             return HttpResponse(status=204)
