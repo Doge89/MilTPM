@@ -234,7 +234,7 @@ export const Container = styled.div`
     margin: ${props => props.margin || '0'};
     cursor: ${props => props.cursor || 'default'};
     background-color: ${props => props.bgColor || 'transparent'};
-    border-radius: ${props => props.borderRadius || '0'};
+    border-radius: ${props => props.borderRadius || '0'};  
 
     &.border-right{ border-right: ${props => props.borderRight || '1px solid rgba(80, 80, 80, 0.5)'} }
     &.border-bottom{ border-bottom: ${props => props.borderBottom || '1px solid rgba(80, 80, 80, 0.5)'} }
@@ -245,6 +245,11 @@ export const Container = styled.div`
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
+    }
+   
+
+    .icon{
+        border-bottom: 5px ${props => props.borderColor || ""} solid
     }
 
     h2, p{

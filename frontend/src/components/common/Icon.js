@@ -10,11 +10,13 @@ import milwaukee from '../../assets/img/milwaukee.png'
 import produccion from '../../assets/img/produccion.png'
 import calidad from '../../assets/img/calidad.png'
 
-function Icon({ name, label, margin, onClick, active }){
+function Icon({ name, label, margin, onClick, active, borderColor }){
 
     const interval = useRef()
+    const intervalEx = useRef(null)
 
     const [colorCambio, setColorCambio] = useState('white')
+    const [exampleCambio, setExampleCambio] = useState(borderColor || "")
 
     const getColor = () => {
         switch(name){
@@ -52,6 +54,19 @@ function Icon({ name, label, margin, onClick, active }){
         }
     }, [active, colorCambio])
 
+    useEffect(() => {
+        if(name == "cambio"){
+            intervalEx.current = setInterval(() => {
+                if(exampleCambio === "red"){
+                    setExampleCambio("white")
+                }else{
+                    setExampleCambio("red")
+                }
+            }, 1000)
+        }
+        return () => {clearInterval(intervalEx.current)}
+    }, [exampleCambio])
+
     return(
         <Container
             flexDirection="row"
@@ -63,6 +78,7 @@ function Icon({ name, label, margin, onClick, active }){
             padding="1vh 1vw"
             borderRadius="0.5vw"
             className="icon"
+            borderColor={borderColor}
         >
             <Image 
                 width="5vw"
@@ -73,6 +89,15 @@ function Icon({ name, label, margin, onClick, active }){
                 margin="0 0 0 1vw"
                 size="2vw"
             >{label}</Text>
+
+            {!active && (
+                
+                <div
+                    style={{width: "30px", height: "30px", backgroundColor: `${active && name !== "modelo" ? borderColor : exampleCambio}`, boxShadow: "1px 2px 4px rgba(0, 0, 0, 0.2)", borderRadius: "8px", margin: "0 10px"}}
+                />
+                
+            )}
+
         </Container>
     )
 }

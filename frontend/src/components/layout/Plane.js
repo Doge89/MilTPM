@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
-import { LayoutContainer, Plane as PlaneComponent, Indicator } from '../../styles/layout'
+import CardLegend from './CardLegend'
+
+import { LayoutContainer, Plane as PlaneComponent, Indicator} from '../../styles/layout'
+
+import { Legend } from '../../styles/layout'
 
 import layout from '../../assets/img/layout.jpg'
 
@@ -87,10 +91,10 @@ function Plane(){
 
     const getLeftLine = (line) => {
         switch(line){
-            case "MXC001": return "77%"
-            case "MXC002": return "73.25%"
-            case "MXC003": return "69.5%"
-            case "MXC004": return "65.75%"
+            case "MXC001": return "86.5%"
+            case "MXC002": return "81.25%"
+            case "MXC003": return "78.5%"
+            case "MXC004": return "73.75%"
             case "MXC005": return "24.5%"
             case "MXC006": return "75.5%"
             case "MXC007": return "70%"
@@ -111,10 +115,10 @@ function Plane(){
 
     const getTopLine = (line) => {
         switch(line){
-            case "MXC001": return "75%"
-            case "MXC002": return "75%"
-            case "MXC003": return "75%"
-            case "MXC004": return "75%"
+            case "MXC001": return "70%"
+            case "MXC002": return "70%"
+            case "MXC003": return "70%"
+            case "MXC004": return "70%"
             case "MXC005": return "61%"
             case "MXC006": return "59%"
             case "MXC007": return "59%"
@@ -199,6 +203,7 @@ function Plane(){
     }, [])
 
     return(
+        <>
         <LayoutContainer>
             <h1>Líneas de producción</h1>
             {window.innerWidth <= maxWidth ? (
@@ -218,6 +223,38 @@ function Plane(){
                 </PlaneComponent>
             )}
         </LayoutContainer>
+        <Legend>
+            <CardLegend 
+                title="Ok"
+                backColor="green"
+            />
+            <CardLegend 
+                title="Materiales"
+                backColor="yellow"
+            />
+            <CardLegend 
+                title="Mantenimiento"
+                backColor="red"
+            /> 
+            <CardLegend 
+                title="Produccion"
+                backColor="purple"
+            />
+            <CardLegend 
+                title="Ingeniería"
+                backColor="cyan"
+            />
+            <CardLegend 
+                title="Calidad"
+                backColor="#F77000"
+            />
+            <CardLegend 
+                title="Cambio Modelo"
+                backColor="white"
+            />
+            
+        </Legend>
+        </>
     )
 }
 

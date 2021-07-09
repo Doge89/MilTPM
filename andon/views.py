@@ -2,6 +2,8 @@ import math, requests
 from icecream import ic
 from django.db.models import Max
 from django.shortcuts import render
+from django.core.mail import send_mail
+from MW.settings import EMAIL_HOST_USER
 from datetime import datetime, timedelta
 from hxh.models import infoProduccion, infoGeneral
 from django.http import HttpResponse, JsonResponse
@@ -37,6 +39,10 @@ def start_andon(request):
             andHist = AndonHist.objects.create(Id = None, estatus = estatus, linea=lineaAct, registro = datetime.now())
             # sisAnd.linea.add(lineaAct)
             # print(sisAnd.estatus)
+
+            if estatus == "mantenimiento":
+                send_mail(f"{request.session['Linea'] if 'Linea' in request.session else data}", "Solicitud de mantenimiento", EMAIL_HOST_USER, ['undertale.9055@gmail.com'], False)
+
             return HttpResponse(status=201)
         except Exception as e:
             print(e)

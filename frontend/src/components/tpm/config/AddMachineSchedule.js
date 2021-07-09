@@ -53,8 +53,10 @@ function AddMachineSchedule({ modalOpen, closeModal, machines, addMachine, check
         if(machine && day && checkMachineExist(machine, day)){
             postData({ data:  JSON.stringify({ dia: getNumberDay(day), maquina: Number(machine) + 1 }) }).then(() => {
                 addMachine(day, machine)
+                
             }).catch(e => console.log(e))
         }
+        window.location.reload()
     }
 
     return(

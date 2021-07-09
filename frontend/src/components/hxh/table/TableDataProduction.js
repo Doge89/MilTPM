@@ -21,8 +21,9 @@ function TableDataProduction({ getWidthCell, idx, history }){
     const [respInputColor, setRespInputColor] = useState('')
 
     const handleInputActual = e => {
+        console.info("Handle Input")
         let newActual = [...context.actual]
-        newActual[idx] = e.target.value
+        newActual[idx] = Math.floor(e.target.value)
         context.dispatchActual({ type: 'SET', value: newActual })
     }
 
@@ -84,6 +85,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
         }
     }, [context.plan[idx], context.actual[idx]])
 
+
     return(
         <>
         <div className="table-title-data">
@@ -142,7 +144,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
                 borderTop={idx === 0 ? '1px solid rgba(83, 83, 83, 0.2)' : '1px solid rgb(83, 83, 83)'}
                 backgroundColor={color}
                 //style={{backgroundColor: color}}
-            >   {console.debug(respInputColor)}
+            > 
                 <Input 
                     width="80%"
                     woLabel
