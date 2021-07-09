@@ -55,6 +55,7 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     margin="0 1vw"
                     onClick={() => handleDefaultClick('materiales')}
                     active={materials}
+                    borderColor="yellow"
                 />
                 <Icon 
                     name="mantenimiento"
@@ -62,6 +63,7 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     margin="0 1vw"
                     onClick={() => handleDefaultClick('mantenimiento')}
                     active={maintenance}
+                    borderColor="red"
                 />
                 <Icon 
                     name="produccion"
@@ -69,6 +71,7 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     margin="0 1vw"
                     onClick={() => handleDefaultClick('produccion')}
                     active={production}
+                    borderColor="purple"
                 />
                 <Icon 
                     name="ingenieria"
@@ -76,6 +79,7 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     margin="0 1vw"
                     onClick={() => handleDefaultClick('ingenieria')}
                     active={engineery}
+                    borderColor="cyan"
                 />
             </div>
             <div className="row">
@@ -85,6 +89,7 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     margin="0 1vw"
                     onClick={() => handleDefaultClick('calidad')}
                     active={quality}
+                    borderColor="#F77000"
                 />
                 <Icon 
                     name="cambio"
@@ -92,6 +97,7 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     margin="0 1vw"
                     onClick={() => handleDefaultClick('cambio')}
                     active={change}
+                    borderColor="red"
                 />
             </div>
         </IconsContainer>

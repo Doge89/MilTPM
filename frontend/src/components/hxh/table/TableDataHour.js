@@ -12,8 +12,9 @@ function TableDataHour({ info, getWidthCell, idx, history }){
     const context = useContext(appContext)
 
     const handleInput = e => {
+        console.info("Plan handle Input")
         let newPlan = [...context.plan]
-        newPlan[idx] = e.target.value
+        newPlan[idx] = Math.floor(e.target.value)
         context.dispatchPlan({ type: 'SET', value: newPlan })
     }
 

@@ -30,7 +30,7 @@ function Info({ prevInfo, history, lines, userType, selDisable }){
     }
 
     const getValue = i => {
-        console.debug(context)
+        //console.debug(context)
         switch(labels[i]){
             case 'Faltas': return context.faltas
             case 'Linea': return context.linea
