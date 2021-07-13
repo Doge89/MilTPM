@@ -5,7 +5,7 @@ import { device } from './device'
 export const InfoContainer = styled.div`
     width: 90%;
     background-color: rgb(243, 243, 243);
-    padding: 1vw 5%;
+    padding: 0.5vw 5%;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -168,7 +168,7 @@ export const Row = styled.div`
     width: 100%;
     align-items: center;
     justify-content: space-around;
-    border-left: 1px solid rgb(83, 83, 83);
+    border-left: 5px solid ${props => props.colorBorder};
     border-right: 1px solid rgb(83, 83, 83);
     border-bottom: ${props => props.borderBottom};
     padding: ${props => props.padding || '0'};

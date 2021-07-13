@@ -35,6 +35,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     const [openModal, setOpenModal] = useState(false)
     const [dataLine, setDataLine] = useState('')
     const [line, setLine] = useState('')
+    const [idxAct, setIdxAct] = useState(null)
 
     const postData = async (data) => {
         const res = await axios({
@@ -199,6 +200,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 const newActual = [...context.actual]
                 if(newActual.length !== 0){
                     const idx = returnSchedule().findIndex(item => Number(item.start.split(':')[0]) === new Date().getHours())
+                    setIdxAct(idx)
                     newActual[idx] = actual?.toString()
                     context.dispatchActual({ type: 'SET', value: newActual })
                 }
@@ -297,6 +299,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                         key={idx}
                         idx={idx}
                         length={returnSchedule().length}
+                        isActual={idx === idxAct ? true : false}
                     />
                 ))}
                 </>

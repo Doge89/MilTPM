@@ -6,7 +6,6 @@ const red = "rgb(254, 13, 46)"
 
 export const TopBarContainer = styled.header`
     width: 100%;
-    height: 16%;
 
     #logo-mobile{
         display: none;
@@ -15,7 +14,7 @@ export const TopBarContainer = styled.header`
     nav{
         width: 94%;
         height: 100%;
-        padding: 0 3%;
+        padding: 10px 3%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -235,6 +234,8 @@ export const Container = styled.div`
     cursor: ${props => props.cursor || 'default'};
     background-color: ${props => props.bgColor || 'transparent'};
     border-radius: ${props => props.borderRadius || '0'};  
+
+    &.border-right-head, &.border-left-head{border-right: 5px solid rgba(80, 80, 80, 0.5)}
 
     &.border-right{ border-right: ${props => props.borderRight || '1px solid rgba(80, 80, 80, 0.5)'} }
     &.border-bottom{ border-bottom: ${props => props.borderBottom || '1px solid rgba(80, 80, 80, 0.5)'} }

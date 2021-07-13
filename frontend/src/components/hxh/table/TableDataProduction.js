@@ -128,6 +128,7 @@ function TableDataProduction({ getWidthCell, idx, history }){
                     value={context.actual[idx] || ''}
                     type="number"
                     disabled={history}
+                    inputPadding="0"
                 />
                 <p className="slash">/</p>
                 <Input 

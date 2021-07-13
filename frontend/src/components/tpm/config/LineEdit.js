@@ -35,11 +35,22 @@ function LineEdit({ isOpen, closeModal, lineToEdit }) {
     const [line, setLine] = useState('')
     const [errMessage, setErrMessage] = useState('')
     const [error, setError] = useState(false)
+    const [turn, setTurn] = useState('')
 
     const fetchLine = async () => {
         const response = await axios({
             url: `${URL}/tpm/get/line/${lineToEdit}/`,
             method: "GET",
+            
+        })
+
+        return response.data
+    }
+
+    const fetchWorkers = async (line, turn) => {
+        const response = await axios({
+            url: `${URL}/tpm/get/worker/${line}/${turn}/`,
+            method: 'GET',
             
         })
 
@@ -69,6 +80,21 @@ function LineEdit({ isOpen, closeModal, lineToEdit }) {
         setErrMessage("Solo puede ingresar números")
     }
 
+    const handleTurnChange = (e) => {
+        setError(false)
+        if(e.target.value !== ""){
+            fetchWorkers(lineToEdit, e.target.value)
+            .then((data) => {
+                if(data && data !== undefined && data !== null){
+                    return setNewWorkers(Number(data.workers))
+                }
+            }).catch(error => console.error(error))
+            return setTurn(e.target.value)
+        }
+        setError(true)
+        setErrMessage("Opción invalida")
+    }
+
     const handleClose = () => {
         setLine('')
         setUserLine('')
@@ -79,13 +105,15 @@ function LineEdit({ isOpen, closeModal, lineToEdit }) {
     const prepareData = (e) => {
         e.preventDefault()
         if(Number(newWorkers) && newWorkers >= 0){
-            changeWorkers({data: JSON.stringify({newWorkers, lineToEdit})})
-            .then((data) => {
-                handleClose()
-                window.location.reload()
-            }).catch((e) => {
-                console.error(e)
-            })
+            if(turn !== ""){
+                changeWorkers({data: JSON.stringify({newWorkers, lineToEdit, turn})})
+                .then((data) => {
+                    handleClose()
+                    window.location.reload()
+                }).catch((e) => {
+                    console.error(e)
+                })
+            }
         }else{
             setError(true)
             setErrMessage("Esa cantidad no es valida")
@@ -98,7 +126,7 @@ function LineEdit({ isOpen, closeModal, lineToEdit }) {
             fetchLine().then((data) => {
                 if(data && data !== undefined){
                     console.log(data)
-                    setNewWorkers(data.Personal)
+                    //setNewWorkers(data.Personal)
                     setUserLine(data.username)
                     setLine(data.Linea)
                 }
@@ -132,6 +160,17 @@ function LineEdit({ isOpen, closeModal, lineToEdit }) {
                             disabled={true}
                         />
                     </CardInfo>
+                    {line !== "" && line !== undefined && (
+                        <CardInfo>
+                            <label>Turno: </label>
+                            <select onChange={handleTurnChange} className="select-schedule">
+                                <option value="">Seleccione una opción</option>
+                                <option value="A" key="0">A</option>
+                                <option value="B" key="1">B</option>
+                                <option value="C" key="2">C</option>
+                            </select>
+                        </CardInfo>
+                    )}
                     <CardInfo>
                         <label>Personal: </label>
                         <input 
