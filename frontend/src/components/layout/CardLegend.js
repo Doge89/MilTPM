@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { LegendContainer } from '../../styles/layout'
 
-function CardLegend( {title, backColor} ){
+function CardLegend( { title, backColor } ){
 
     const [backgroundColor, setBackGroundColor] = useState(backColor || "")
 

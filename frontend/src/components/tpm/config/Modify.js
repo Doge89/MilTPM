@@ -4,12 +4,13 @@ import Selector from '../Selector'
 import Users from './Users'
 import Schedule from './Schedule'
 import Ports from './Ports'
+import ConfLine from './ConfLine'
 
 import { Container } from '../../../styles/tpm'
 
 import { modifyViews } from '../../../var'
 
-function Modify({ machines, schedule }){
+function Modify({ machines, schedule, lines }){
 
     const [modifyView, setModifyView] = useState(modifyViews[0])
     const [users, setUsers] = useState([{ user: 'Administrador', type: 'admin' }])
@@ -36,9 +37,14 @@ function Modify({ machines, schedule }){
                     machines={machines}
                     schedule={schedule}
                 />
-            ):(
+            ): modifyView.value === "port" ? (
                 <Ports />
-            )}
+            ): 
+                <ConfLine 
+                    lines={lines}
+                    users={users}
+                />
+            }
         </Container>
     )
 }

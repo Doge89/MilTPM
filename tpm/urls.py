@@ -20,5 +20,8 @@ urlpatterns = [
     path('historial/maquina/', views._get_machine_card),
     path('historial/get/id/', views._get_machine_card_by_id),
     path('historial/modificar/', views._modify_card),
+
+    path('get/line/<linea>/', views.__get_line_info),
+    path('change/workers/', views._change_line_data)
     
 ]

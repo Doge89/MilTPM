@@ -1,4 +1,5 @@
 import ast, json
+from icecream import ic
 from datetime import datetime
 from django.core import serializers
 from django.shortcuts import render
@@ -378,3 +379,41 @@ def _modify_card(request):
             print(e)
             return HttpResponse(status=500)
     return HttpResponse(status=405)
+
+@require_http_methods(['GET'])
+def __get_line_info(request, linea = None):
+    if request.method == "GET":
+        try:
+            if type(linea) == str and linea != "":
+                infoLine = Linea.objects.get(linea__exact=f"{linea}")
+                userLine = Usuarios.objects.get(linea__exact=f"{linea}")
+                return JsonResponse({'Linea': infoLine.linea, 'Personal': infoLine.personal, "username": userLine.username})
+        except TypeError as te:
+            ic("Tipo de dato erroneo o no contiene informacion")
+            return HttpResponse(status = 400)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
+
+@require_http_methods(['POST'])
+@ensure_csrf_cookie
+def _change_line_data(request):
+    if request.method == "POST":
+        try:
+            data = request.POST.get('data')
+            if data:
+                data = ast.literal_eval(data)
+                ic(data)
+                lineToEdit = Linea.objects.get(linea__exact=f"{data['lineToEdit']}")
+                if lineToEdit:
+                    lineToEdit.personal = int(data['newWorkers'])
+                    lineToEdit.save()
+                    return HttpResponse(status = 200)
+                return HttpResponse(status = 400)
+            raise Exception("La informacion se encuentra vacia")
+            return HttpResponse(status = 400)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)

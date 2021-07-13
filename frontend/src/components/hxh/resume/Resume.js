@@ -18,7 +18,8 @@ const styles = {
         right: 'auto',
         bottom: 'auto',
         width: window.innerWidth <= maxWidth ? '70%' : '40%',
-        height: window.innerWidth <= maxWidth ? '85%' : "70%"
+        height: window.innerWidth <= maxWidth ? '85%' : "90%",
+        inset: window.innerWidth > maxWidth ? "5% auto auto 30%" : "5% auto auto 15%"
     },
     overlay: {
         zIndex: 2
@@ -39,6 +40,12 @@ function Resume( { open, close, line} ){
     const [deadEngineering, setDeadEngineering] = useState('00:00:00')
     const [deadChange, setDeadChange] = useState('00:00:00')
     const [deadMant, setDeadMant] = useState('00:00:00')
+    const [deadFacilities, setDeadFacilities] = useState("00:00:00")
+    const [deadPsi, setDeadPsi] = useState("00:00:00")
+    const [deadPse, setDeadPse] = useState("00:00:00")
+
+    const labels = ["Materiales", "Produccción", "Calidad", "Ingeniería", "Cambio Modelo", "Mantenimiento", "Facilities", "PSI", "PSE"]
+    const deadTime = [deadMaterial, deadProduction, deadQuality, deadEngineering, deadChange, deadMant, deadFacilities, deadPsi, deadPse]
 
     const context = useContext(appContext)
     
@@ -51,7 +58,7 @@ function Resume( { open, close, line} ){
     }
 
     const CalcDeadTime = (reazon, elements, values) => {
-        console.log(reazon)
+        //console.log(reazon)
         let ocurrences = []
         let val = []
         for(let i = 0; i < elements.length; i++){
@@ -71,17 +78,15 @@ function Resume( { open, close, line} ){
             case "ingenieria" : return setDeadEngineering(value)
             case "cambio de modelo": return setDeadChange(value)
             case "materiales": return setDeadMaterial(value)
+            case "facilities": return setDeadFacilities(value)
+            case "pse": return setDeadPse(value)
+            case "psi": return setDeadPsi(value)
         }
     }
 
     const handleClose = () => {
         
-        setDeadMaterial('00:00:00')
-        setDeadQuality('00:00:00')
-        setDeadChange('00:00:00')
-        setDeadEngineering('00:00:00')
-        setDeadMant('00:00:00')
-        setDeadProduction('00:00:00')
+        __setDefault()
         console.log("Closing Modal")
         close()
     }
@@ -105,12 +110,12 @@ function Resume( { open, close, line} ){
                 //console.log(info.data.andon.deadTime)
                 //console.log(context.linea)
                 arr.forEach(e => allData[k++] = CalcDeadTime(e, info.data.andon.status, info.data.andon.deadTime))
-                console.log(allData)
+                //console.log(allData)
                 allData.forEach((e) => {
                     //console.warn(typeof e)
                     if(e.values.length > 1){
                         let response = e.values.reduce((curr, next) => {
-                            console.log(curr, next)
+                            //console.log(curr, next)
                             var hourAct = curr.split(":"), nextHour = next.split(":")
                             let hour = Number(hourAct[0]) + Number(nextHour[0])
                             let min = Number(hourAct[1]) + Number(nextHour[1])
@@ -122,10 +127,10 @@ function Resume( { open, close, line} ){
                             //console.log(seg)
                             //console.log(e.reazon)
                             let chain = `${hour < 10 ? `0${hour}` : hour}:${min < 10 ? `0${min}`: min}:${seg < 10 ? `0${seg}`: seg}`;
-                            console.info(chain)
+                            //console.info(chain)
                             return chain      
                         })
-                        console.log(response)
+                        //console.log(response)
                         setDeadTime(e.reazon, response)
                     }else{
                         setDeadTime(e.reazon, e.values)
@@ -137,6 +142,18 @@ function Resume( { open, close, line} ){
             }).catch(error => console.error(error))
         }, 1000)
          
+    }
+
+    const __setDefault = () =>{
+        setDeadMaterial('00:00:00')
+        setDeadQuality('00:00:00')
+        setDeadChange('00:00:00')
+        setDeadEngineering('00:00:00')
+        setDeadMant('00:00:00')
+        setDeadProduction('00:00:00')
+        setDeadFacilities("00:00:00")
+        setDeadPse("00:00:00")
+        setDeadPsi("00:00:00")
     }
 
     useEffect(() => {
@@ -151,12 +168,7 @@ function Resume( { open, close, line} ){
 
     useEffect(() => {
         if(open){
-            setDeadMaterial('00:00:00')
-            setDeadQuality('00:00:00')
-            setDeadChange('00:00:00')
-            setDeadEngineering('00:00:00')
-            setDeadMant('00:00:00')
-            setDeadProduction('00:00:00')
+            __setDefault()
         }
     }, [open])
 
@@ -183,42 +195,13 @@ function Resume( { open, close, line} ){
                         </Pieces>
                     </ResumeRowContainer>
                     <div>
-                        <DeadTime
-                            title={"Mantenimiento"}
-                            time={deadMant}
-                            isOpened={open}
-                            setDeadMant={setDeadMant}
-                        />
-                        <DeadTime
-                            title={"Produccion"}
-                            time={deadProduction}
-                            isOpened={open}
-                            setDeadProduction={setDeadProduction}
-                        />
-                        <DeadTime
-                            title={"Materiales"}
-                            time={deadMaterial}
-                            isOpened={open}
-                            setDeadMaterial={setDeadMaterial}
-                        />
-                        <DeadTime
-                            title={"Calidad"}
-                            time={deadQuality}
-                            isOpened={open} 
-                            setDeadQuality={setDeadQuality}
-                        />
-                        <DeadTime
-                            title={"Ingenieria"}
-                            time={deadEngineering}
-                            isOpened={open}
-                            setDeadEngineering={setDeadEngineering}
-                        />
-                        <DeadTime
-                            title={"Cambio de Modelo"}
-                            time={deadChange}
-                            isOpened={open}
-                            setDeadChange={setDeadChange}
-                        />
+                        {labels.map((label, idx) => (
+                            <DeadTime 
+                                title={label}
+                                time={deadTime[idx]}
+                                isOpened={open}
+                            />
+                        ))}
                     </div>
                 </CreateUserForm>
             ) : (
@@ -237,42 +220,13 @@ function Resume( { open, close, line} ){
                         </Pieces>
                     </ResumeRowContainer>
                     <div>
-                        <DeadTime
-                            title={"Mantenimiento"}
-                            time={deadMant}
-                            setDeadMant={setDeadMant}
-                            isOpened={open}
-                        />
-                        <DeadTime
-                            title={"Produccion"}
-                            time={deadProduction}
-                            setDeadProduction={setDeadProduction}
-                            isOpened={open}
-                        />
-                        <DeadTime
-                            title={"Materiales"}
-                            time={deadMaterial}
-                            setDeadMaterial={setDeadMaterial}
-                            isOpened={open}
-                        />
-                        <DeadTime
-                            title={"Calidad"}
-                            time={deadQuality}
-                            setDeadQuality={setDeadQuality}
-                            isOpened={open}
-                        />
-                        <DeadTime
-                            title={"Ingenieria"}
-                            time={deadEngineering}
-                            setDeadEngineering={setDeadEngineering}
-                            isOpened={open}
-                        />
-                        <DeadTime
-                            title={"Cambio de Modelo"}
-                            time={deadChange}
-                            setDeadChange={setDeadChange}
-                            isOpened={open}
-                        />
+                        {labels.map((label, idx) => (
+                            <DeadTime 
+                                title={label}
+                                time={deadTime[idx]}
+                                isOpened={open}
+                            />
+                        ))}
                     </div>
                 </ModalContainer>
             ) )}

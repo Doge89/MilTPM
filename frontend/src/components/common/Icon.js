@@ -26,6 +26,9 @@ function Icon({ name, label, margin, onClick, active, borderColor }){
             case "materiales": return 'yellow'
             case "milwaukee": return milwaukee
             case "produccion": return 'purple'
+            case "facilities": return "#0054FF"
+            case "psi": return "#CD00FF"
+            case "pse": return "#FF0069"
             default: return '#FF7000'
         }
     }

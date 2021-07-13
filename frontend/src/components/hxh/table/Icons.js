@@ -12,19 +12,25 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
     const [engineery, setEngineery] = useState(false)
     const [quality, setQuality] = useState(false)
     const [change, setChange] = useState(false)
+    const [facilities, setFacilities] = useState(false)
+    const [psi, setPSI] = useState(false)
+    const [pse, setPSE] = useState(false)
 
     const history = useHistory();
 
     const handleDefaultClick = (type) => history.push(`/andon?tipo=${type}${userType === 'admin' ? `&linea=${linea}` : ''}`)
 
     useEffect(() => {
-        console.log(rerenderIcons)
+        // console.log(rerenderIcons)
         const timerMaterials = localStorage.getItem('timerValuemateriales')
         const timerMaintenance = localStorage.getItem('timerValuemantenimiento')
         const timerProduction = localStorage.getItem('timerValueproduccion')
         const timerEngineery = localStorage.getItem('timerValueingenieria')
         const timerQuality = localStorage.getItem('timerValuecalidad')
         const timerChange = localStorage.getItem('timerValuecambio')
+        const timerFacilities = localStorage.getItem('timerValuefacilities')
+        const timerPSI = localStorage.getItem('timerValuepsi')
+        const timerPSE = localStorage.getItem('timerValuepse')
 
         if(timerMaterials){ setMaterials(true) }
         else{ setMaterials(false) }
@@ -43,6 +49,15 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
         
         if(timerChange){ setChange(true) }
         else{ setChange(false) }
+
+        if(timerFacilities){setFacilities(true)}
+        else{setFacilities(false)}
+
+        if(timerPSI){setPSI(true)}
+        else{setPSI(false)}
+
+        if(timerPSE){setPSE(true)}
+        else{setPSE(false)}
 
     }, [rerender, rerenderIcons])
 
@@ -73,14 +88,6 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     active={production}
                     borderColor="purple"
                 />
-                <Icon 
-                    name="ingenieria"
-                    label="Ingeniería"
-                    margin="0 1vw"
-                    onClick={() => handleDefaultClick('ingenieria')}
-                    active={engineery}
-                    borderColor="cyan"
-                />
             </div>
             <div className="row">
                 <Icon 
@@ -98,6 +105,40 @@ function Icons({ rerender, userType, linea, rerenderIcons }){
                     onClick={() => handleDefaultClick('cambio')}
                     active={change}
                     borderColor="red"
+                />
+                <Icon 
+                    name="facilities"
+                    label="Facilities"
+                    margin="0 1vw"
+                    onClick={() => handleDefaultClick('facilities')}
+                    active={facilities}
+                    borderColor="#0054FF"
+                />
+            </div>
+            <div className="row">
+                <Icon 
+                    name="ingenieria"
+                    label="Ingeniería"
+                    margin="0 1vw"
+                    onClick={() => handleDefaultClick('ingenieria')}
+                    active={engineery}
+                    borderColor="cyan"
+                />
+                <Icon 
+                    name="psi"
+                    label="PSI"
+                    margin="0 1vw"
+                    onClick={() => handleDefaultClick('psi')}
+                    active={psi}
+                    borderColor="#CD00FF"
+                />
+                <Icon 
+                    name="pse"
+                    label="PSE"
+                    margin="0 1vw"
+                    onClick={() => handleDefaultClick('pse')}
+                    active={pse}
+                    borderColor="#FF0069"
                 />
             </div>
         </IconsContainer>
