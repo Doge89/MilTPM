@@ -87,6 +87,7 @@ def _pause_andon(request):
             elif andon.active != 1 and user.clave == clave:
                 andon.active = True
                 andon.pause = andon.pause + f"{datetime.now()}" + "/" 
+            ic(andon.active)
             andon.save()
             return JsonResponse({'Activo': andon.active})
         except Exception as e:

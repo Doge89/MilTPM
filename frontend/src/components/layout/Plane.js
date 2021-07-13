@@ -24,6 +24,9 @@ function Plane(){
     const [lines, setLines] = useState([])
     const [infoFetched, setInfoFetched] = useState(false)
 
+    const labels = ["Ok", "Materiales", "Mantenimiento", "Produccion", "Ingenieria", "Calidad", "Cambio Modelo", "Facilities", "PSI", "PSE"]
+    const colors = ["green", "yellow", "rgb(254, 16, 43)", "purple", "cyan", "#F77000", "white", "#0054FF", "#CD00FF", "#FF0069"]
+
     const fetchSession = async () => {
         const res = await axios({
             url: `${URL}/login/validate`,
@@ -224,34 +227,12 @@ function Plane(){
             )}
         </LayoutContainer>
         <Legend>
-            <CardLegend 
-                title="Ok"
-                backColor="green"
-            />
-            <CardLegend 
-                title="Materiales"
-                backColor="yellow"
-            />
-            <CardLegend 
-                title="Mantenimiento"
-                backColor="red"
-            /> 
-            <CardLegend 
-                title="Produccion"
-                backColor="purple"
-            />
-            <CardLegend 
-                title="Ingeniería"
-                backColor="cyan"
-            />
-            <CardLegend 
-                title="Calidad"
-                backColor="#F77000"
-            />
-            <CardLegend 
-                title="Cambio Modelo"
-                backColor="white"
-            />
+            {labels.map((label, idx) => (
+                <CardLegend 
+                    title={label}
+                    backColor={colors[idx]}
+                />
+            ))}
             
         </Legend>
         </>

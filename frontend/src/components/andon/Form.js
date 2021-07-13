@@ -176,6 +176,9 @@ function Form({ children, location }){
             case "ingenieria": return 'Ingeniería'
             case "calidad": return 'Calidad'
             case "cambio": return 'Cambio de modelo'
+            case "facilities": return "Facilities"
+            case "psi": return "PSI"
+            case "pse": return "PSE"
         }
     }
 

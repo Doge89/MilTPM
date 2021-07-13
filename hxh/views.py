@@ -190,7 +190,7 @@ def _get_all_lines(request):
     if request.method == "GET":
         try:
             allLines = Linea.objects.all()
-            return JsonResponse({'lineas': [i.linea for i in allLines]}, status = 200)
+            return JsonResponse({'lineas': [i.linea for i in allLines], 'workers': [i.personal for i in allLines]}, status = 200)
         except Exception as e:
             ic(e)
             return HttpResponse(status = 500)

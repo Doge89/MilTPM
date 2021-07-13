@@ -48,10 +48,10 @@ export const allDay= [{ start: '00:00:00', end: '01:00:00' }, { start: '01:00:00
 
 export const URL = 'http://192.168.100.22:8000' //MODIFY IP ADRESS
 
-export const modifyViews = [{ nombre: 'Usuarios', value: 'user' }, { nombre: 'Cronograma', value: 'schedule' }, { nombre: 'Puerto COM', value: 'port' }]
+export const modifyViews = [{ nombre: 'Usuarios', value: 'user' }, { nombre: 'Cronograma', value: 'schedule' }, { nombre: 'Puerto COM', value: 'port' }, {nombre: "Linea", value: "line"}]
 
 export const days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
 
 export const maxWidth = 768
 
-export const andonReason = ['materiales', 'mantenimiento', 'produccion', 'ingenieria', 'calidad', 'cambio']
+export const andonReason = ['materiales', 'mantenimiento', 'produccion', 'ingenieria', 'calidad', 'cambio', "facilities", "pse", "psi"]

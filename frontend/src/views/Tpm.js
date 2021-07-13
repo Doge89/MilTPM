@@ -195,6 +195,7 @@ function Tpm(){
                 <Modify 
                     machines={machines}
                     schedule={schedule}
+                    lines={lines}
                 />
             )}
         </MainContainer>

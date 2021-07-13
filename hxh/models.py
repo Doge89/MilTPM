@@ -13,6 +13,7 @@ class infoGeneral(models.Model):
     job = models.CharField(max_length=15, blank=False, help_text=_('No. de Job'), verbose_name=_('Job'))
     mod = models.CharField(max_length=15, blank=False, help_text=_('No. de modelo'), verbose_name=_('Modelo'))
     entrenamiento = models.CharField(max_length=2, blank=True, help_text=_('Personal en Entrenamiento'), verbose_name=_('Entrenamiento'), default='')
+    no_personal = models.IntegerField(verbose_name=_("No. Personal"), blank=False, default=0, help_text=_("Numero de trabajadores en la linea"))
 
     class Meta:
         db_table = 'infoGeneral'
