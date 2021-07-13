@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.forms import model_to_dict
 from MW.settings import EMAIL_HOST_USER
 from django.core.mail import send_mail
-from usuarios.models import Usuarios, Linea
+from usuarios.models import Usuarios, Linea, LineaStaff
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from django.views.decorators.http import require_http_methods
@@ -382,9 +382,21 @@ def _modify_card(request):
 
 @require_http_methods(['GET'])
 def __get_line_info(request, linea = None):
+
+    def __insertTurnData():
+        turns = ('A', 'B', 'C')
+        lineToEdit = Linea.objects.get(linea__exact=f"{linea}")         
+        if len(LineaStaff.objects.filter(linea_id__linea__exact=f"{linea}")) == 0:
+            ic("NO EXISTEN REGISTROS")
+            ic("Creando Registros")
+
+            for i in range(3):
+                LineaStaff.objects.create(Id = None, turno = turns[i], staff = 0, linea = lineToEdit)         
+
     if request.method == "GET":
         try:
             if type(linea) == str and linea != "":
+                __insertTurnData()
                 infoLine = Linea.objects.get(linea__exact=f"{linea}")
                 userLine = Usuarios.objects.get(linea__exact=f"{linea}")
                 return JsonResponse({'Linea': infoLine.linea, 'Personal': infoLine.personal, "username": userLine.username})
@@ -400,19 +412,41 @@ def __get_line_info(request, linea = None):
 @ensure_csrf_cookie
 def _change_line_data(request):
     if request.method == "POST":
+        staff = 0
         try:
             data = request.POST.get('data')
-            if data:
-                data = ast.literal_eval(data)
-                ic(data)
-                lineToEdit = Linea.objects.get(linea__exact=f"{data['lineToEdit']}")
-                if lineToEdit:
-                    lineToEdit.personal = int(data['newWorkers'])
-                    lineToEdit.save()
-                    return HttpResponse(status = 200)
-                return HttpResponse(status = 400)
+            data = ast.literal_eval(data)
+            ic(data)
+            if data:        
+                lineToEdit = Linea.objects.get(linea__exact=f"{data['lineToEdit']}")    
+                lineStaff = LineaStaff.objects.get(linea_id__linea__exact=f"{data['lineToEdit']}", turno__exact=f"{data['turn']}")
+                if lineStaff:
+                    lineStaff.staff = int(data['newWorkers'])
+                    lineStaff.save()
+
+                for i in LineaStaff.objects.filter(linea_id__linea__exact=f"{data['lineToEdit']}"):
+                    staff += i.staff
+                
+                lineToEdit.personal = staff
+                lineToEdit.save()
+                return HttpResponse(status = 200)
             raise Exception("La informacion se encuentra vacia")
             return HttpResponse(status = 400)
+
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+
+    return HttpResponse(status = 405)
+
+@require_http_methods(['GET'])
+def _get_workers(request, line = None, turn = None):
+    if request.method == "GET":
+        try:
+            if line and turn != None:
+                data = LineaStaff.objects.get(linea_id__linea__exact=f"{line}", turno__exact=f"{turn}")
+                ic(data)
+                return JsonResponse({'workers': int(data.staff)}, status = 200)
         except Exception as e:
             print(e)
             return HttpResponse(status = 500)
