@@ -4,13 +4,13 @@ import TableData from './TableData'
 
 import { Row } from '../../../styles/hxh'
 
-function TableRow({ columns, info, idx, length, history, isActual }){
+function TableRow({ columns, info, idx, length, history, isActual, borderColor }){
 
     return(
         <Row 
             borderBottom={idx === length - 1 ? "1px solid rgb(83, 83, 83)" : '0'} 
             id={`${info.start}`} 
-            colorBorder={isActual ? "rgb(254, 13, 43)" : "rgb(83, 83, 83)"}
+            colorBorder={isActual ? borderColor : "rgb(133, 133, 133)"}
         
         >
             {columns.map((column, i) => (

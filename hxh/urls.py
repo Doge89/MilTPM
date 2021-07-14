@@ -14,6 +14,7 @@ urlpatterns = [
     path('historial/', views.historial, name='Historial'),
     path('historial/get/', views.historial_get),
 
-    path('all/lines/', views._get_all_lines)
+    path('all/lines/', views._get_all_lines),
+    path('get/status/<linea>/', views._get_status_line)
 
 ]

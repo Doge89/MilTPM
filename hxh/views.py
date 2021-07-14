@@ -236,7 +236,7 @@ def _get_all_hxh(request):
                 andHist = __get_And_Hist(request.session['Linea'] if 'Linea' in request.session else request.session['admin_line'])
                 generalInfo = LineaStaff.objects.get(linea_id__linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else request.session['admin_line']}", turno__exact=__getTurn())
                 staffOf = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.sessio['Linea'] if 'Linea' in request.session else request.session['admin_line']}").last()
-                totalWorkers = generalInfo.staff - int(staffOf.faltas)
+                totalWorkers = generalInfo.staff - (int(staffOf.faltas) if staffOf.faltas else 0)
                 serializedData = {
                     'piecesOk': [i.actual for i in table],
                     'pieces': [i.plan for i in table],
@@ -258,7 +258,19 @@ def _get_all_hxh(request):
             return HttpResponse(status = 500)
     return HttpResponse(status = 405)
 
-    
+def _get_status_line(request, linea = None):
+    if request.method == "GET":
+        try:
+            if type(linea) == str and linea != "" and "M" in linea:
+                status = Andon.objects.filter(linea_id__linea__exact=f"{linea}")
+                return JsonResponse({'status': [i.estatus for i in status]}, status = 200)
+        except TypeError as te:
+            ic("Tipo de dato no correspondiente")
+            return HttpResponse(status = 400)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
 
 
  

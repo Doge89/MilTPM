@@ -20,7 +20,12 @@ import { twoDigits } from '../../../scripts'
 function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLines, setInfoUserType }){
 
     let timeout
+
     const interval = useRef()
+    const intervalColor = useRef()
+    const intervalStatus = useRef()
+    const actStatus = useRef()
+    const currentColor = useRef()
 
     const date = new Date()
 
@@ -86,6 +91,15 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         })
         console.log(res.data)
         return res.data
+    }
+
+    const getStatusAct = async () => {
+        const response = await axios({
+            url: `${URL}/hxh/get/status/${context.linea}/`,
+            method: "GET"
+        })
+
+        return response.data
     }
 
     const prepareData = () => {
@@ -226,6 +240,29 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
             }
         }).catch(e => console.log(e))
     }
+ 
+    const setColor = (status, i) => {
+        switch(status.toLowerCase()){
+            case "materiales": return currentColor.current = "yellow"
+            case "mantenimiento": return currentColor.current = "red"
+            case "produccion": return currentColor.current = "purple"
+            case "ingenieria": return currentColor.current = "cyan"
+            case "calidad": return currentColor.current = "#F77000"
+            case "facilities": return currentColor.current = "#0054FF"
+            case "pse": return currentColor.current = "#FF0069"
+            case "psi": return currentColor.current = "#CD00FF"
+        }
+    }
+
+    const getColorCurrent = () => {
+        //console.trace("Linea 258")
+        let currentStatus = [...actStatus.current]
+        currentColor.current = currentStatus.length === 0 ? "green" : ""
+        for(let i = 0; i < currentStatus.length; i++){
+            setColor(currentStatus[i], i)
+        }
+         
+    }
 
     useEffect(() => {
         if(!hxhHistory){
@@ -277,6 +314,32 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         
     }, [data])
 
+    useEffect(() =>{
+        if(context.linea !== undefined && context.linea !== ""){
+            getStatusAct()
+            .then(({ status }) => {
+                let lineStatus = status.map(item => {return item})
+                actStatus.current = lineStatus
+            })
+            .catch(error => console.error(error))       
+        }
+    }, [context.linea])
+
+    useEffect(() => {
+        if(actStatus.current !== undefined){
+            intervalStatus.current = setInterval(() => {
+                //console.info("Line 331")
+                getStatusAct()
+                .then(({ status }) => {
+                    let lineStatus = status.map(item => {return item})
+                    actStatus.current = lineStatus
+                })
+                .catch(error => console.error(error))
+            }, 9000)
+            intervalColor.current = setInterval(getColorCurrent, 1000)
+        }
+        return () => {clearInterval(intervalColor.current)}
+    }, [actStatus.current])
 
     return(
         <TableContainer>
@@ -300,6 +363,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                         idx={idx}
                         length={returnSchedule().length}
                         isActual={idx === idxAct ? true : false}
+                        borderColor={currentColor.current}
                     />
                 ))}
                 </>

@@ -96,6 +96,9 @@ function Info({ prevInfo, history, lines, userType, selDisable }){
                     )}
                 </div>
             ))}
+            <div className="column">
+                <p>Ejemplo</p>
+            </div>
         </InfoContainer>
     )
 }
