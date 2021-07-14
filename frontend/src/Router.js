@@ -9,10 +9,12 @@ import Tpm from './views/Tpm'
 import Mp from './views/Mp'
 import MpHistory from './views/MpHistory'
 import Layout from './views/Layout'
+import Users from './views/Users'
 
 import ProviderHXH from './reducers/ProviderHXH'
 import ProviderTPM from './reducers/ProviderTPM'
 import ProviderMP from './reducers/ProviderMP'
+import ProviderUsers from './reducers/ProviderUsers'
 
 function Router(){
     return(
@@ -42,6 +44,11 @@ function Router(){
                     <ProviderMP>
                         <MpHistory />
                     </ProviderMP>
+                </Route>
+                <Route exact path="/users">
+                    <ProviderUsers>
+                        <Users />
+                    </ProviderUsers>
                 </Route>
                 <Route exact path="/" >
                     <Redirect to="/layout" />
