@@ -1,6 +1,7 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from datetime import datetime
 from usuarios.models import Linea
+from django.utils.translation import ugettext_lazy as _
 # Create your models here.
 
 class infoGeneral(models.Model):
@@ -52,6 +53,63 @@ class infoProduccion(models.Model):
 
     def __unicode__(self):
         return "{} {} {} {} {} {} {} {} {} {} {} {} {} {}\n".format(self.inicio, self.final, self.plan, self.actual, self.diferencia, self.tiempoMuerto, self.codigo, self.cantidad, self.descripcion, self.contramedida, self.comentarios, self.turno, self.fecha, self.info)
+
+    def __repr__(self):
+        return self.__unicode__()
+
+class Staff(models.Model):
+    Id = models.AutoField(primary_key=True)
+    key = models.CharField(max_length = 32, verbose_name = _("Key"), blank =False , default = "", help_text=_("LLave unica de usuario"), db_index = True, unique = True)
+    name = models.CharField(max_length=255, verbose_name=_("Nombre"), blank=False, default = "", help_text=_("Nombre del operador"))
+    is_active = models.BooleanField(verbose_name=_("Trabaja?"), blank=False, default=True, help_text=_("El usuario sigue laborando?"))
+    register = models.DateTimeField(verbose_name=_("Registro"), auto_now_add=False, help_text = _("Fecha de inicio laboral"), default = datetime.now())
+
+    class Meta:
+        db_table = "Staff"
+        managed = True,
+        verbose_name = "Staff"
+        verbose_name_plural = "Miebros de la planta"
+
+    def __unicode__(self):
+        return "%s %s %s %s" % (self.key, self.name, self.is_active, self.register)
+
+    def __repr__(self):
+        return self.__unicode__()
+
+class SignUp(models.Model):
+    Id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(to=Staff, on_delete=models.PROTECT, related_name="StaffMemberIn", related_query_name="MemberIn", verbose_name=_("Usuario"), help_text=_("Usuario correspondiente"))
+    linea = models.ForeignKey(to=Linea, on_delete=models.PROTECT, related_name="StaffLineIn", related_query_name="LineOperation", verbose_name=_("Linea"), help_text=_("Linea de trabajo"))
+    fecha = models.DateField(verbose_name=_("Dia"), auto_now_add=False, blank =False, default = datetime.date(datetime.now()), help_text=_("Fecha actual"))
+    hora = models.TimeField(verbose_name=_("Hora"), auto_now_add=False, blank = False, help_text=_("Hora de entrada"))
+
+    class Meta:
+        db_table = 'Entradas_Staff'
+        managed = True
+        verbose_name = 'Registro'
+        verbose_name_plural = 'Registros'
+
+    def __unicode__(self):
+        return "%s %s %s %s" % (self.user, self.linea, self.fecha, self.hora)
+
+    def __repr__(self):
+        return self.__unicode__()
+
+class Loggout(models.Model):
+    Id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(to=Staff, on_delete=models.PROTECT, related_name="StaffMemberOff", related_query_name="MemberOf", verbose_name=_("Usuario"), help_text=_("Usuario correspondiente"))
+    linea = models.ForeignKey(to=Linea, on_delete=models.PROTECT, related_name="StaffLineOff", related_query_name="LineOperationOff", verbose_name=_("Linea"), help_text=_("Linea de trabajo"))
+    fecha = models.DateField(verbose_name=_("Dia"), auto_now_add=False, blank =False, default = datetime.date(datetime.now()), help_text=_("Fecha actual"))
+    hora = models.TimeField(verbose_name=_("Hora"), auto_now_add=False, blank = False, help_text=_("Hora de entrada"))
+
+    class Meta:
+        db_table = 'Salidas_Staff'
+        managed = True
+        verbose_name = 'Salida'
+        verbose_name_plural = 'Salidas'
+
+    def __unicode__(self):
+        return "%s %s %s %s" % (self.user, self.linea, self.fecha, self.hora)
 
     def __repr__(self):
         return self.__unicode__()

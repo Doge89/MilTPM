@@ -26,11 +26,13 @@ const styles = {
     }
 }
 
-function Resume( { open, close, line} ){
+function Resume( { open, close, line } ){
 
     //VARS
     const [okPieces, setOkPieces] = useState(NaN)
     const [badPieces, setBadPieces] = useState(NaN)
+    const [staff, setStaff] = useState(NaN)
+    const [totalStaff, setTotalStaff] = useState(NaN)
     const [data, setData] = useState('')
     const interval = useRef()
 
@@ -136,6 +138,8 @@ function Resume( { open, close, line} ){
                         setDeadTime(e.reazon, e.values)
                     }
                 })   
+                setStaff(info.data.staff)
+                setTotalStaff(info.data.totalStaff)
                 setOkPieces(tempPiecesOk)
                 setBadPieces(tempPiecesBad)  
                 
@@ -186,13 +190,25 @@ function Resume( { open, close, line} ){
                         <Pieces
                             title="Piezas Ok"
                             noPieces={okPieces}
-                        >
-                        </Pieces>
+                            staffResume={false}
+                        />
                         <Pieces
                             title="Piezas Bad"
                             noPieces={badPieces}
-                        >
-                        </Pieces>
+                            staffResume={false}
+                        />
+                    </ResumeRowContainer>
+                    <ResumeRowContainer>
+                        <Pieces 
+                            title="Operarios"
+                            staff={totalStaff}
+                            staffResume={true}
+                        />
+                        <Pieces 
+                            title="Operarios en linea"
+                            staff={staff}
+                            staffResume={true}
+                        />
                     </ResumeRowContainer>
                     <div>
                         {labels.map((label, idx) => (
@@ -211,13 +227,26 @@ function Resume( { open, close, line} ){
                         <Pieces
                             title="Piezas Ok"
                             noPieces={okPieces}
-                        >
-                        </Pieces>
+                            staffResume={false}
+                        />
                         <Pieces
                             title="Piezas Bad"
                             noPieces={badPieces}
-                        >
-                        </Pieces>
+                            staffResume={false}
+                        />
+ 
+                    </ResumeRowContainer>
+                    <ResumeRowContainer>
+                        <Pieces 
+                            title="Operarios"
+                            staff={totalStaff}
+                            staffResume={true}
+                        />
+                        <Pieces 
+                            title="Operarios en linea"
+                            staff={staff}
+                            staffResume={true}
+                        />
                     </ResumeRowContainer>
                     <div>
                         {labels.map((label, idx) => (

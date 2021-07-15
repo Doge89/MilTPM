@@ -167,7 +167,7 @@ function Plane(){
                 intervalLine.current = newIntervalLine[i]
             }
         }
-
+        console.info(newCurrentColor)
         if(newCurrentColor[i] + 1 > lines[i].status.length -1){ return 0 }
         else{ return newCurrentColor[i] + 1 }
 
@@ -176,6 +176,7 @@ function Plane(){
     const handleLineBlink = () => {
         let newCurrentColor = [...currentColor.current]
         for(let i = 0; i < lines.length; i++){
+            console.log(newCurrentColor)
             const domElement = document.getElementById(`line${lines[i].linea}`)
             const oneStatus = lines[i].status.length === 1
             newCurrentColor[i] = setLineColor(getColor(lines[i].status[newCurrentColor[i]]), i, domElement, newCurrentColor, oneStatus)

@@ -4,14 +4,19 @@ import TableData from './TableData'
 
 import { Row } from '../../../styles/hxh'
 
-function TableRow({ columns, info, idx, length, history }){
+function TableRow({ columns, info, idx, length, history, isActual, borderColor }){
 
     return(
-        <Row borderBottom={idx === length - 1 ? "1px solid rgb(83, 83, 83)" : '0'} id={`${info.start}`}>
+        <Row 
+            borderBottom={idx === length - 1 ? "1px solid rgb(83, 83, 83)" : '0'} 
+            id={`${info.start}`} 
+            colorBorder={isActual ? borderColor : "rgb(133, 133, 133)"}
+        
+        >
             {columns.map((column, i) => (
                 <TableData 
                     width={column.width}
-                    height="10vh"
+                    height="8vh"
                     key={i}
                     subtitles={column.subtitles}
                     subtitlesCentered={column.subtitlesCentered}
@@ -19,6 +24,7 @@ function TableRow({ columns, info, idx, length, history }){
                     info={info}
                     idx={idx}
                     history={history}
+                    
                 />
             ))}
         </Row>

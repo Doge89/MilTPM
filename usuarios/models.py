@@ -114,6 +114,23 @@ class Linea(models.Model):
     def __unicode__(self):
         return "%s %s" % (self.linea, self.usuario)
 
+class LineaStaff(models.Model):
+    Id = models.AutoField(primary_key = True)
+    turno = models.CharField(max_length=20, verbose_name=_("Turno"), help_text=_("Turno de produccion"), blank=False, default="")
+    staff = models.IntegerField(verbose_name=_("Trabajadores"), blank=False, default=0, help_text=_("Número de trabajadores en el turno"))
+    linea = models.ForeignKey(Linea, on_delete=models.CASCADE, related_name="staff", related_query_name="LineStaff")
+
+    class Meta:
+        db_table = "LineaStaff"
+        managed = True
+        verbose_name = "Staff"
+        verbose_name_plural = "Lines Staff"
+
+    def __unicode__(self):
+        return "%s %s %s" % (self.turno, self.staff, self.linea)
+
+    def __repr__(self):
+        return self.__unicode__()
 class Andon(models.Model):
     Id = models.AutoField(primary_key=True)
     estatus = models.CharField(max_length=20, blank=True, default='', help_text=_('Estatus'), verbose_name=_('Estado'))

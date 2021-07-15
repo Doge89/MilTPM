@@ -14,6 +14,10 @@ function Info({ prevInfo, history, lines, userType, selDisable }){
 
     const columns = ['', '', '', '']
 
+    const handleRedirect = (e) =>{
+        window.location.replace("/users/")
+    }
+
     const handleInput = (e, i) => {
         switch(labels[i]){
             case 'Faltas': 
@@ -96,6 +100,9 @@ function Info({ prevInfo, history, lines, userType, selDisable }){
                     )}
                 </div>
             ))}
+            <div className="column">
+                <p onClick={handleRedirect}>Operarios</p>
+            </div>
         </InfoContainer>
     )
 }

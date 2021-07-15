@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { ResumeRowContainer } from '../../../styles/hxh'
+import React from 'react'
 
-
-function Pieces( { noPieces, title } ){
+function Pieces( { noPieces, title, staff, staffResume } ){
 
     //VARIABLES
     return (
@@ -11,8 +9,7 @@ function Pieces( { noPieces, title } ){
             className="numberPieces"
         >
             <h1>{title}</h1>
-            <span>{noPieces}</span>
-
+            <span>{staffResume ? staff : noPieces}</span>
         </div>
 
     )

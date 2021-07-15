@@ -34,6 +34,9 @@ urlpatterns = [
     path('mp/', include('mp.urls'), name='MP'),
     path('tpm/', include('tpm.urls'), name='TPM'),
     path('admin/', include('usuarios.urls'), name='TPM'),
-    path('layout/', include('layout.urls'), name='layout')
+    path('layout/', include('layout.urls'), name='layout'),
+
+    #USERS LINKS
+    path('users/', include('staff.urls'), name='Users')
 
 ]

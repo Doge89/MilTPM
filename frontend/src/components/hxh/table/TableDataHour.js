@@ -89,6 +89,7 @@ function TableDataHour({ info, getWidthCell, idx, history }){
                     value={getCurrentPlan()}
                     disabled
                     className="second-input"
+                    inputPadding="0"
                 />
             </Cell>
         </div>

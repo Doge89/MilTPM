@@ -116,9 +116,10 @@ export const InfoContainer = styled.div`
 `;
 
 export const Container = styled.div`
-    width: 80%;
+    width: ${props => props.width || "80%"};
     padding: ${props => props.padding || '0 10%'};
     display: flex;
+    justify-content: ${props => props.align || "initial"};
     align-items: center;
     flex-direction: column;
     min-height: 60%;

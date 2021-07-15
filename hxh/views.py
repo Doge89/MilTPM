@@ -3,7 +3,7 @@ from icecream import ic
 from itertools import chain
 from datetime import datetime
 from .models import infoGeneral, infoProduccion
-from usuarios.models import Usuarios, Linea, Andon, AndonHist
+from usuarios.models import Usuarios, Linea, Andon, AndonHist, LineaStaff
 from django.shortcuts import render
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, JsonResponse
@@ -107,7 +107,7 @@ def post(request, linea = None):
             data = ast.literal_eval(data)
             print(data)
             dataProd = _get_objects(Linea = data['linea'])
-            general = infoGeneral.objects.last()
+            general = infoGeneral.objects.filter(linea_id__linea__exact=f"{data['linea']}").last()
             j = 0
             for i in dataProd:
                 i.plan = data['plan'][j]
@@ -224,19 +224,29 @@ def _get_all_hxh(request):
             else AndonHist.objects.filter(registro__range=(f"{now.date()} 15:00:00", f"{now.date()} 23:00:00"), linea_id__linea__exact=f"{Linea}") if now.hour >= 15 and now.hour < 23 else \
                 AndonHist.objects.filter(registro__range=(f"{now.date()} 23:00:00", f"{now.date()} 06:00:00"), linea_id__linea__exact=f"{Linea}")
     
+    def __getTurn():
+        now = datetime.now()
+        return 'A' if now.hour >= 6 and now.hour < 15 \
+            else 'B' if now.hour >= 15 and now.hour < 23 else 'C' 
+ 
     if request.method == 'GET':
         try:
             if 'Linea' in request.session or 'admin_line' in request.session:
                 table = _get_objects(request.session['Linea'] if 'Linea' in request.session else request.session['admin_line'])
-                #print(table)
                 andHist = __get_And_Hist(request.session['Linea'] if 'Linea' in request.session else request.session['admin_line'])
+                generalInfo = LineaStaff.objects.get(linea_id__linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else request.session['admin_line']}", turno__exact=__getTurn())
+                staffOf = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.sessio['Linea'] if 'Linea' in request.session else request.session['admin_line']}").last()
+                totalWorkers = generalInfo.staff - (int(staffOf.faltas) if staffOf.faltas else 0)
                 serializedData = {
                     'piecesOk': [i.actual for i in table],
                     'pieces': [i.plan for i in table],
                     'andon': {
                         'deadTime': [i.tiempoM for i in andHist],
                         'status': [i.finishDep for i in andHist]
-                    }
+                    },
+                    'staff': totalWorkers if totalWorkers > 0 else 0,
+                    "totalStaff": generalInfo.staff
+
                 }
                 #ic(request.session['Linea'])
                 ic(serializedData['piecesOk'])
@@ -248,7 +258,19 @@ def _get_all_hxh(request):
             return HttpResponse(status = 500)
     return HttpResponse(status = 405)
 
-    
+def _get_status_line(request, linea = None):
+    if request.method == "GET":
+        try:
+            if type(linea) == str and linea != "" and "M" in linea:
+                status = Andon.objects.filter(linea_id__linea__exact=f"{linea}")
+                return JsonResponse({'status': [i.estatus for i in status]}, status = 200)
+        except TypeError as te:
+            ic("Tipo de dato no correspondiente")
+            return HttpResponse(status = 400)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
 
 
  
