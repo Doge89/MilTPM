@@ -351,7 +351,8 @@ export const Text = styled.span`
     color: ${props => props.color};
     font-weight: ${props => props.weight || 'normal'};
     text-align: ${props => props.align || 'start'};
-`
+    text-transform: ${props => props.transform || "initial"}
+    `
 export const Next = styled.span`
     background-color: ${red};
     color: white;
