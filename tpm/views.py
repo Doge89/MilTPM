@@ -414,7 +414,7 @@ def _change_line_data(request):
     if request.method == "POST":
         staff = 0
         try:
-            data = request.POST.get('data')
+            data = request.POST.get('info')
             data = ast.literal_eval(data)
             ic(data)
             if data:        
