@@ -151,6 +151,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         let newContramedida = []
         let newCantidad = []
         let newTimeout = []
+        let newWorkers = []
 
         for(let i = 0; i < data?.length; i++){
             newPLan[i] = data[i].plan.toString()
@@ -162,6 +163,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
             newContramedida[i] = data[i].contramedida
             newCantidad[i] = data[i].cantidad
             newTimeout[i] = data[i].tiempoMuerto
+            newWorkers[i] = data[i].operarios
         }
 
         context.dispatchPlan({ type: 'SET', value: newPLan })
@@ -173,6 +175,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         context.dispatchContramedida({ type: 'SET', value: newContramedida })
         context.dispatchCantidad({ type: 'SET', value: newCantidad })
         context.dispatchTimeout({ type: 'SET', value: newTimeout })
+        context.dispatchWorker({type: "SET", value: newWorkers})
     }
 
     const setAndonInfo = (andonDB) => {
@@ -227,6 +230,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
             const dataInfo = JSON.parse(InfGen)
             const data = JSON.parse(InfProd).map(row => row.fields)
             const andon = JSON.parse(Andon).map(row => row.fields)
+            console.info(data)
             setDataFetched(data)
             setInfoTable(data)
             console.log(dataInfo)

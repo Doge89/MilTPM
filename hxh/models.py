@@ -43,6 +43,7 @@ class infoProduccion(models.Model):
     comentarios = models.CharField(max_length=1000, blank=True, default='', help_text=_('Comentarios adicionar'), verbose_name=_('Comentarios'))
     turno = models.CharField(max_length=3, blank=True, default='', help_text=_('Turno'), verbose_name=_('Turno'))
     fecha = models.DateField(auto_now_add=False, verbose_name=_('Fecha'), help_text=_('Fecha'))
+    operarios = models.IntegerField(verbose_name=_("Operarios"), blank=False, default=0, help_text=_("Numero de Operarios"))
     info = models.ForeignKey(infoGeneral, on_delete=models.CASCADE)
 
     class Meta:
@@ -52,7 +53,7 @@ class infoProduccion(models.Model):
         verbose_name_plural = 'InformacionDeProduccion'
 
     def __unicode__(self):
-        return "{} {} {} {} {} {} {} {} {} {} {} {} {} {}\n".format(self.inicio, self.final, self.plan, self.actual, self.diferencia, self.tiempoMuerto, self.codigo, self.cantidad, self.descripcion, self.contramedida, self.comentarios, self.turno, self.fecha, self.info)
+        return "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {}\n".format(self.inicio, self.final, self.plan, self.actual, self.diferencia, self.tiempoMuerto, self.codigo, self.cantidad, self.descripcion, self.contramedida, self.comentarios, self.turno, self.fecha, self.info, self.operarios)
 
     def __repr__(self):
         return self.__unicode__()

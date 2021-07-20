@@ -1,5 +1,5 @@
 export const columns = [{
-    width: '15%',
+    width: '13%',
     subtitlesCentered: ['Inicio', 'Final'],
     subtitles: ['Plan'],
     title: 'Hora'
@@ -9,25 +9,30 @@ export const columns = [{
     subtitles: [],
     title: 'Producción'
 },{
-    width: '13%',
+    width: '10%',
     subtitlesCentered: ['Código', 'Cantidad'],
     subtitles: [],
     title: 'FTQ'
 },{
-    width: '12%',
+    width: '10%',
     subtitlesCentered: ['Descripción defecto'],
     subtitles: [],
     title: 'Status'
 },{
-    width: '17%',
+    width: '15%',
     subtitlesCentered: ['Contramedida defecto'],
     subtitles: [],
     contramedida: true
 },{
-    width: '20%',
+    width: '18%',
     subtitlesCentered: [],
     subtitles: [],
     title: 'Comentarios'
+}, {
+    width: '11%',
+    subtitlesCentered: [],
+    subtitles: [],
+    title: 'Operarios'
 }]
 
 export const scheduleA = [{ start: '06:00:00', end: '07:00:00' }, { start: '07:00:00', end: '08:00:00' }, { start: '08:00:00', end: '09:00:00' },

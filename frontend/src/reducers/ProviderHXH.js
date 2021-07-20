@@ -23,17 +23,19 @@ function Provider({ children }){
     const [ job, dispatchJob ] = useReducer(defaultReducer, '')
     const [ entrenamiento, dispatchEntrenamiento ] = useReducer(defaultReducer, '')
     const [ mod, dispatchMod ] = useReducer(defaultReducer, '')
+    const [ worker, dispatchWorker ] = useReducer(defaultReducer, [])
 
     return(
         <appContext.Provider
             value={{
                 plan, faltas, linea, incidencias,timeout, cantidad,
                 consola, bajas, job, entrenamiento, mod, actual,
-                diferencia, codigo, descripcion, comentario,
+                diferencia, codigo, descripcion, comentario, worker,
                 dispatchPlan, dispatchFaltas, dispatchLinea, contramedida,
                 dispatchIncidencias, dispatchConsola, dispatchBajas, dispatchTimeout,
                 dispatchJob, dispatchEntrenamiento, dispatchMod, dispatchActual, dispatchCantidad,
-                dispatchDiferencia, dispatchCodigo, dispatchDescripcion, dispatchComentario, dispatchContramedida
+                dispatchDiferencia, dispatchCodigo, dispatchDescripcion, dispatchComentario, dispatchContramedida,
+                dispatchWorker
             }}
         >
             {children}
