@@ -62,7 +62,9 @@ class Staff(models.Model):
     key = models.CharField(max_length = 32, verbose_name = _("Key"), blank =False , default = "", help_text=_("LLave unica de usuario"), db_index = True, unique = True)
     name = models.CharField(max_length=255, verbose_name=_("Nombre"), blank=False, default = "", help_text=_("Nombre del operador"))
     is_active = models.BooleanField(verbose_name=_("Trabaja?"), blank=False, default=True, help_text=_("El usuario sigue laborando?"))
+    status = models.CharField(verbose_name=_("Estatus"), max_length=5, blank=False, default="OFF", help_text=_("Estatus del trabajador"))
     register = models.DateTimeField(verbose_name=_("Registro"), auto_now_add=False, help_text = _("Fecha de inicio laboral"), default = datetime.now())
+    linea = models.ForeignKey(to = Linea, on_delete=models.SET_NULL, related_name="StaffUser", related_query_name="StaffUser", default = None, null=True)
 
     class Meta:
         db_table = "Staff"
@@ -71,7 +73,7 @@ class Staff(models.Model):
         verbose_name_plural = "Miebros de la planta"
 
     def __unicode__(self):
-        return "%s %s %s %s" % (self.key, self.name, self.is_active, self.register)
+        return "%s %s %s %s %s" % (self.key, self.name, self.is_active, self.register, self.status)
 
     def __repr__(self):
         return self.__unicode__()
@@ -110,6 +112,25 @@ class Loggout(models.Model):
 
     def __unicode__(self):
         return "%s %s %s %s" % (self.user, self.linea, self.fecha, self.hora)
+
+    def __repr__(self):
+        return self.__unicode__()
+
+class History(models.Model):
+    Id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(to=Staff, on_delete=models.RESTRICT, related_name="UserResume", related_query_name="ResumeUser")
+    linea = models.ForeignKey(to=Linea, on_delete=models.PROTECT, related_name="LineResume", related_query_name="ResumeLine")
+    status = models.CharField(verbose_name=_("Estatus"), max_length = 5, help_text=_("Estatus del registro"), default = "")
+    registro = models.DateTimeField(verbose_name=_("Hora"), auto_now_add=False, help_text = _("Hora del registro"), default = datetime.now())
+
+    class Meta:
+        db_table = 'historial_move'
+        managed = True
+        verbose_name = 'Hisotrial'
+        verbose_name_plural = 'Records'
+
+    def __unicode__(self):
+        return "%s %s %s %s" % (self.user, self.linea, self.status, self.registro)
 
     def __repr__(self):
         return self.__unicode__()
