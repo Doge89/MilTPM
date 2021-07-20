@@ -91,8 +91,11 @@ def manage_users(request, linea = None):
             data = ast.literal_eval(data)
             if data:
                 try:
+                    
                     staffUser = Staff.objects.get(key__exact=f"{data['key']}")
                     staffLine = Linea.objects.get(linea__exact=f"{data['linea']}")
+                    productionInfo = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else data['linea']}", fecha__exact=f"{datetime.date(datetime.now())}", inicio__exact=f"{datetime.now().hour}:00:00")
+                    
                     ic(staffLine)
                     hour = datetime.strftime(datetime.now(), "%H:%M:%S")
                     if staffUser.status == "OFF":
@@ -101,7 +104,8 @@ def manage_users(request, linea = None):
                         history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
                         staffUser.linea = staffLine
                         staffUser.save()
-                        return JsonResponse({'date': newEntrance.fecha, "hour": newEntrance.hora}, status = 200)
+                        workers = __changeWorkers(staffUser.status, productionInfo)
+                        return JsonResponse({'date': newEntrance.fecha, "hour": newEntrance.hora, 'workers': workers}, status = 200)
                     raise Exception("Tiene que marcar una salida primero")
                 except Staff.DoesNotExist:
                     print("NO EXISTE USUARIO CON ESA LLAVE")
@@ -131,15 +135,19 @@ def manage_exit_users(request, linea = None):
             data = request.POST.get('data')
             data = ast.literal_eval(data)
             if(data):
+                
                 staffUser = Staff.objects.get(key__exact = f"{data['key']}")
                 staffLine = Linea.objects.get(linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else data['linea']}")
+                productionInfo = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else data['linea']}", fecha__exact=f"{datetime.date(datetime.now())}", inicio__exact=f"{datetime.now().hour}:00:00")
+                
                 hour = datetime.strftime(datetime.now(), "%H:%M:%S")
                 if staffUser.status == "IN":
                     newEntrance = Loggout.objects.create(Id = None, fecha = datetime.date(datetime.now()), hora = hour, linea = staffLine, user = staffUser)
                     staffUser.status = "OFF"
                     history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
                     staffUser.save()
-                    return JsonResponse({'hour': newEntrance.hora, 'date': newEntrance.fecha}, status = 200)
+                    workers = __changeWorkers(staffUser.status, productionInfo)
+                    return JsonResponse({'hour': newEntrance.hora, 'date': newEntrance.fecha, 'workers': workers}, status = 200)
                 raise Exception("Tiene que marcar primero la entrada")
         except Exception as e:
             print(e)
@@ -166,3 +174,11 @@ def __getHourRange() -> tuple:
     return ("06:00:00", "15:00:00") if datetime.now().hour >= 6 and datetime.now().hour < 13 else \
         ("15:00:00", "23:00:00") if datetime.now().hour >= 13 and datetime.now().hour < 23 else \
             ("23:00:00","06:00:00")
+
+def __changeWorkers(reazon: str, objProduction: infoProduccion) -> int:
+    if reazon == "IN":
+        objProduction.operarios += 1
+    else:
+        objProduction.operarios -= 1
+    objProduction.save()
+    return objProduction.operarios

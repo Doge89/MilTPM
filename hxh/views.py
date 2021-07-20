@@ -91,6 +91,7 @@ def get(request, linea = None):
             except Andon.DoesNotExist:
                 print("NO EXISTEN REGISTROS EN LA LINEA")
                 return HttpResponse(status=200)
+            #ic(serializedInfProd)
             return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea, 'Andon': serializedAndon}, status = 200)
         except Exception as e:
             print(e)

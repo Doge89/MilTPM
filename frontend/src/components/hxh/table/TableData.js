@@ -8,6 +8,7 @@ import TableDataComentarios from './TableDataComentarios'
 import TableDataContramedida from './TableDataContramedida'
 
 import { Container } from '../../../styles/common'
+import TableDataWorkers from './TableDataWorkers'
 
 function TableData({ width, height, subtitlesCentered, subtitles, title, info, idx, history }){
 
@@ -57,13 +58,19 @@ function TableData({ width, height, subtitlesCentered, subtitles, title, info, i
                         idx={idx}
                         history={history}
                     />
+                ) : title === "Operarios" ?(
+                    <TableDataWorkers 
+                        getWidthCell={getWidthCell}
+                        idx={idx}
+                        history={history}
+                    />
                 ) : (
                     <TableDataContramedida 
                         getWidthCell={getWidthCell} 
                         idx={idx}
                         history={history}
                     />
-                )}
+                ) }
             </div>
         </Container>
     )
