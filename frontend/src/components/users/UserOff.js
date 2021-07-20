@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import querystring from 'querystring'
@@ -7,7 +7,7 @@ import { URL } from '../../var'
 import { appContext } from '../../reducers/ProviderUsers'
 
 import UserHeaderTurns from './UserHeaderTurns'
-import { Container } from '../../styles/common'
+import { Container, Text } from '../../styles/common'
 import { PanelTableCell, Table } from '../../styles/tpm'
 import StaffItem from './StaffItem'
 
@@ -21,6 +21,8 @@ function UsersOff({ priv, lines, userLine }){
     const [ names, setNames ] = useState([])
     const [ dates, setDates ] = useState([])
     const [ times, setTimes ] = useState([])
+    const [ errMessage, setErrorMessage ] = useState('')
+    const [ errorFound, setErrorFound ] = useState(false)
 
     const getExists = async () => {
         const response = await axios({
@@ -48,20 +50,31 @@ function UsersOff({ priv, lines, userLine }){
     const handleKeyChange = e => context.dispatchNewKey({type: "SET", value: e.target.value})
 
     const handleSelectorChange = (e) => {
+        setErrorFound(false)
         if(e.target.value !== ""){
             setSelectedLine(e.target.value)
+        }else{
+            setErrorFound(true)
+            setDataFound(false)
+            setErrorMessage("Espere, la linea no puede ser vacia")
         }
     }
 
     const handleClick = (e) => {
+        setErrorFound(false)
         e.preventDefault()
-        if(context.newKey !== "" && selectedLine !== ""){
+        if(context.newKey !== "" || selectedLine !== ""){
             checkExit({data: JSON.stringify({'key':context.newKey, 'linea': selectedLine || userLine})})
             .then((data) => {
                 console.log(data)
                 setRenderTable(!renderTable)
             })
-            .catch(error => console.error(error))
+            .catch(error => {
+                console.error(error)
+                setErrorFound(true)
+                setDataFound(false)
+                setErrorMessage("El servidor no puede crea el registro sin una llave, intente añadiendo una")
+            })
         }
     }
 
@@ -75,16 +88,23 @@ function UsersOff({ priv, lines, userLine }){
                 setTimes(time)
                 setDataFound(true)
             })
-            .catch(error => console.error(error))
+            .catch(error => {
+                setDataFound(false)
+                setErrorFound(true)
+                setErrorMessage("La linea no puede ser Vacia, seleccione una linea")
+                console.error(error)
+            })
         }
     }
 
     useEffect(() => {
-        if(selectedLine !== "")
+        setErrorFound(false)
+        if(selectedLine !== "" || userLine !== "")
         handleGetExits()
     }, [selectedLine, renderTable])
 
     useEffect(() => {
+        setErrorFound(false)
         if(userLine !== ""){
             handleGetExits()
         }
@@ -101,6 +121,18 @@ function UsersOff({ priv, lines, userLine }){
                 onChangeInput={handleKeyChange}
                 onClickButton={handleClick}
             />
+            {errorFound && (
+                <Text
+                    margin="15px 0"
+                    size="25px"
+                    color="red"
+                    weight="bold"
+                    align="center"
+                    transform="uppercase"
+                >
+                    {errMessage}
+                </Text>
+            )}
             {dataFounded && (
                 <Container
                     flexDirection = "row"
@@ -123,6 +155,7 @@ function UsersOff({ priv, lines, userLine }){
                                     date={dates[i]}
                                     hour={times[i]}
                                     viewType="Records"
+                                    width="50%"
                                 />
                             ))}
                         </div>

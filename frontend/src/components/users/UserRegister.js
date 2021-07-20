@@ -3,8 +3,6 @@ import axios from 'axios'
 import querystring from "querystring"
 import Cookies from 'js-cookie'
 
-import UserLineSelector from './UserLineSelector'
-
 import { Container, Text, ButtonPrimary } from '../../styles/common'
 import { PanelTableCell, Table } from '../../styles/tpm'
 import { AddUserForm } from '../../styles/users'
@@ -15,15 +13,15 @@ import { appContext } from "../../reducers/ProviderUsers"
 import StaffItem from './StaffItem'
 
 
-function UserRegister({ priv, lines, userLine }){
+function UserRegister({ priv, lines, userLine, userKeys }){
 
     const context = useContext(appContext)
 
     const [ dataFounded, setDataFounded ] = useState(false)
     const [ errMessage, setErrMessage ] = useState("")
-    const [ lineToAdd, setLineToAdd ] = useState("")
     const [ keys, setKeys ] = useState([])
     const [ names, setNames ] = useState([])
+    const [ renderTable, setRenderTable ] = useState(false)
 
     const fetchStaff = async () => {
         const response = await axios({
@@ -63,27 +61,10 @@ function UserRegister({ priv, lines, userLine }){
             if("message" in data){
                 return setErrMessage(data.message)
             }
-            console.log(data)
             setDataFounded(true)
             setKeys(data.key)
             setNames(data.name)
         }).catch(error => console.error(error))
-    }
-
-    const handleChange = (e) =>{
-        if(e.target.value !== ""){
-            fetchStaff(e.target.value)
-            .then((data) => {
-                setLineToAdd(e.target.value)
-                if("message" in data){
-                    return setErrMessage(data.message)
-                }else{
-                    console.log(data)
-                    setDataFounded(true)
-                }
-                
-            }).catch(error => console.error(error))
-        }
     }
 
     const getData = () => {
@@ -94,29 +75,28 @@ function UserRegister({ priv, lines, userLine }){
 
     const prepareData = (e) =>{
         e.preventDefault()
-        const data = {
-            info: getData()
-        }
-        console.log(data)
         createUser({data: getData()})
         .then((data) => {
+            setRenderTable(!renderTable)
             console.log(data)
         }).catch(error => console.error(error))
     }
 
     useEffect(() => {
-        console.log(lines)
+        //console.log(lines)
         getStaff()
+    }, [renderTable])
+
+    useEffect(() => {
+        console.info(userKeys)
+        if(userKeys.length !== 0){
+            getStaff()
+        }
     }, [])
 
     return(
 
         <>
-        {/* <UserLineSelector 
-            priv={priv}
-            lines={lines}
-            onChange={handleChange}
-        /> */}
         {errMessage !== "" &&(
             <Text
                 color="red"
@@ -171,12 +151,14 @@ function UserRegister({ priv, lines, userLine }){
                             <PanelTableCell width="50%" className="header border-right border-bottom border-top border-left move-left">Llave</PanelTableCell>
                             <PanelTableCell width="50%" className="header border-bottom border-right border-top move-left">Nombre</PanelTableCell>
                         </div>
-                        {keys.map((key, idx) => (
+                        {/* {console.info(userKeys)} */}
+                        {context.key?.map((key, idx) => (
                             <StaffItem
-                                key={keys[idx]}
+                                key={key !== undefined ? key : key[idx]}
                                 name={names[idx]}
                                 idx={idx}
                                 viewType="Register"
+                                width="50%"
                             />
                         ))}
                     </div>

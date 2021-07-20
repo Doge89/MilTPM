@@ -75,9 +75,9 @@ def manage_users(request, linea = None):
     if request.method == "GET":
         try:
             if type(linea) == str and linea != "":
-                #lineStaff = Linea.objects.get(linea__exact = f"{request.session['Linea'] if 'Linea' in request.session else linea}")
-                staffLine = SignUp.objects.filter(linea_id__linea__exact = f"{request.session['Linea'] if 'Linea' in request.session else linea}", fecha__exact=f"{datetime.date(datetime.now())}")
-                return JsonResponse({'name': [i.user.name for i in staffLine], 'date': [i.fecha for i in staffLine], 'time': [i.hora for i in staffLine]})
+                workers = Staff.objects.filter(linea_id__linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else linea}")
+                staffLine = SignUp.objects.filter(linea_id__linea__exact = f"{request.session['Linea'] if 'Linea' in request.session else linea}", fecha__exact=f"{datetime.date(datetime.now())}", hora__range=__getHourRange())
+                return JsonResponse({'name': [i.user.name for i in staffLine], 'date': [i.fecha for i in staffLine], 'time': [i.hora for i in staffLine], 'workers': len([i.status for i in workers if i.status == 'IN'])})
         except SignUp.DoesNotExist:
             print("NO EXISTEN ENTRADAS")
             return HttpResponse(status = 204)
@@ -95,8 +95,14 @@ def manage_users(request, linea = None):
                     staffLine = Linea.objects.get(linea__exact=f"{data['linea']}")
                     ic(staffLine)
                     hour = datetime.strftime(datetime.now(), "%H:%M:%S")
-                    newEntrance = SignUp.objects.create(Id = None, fecha = datetime.date(datetime.now()), hora = f"{hour}", linea = staffLine, user = staffUser)
-                    return JsonResponse({'date': newEntrance.fecha, "hour": newEntrance.hora}, status = 200)
+                    if staffUser.status == "OFF":
+                        newEntrance = SignUp.objects.create(Id = None, fecha = datetime.date(datetime.now()), hora = f"{hour}", linea = staffLine, user = staffUser)
+                        staffUser.status = "IN"
+                        history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
+                        staffUser.linea = staffLine
+                        staffUser.save()
+                        return JsonResponse({'date': newEntrance.fecha, "hour": newEntrance.hora}, status = 200)
+                    raise Exception("Tiene que marcar una salida primero")
                 except Staff.DoesNotExist:
                     print("NO EXISTE USUARIO CON ESA LLAVE")
                     return HttpResponse(status = 204)
@@ -115,7 +121,7 @@ def manage_exit_users(request, linea = None):
     if request.method == "GET":
         try:
             if type(linea) == str and linea:
-                staffLine = Loggout.objects.filter(linea_id__linea__exact = f"{request.session['Linea'] if 'Linea' in request.session else linea}")
+                staffLine = Loggout.objects.filter(linea_id__linea__exact = f"{request.session['Linea'] if 'Linea' in request.session else linea}", fecha__exact=f"{datetime.date(datetime.now())}", hora__range=__getHourRange())
                 return JsonResponse({'name': [i.user.name for i in staffLine], "date": [i.fecha for i in staffLine], "time": [i.hora for i in staffLine]})                
         except Exception as e:
             print(e)
@@ -128,10 +134,35 @@ def manage_exit_users(request, linea = None):
                 staffUser = Staff.objects.get(key__exact = f"{data['key']}")
                 staffLine = Linea.objects.get(linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else data['linea']}")
                 hour = datetime.strftime(datetime.now(), "%H:%M:%S")
-                newEntrance = Loggout.objects.create(Id = None, fecha = datetime.date(datetime.now()), hora = hour, linea = staffLine, user = staffUser)
-                return JsonResponse({'hour': newEntrance.hora, 'date': newEntrance.fecha}, status = 200)
+                if staffUser.status == "IN":
+                    newEntrance = Loggout.objects.create(Id = None, fecha = datetime.date(datetime.now()), hora = hour, linea = staffLine, user = staffUser)
+                    staffUser.status = "OFF"
+                    history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
+                    staffUser.save()
+                    return JsonResponse({'hour': newEntrance.hora, 'date': newEntrance.fecha}, status = 200)
+                raise Exception("Tiene que marcar primero la entrada")
         except Exception as e:
             print(e)
             return HttpResponse(status = 500)
 
     return HttpResponse(status = 405)
+
+@require_http_methods(['GET'])
+def History_Line(request, linea = None):
+    if request.method == "GET":
+        try:
+            if type(linea) == str and linea != "":
+                history_line = History.objects.filter(linea_id__linea__exact=f"{linea}", registro__range=(f"{datetime.date(datetime.now())} {__getHourRange()[0]}", f"{datetime.date(datetime.now())} {__getHourRange()[1]}"))
+                ic([i.registro for i in history_line])
+                return JsonResponse({'keys': [i.user.name for i in history_line], 'hour': [i.registro for i in history_line], 'status': [i.status for i in history_line]}, status = 200)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
+
+
+#ONLY METHODS
+def __getHourRange() -> tuple:
+    return ("06:00:00", "15:00:00") if datetime.now().hour >= 6 and datetime.now().hour < 13 else \
+        ("15:00:00", "23:00:00") if datetime.now().hour >= 13 and datetime.now().hour < 23 else \
+            ("23:00:00","06:00:00")

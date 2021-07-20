@@ -4,7 +4,8 @@ import UserLineSelector from './UserLineSelector'
 
 import { UserInContainer, FormUserIn } from '../../styles/users'
 
-function UserHeaderTurns({ priv, lines, headerTitle, textBtn, onChangeSelector , onChangeInput, onClickButton }){
+function UserHeaderTurns({ priv, lines, headerTitle, textBtn, onChangeSelector ,
+                        onChangeInput, onClickButton, is_resume }){
     return (
         <UserInContainer>
             {priv === "admin" && (
@@ -17,17 +18,20 @@ function UserHeaderTurns({ priv, lines, headerTitle, textBtn, onChangeSelector ,
                     />
                 </div>
             )}
-            <FormUserIn>
-                <h1>{headerTitle}</h1>
-                <form>
-                    <label>Llave: </label>
-                    <input 
-                        type="password" 
-                        onChange={onChangeInput}    
-                    />
-                    <button onClick={onClickButton}>{textBtn}</button>
-                </form>
-            </FormUserIn>
+            {!is_resume && (
+                <FormUserIn>
+                    <h1>{headerTitle}</h1>
+                    <form>
+                        <label>Llave: </label>
+                        <input 
+                            type="password" 
+                            onChange={onChangeInput}    
+                        />
+                        <button onClick={onClickButton}>{textBtn}</button>
+                    </form>
+                </FormUserIn>
+            )}
+            
         </UserInContainer>
     )
 }
