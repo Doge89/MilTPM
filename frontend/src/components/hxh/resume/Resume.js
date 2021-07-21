@@ -144,7 +144,7 @@ function Resume( { open, close, line } ){
                 setBadPieces(tempPiecesBad)  
                 
             }).catch(error => console.error(error))
-        }, 1000)
+        }, 5000)
          
     }
 
@@ -164,8 +164,7 @@ function Resume( { open, close, line } ){
         if(context.linea && context.linea !== "" && context.linea !== " "){
             //console.log(context.linea)
             setData(line)
-            fillResume()
-            
+            fillResume()    
         }
         return () => {clearInterval(interval.current)}
     }, [context.linea])

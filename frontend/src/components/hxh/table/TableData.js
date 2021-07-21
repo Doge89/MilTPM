@@ -10,7 +10,7 @@ import TableDataContramedida from './TableDataContramedida'
 import { Container } from '../../../styles/common'
 import TableDataWorkers from './TableDataWorkers'
 
-function TableData({ width, height, subtitlesCentered, subtitles, title, info, idx, history }){
+function TableData({ width, height, subtitlesCentered, subtitles, title, info, idx, history, deadTimes, userType }){
 
     const getWidthCell = () => {
         if(subtitlesCentered.length !== 0){
@@ -24,7 +24,7 @@ function TableData({ width, height, subtitlesCentered, subtitles, title, info, i
             height={height}
             flexDirection="row"
             className="table-row-data"
-        >
+        >  
             <h1>{title}</h1>
             <div className="data-container">
                 {title === "Hora" ? (
@@ -39,6 +39,8 @@ function TableData({ width, height, subtitlesCentered, subtitles, title, info, i
                         getWidthCell={getWidthCell}
                         idx={idx}
                         history={history}
+                        deadTimes={deadTimes}
+                        userType={userType}
                     />
                 ) : title === "FTQ" ? (
                     <TableDataFTQ 

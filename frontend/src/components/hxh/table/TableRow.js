@@ -4,7 +4,7 @@ import TableData from './TableData'
 
 import { Row } from '../../../styles/hxh'
 
-function TableRow({ columns, info, idx, length, history, isActual, borderColor }){
+function TableRow({ columns, info, idx, length, history, isActual, borderColor, deadTimes, userType }){
 
     return(
         <Row 
@@ -23,8 +23,9 @@ function TableRow({ columns, info, idx, length, history, isActual, borderColor }
                     title={column.title}
                     info={info}
                     idx={idx}
-                    history={history}
-                    
+                    history={history}  
+                    deadTimes={deadTimes} 
+                    userType={userType}
                 />
             ))}
         </Row>

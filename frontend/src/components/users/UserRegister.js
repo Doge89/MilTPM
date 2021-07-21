@@ -19,7 +19,6 @@ function UserRegister({ priv, lines, userLine, userKeys }){
 
     const [ dataFounded, setDataFounded ] = useState(false)
     const [ errMessage, setErrMessage ] = useState("")
-    const [ keys, setKeys ] = useState([])
     const [ names, setNames ] = useState([])
     const [ renderTable, setRenderTable ] = useState(false)
 
@@ -62,7 +61,6 @@ function UserRegister({ priv, lines, userLine, userKeys }){
                 return setErrMessage(data.message)
             }
             setDataFounded(true)
-            setKeys(data.key)
             setNames(data.name)
         }).catch(error => console.error(error))
     }
@@ -88,11 +86,10 @@ function UserRegister({ priv, lines, userLine, userKeys }){
     }, [renderTable])
 
     useEffect(() => {
-        console.info(userKeys)
         if(userKeys.length !== 0){
             getStaff()
         }
-    }, [])
+    }, [userKeys])
 
     return(
 
