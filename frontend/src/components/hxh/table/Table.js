@@ -39,7 +39,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     const [userType, setUserType] = useState('')
     const [openModal, setOpenModal] = useState(false)
     const [dataLine, setDataLine] = useState('')
-    const [line, setLine] = useState('')
+    const [deadTimes, setDeadTimes] = useState([])
     const [idxAct, setIdxAct] = useState(null)
 
     const postData = async (data) => {
@@ -102,11 +102,19 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         return response.data
     }
 
+    // const getDeadTimes = async () => {
+    //     const response = await axios({
+    //         url: `${URL}/hxh/get/time/${userType === 'production' ? '' : `${context.linea}`}/`,
+    //         method: 'GET'
+    //     })
+    //     return response.data
+    // }
+
     const prepareData = () => {
         return JSON.stringify({
             actual: context.actual.map(value => Number(value)), diferencia: context.diferencia.map(value => Number(value)), 
             codigo: context.codigo, descripcion: context.descripcion, plan: context.plan.map(value => Number(value)),
-            comentario: context.comentario,tiempoMuerto: context.timeout, faltas: context.faltas, linea: context.linea, 
+            comentario: context.comentario, tiempoMuerto: context.timeout, faltas: context.faltas, linea: context.linea, 
             incidencias: context.incidencias, mod: context.mod, entrenamiento: context.entrenamiento, bajas: context.bajas,
             consola: context.consola, contramedida: context.contramedida, job: context.job, cantidad: context.cantidad
         })
@@ -121,6 +129,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
     const closeModal = () => {setOpenModal(false)}
 
     const handleBtn = () => {
+        //context.timeout.pop()
+        //console.info(context.timeout)
         const data = {
             data: prepareData()
         }
@@ -140,7 +150,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         timeout = setTimeout(checkHour, 1000 * 60)
     }
 
-    const setInfoTable = (data) => {
+    const setInfoTable = (data, deadTimes) => {
 
         let newPLan = []
         let newActual = []
@@ -152,20 +162,22 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         let newCantidad = []
         let newTimeout = []
         let newWorkers = []
+        let newDeadTimes = []
 
         for(let i = 0; i < data?.length; i++){
             newPLan[i] = data[i].plan.toString()
             newActual[i] = data[i].actual.toString()
             newDiferencia[i] = data[i].diferencia.toString()
+            newDeadTimes[i] = deadTimes[i]
             newCodigo[i] = data[i].codigo
             newDescripcion[i] = data[i].descripcion
             newComentario[i] = data[i].comentarios
             newContramedida[i] = data[i].contramedida
             newCantidad[i] = data[i].cantidad
             newTimeout[i] = data[i].tiempoMuerto
-            newWorkers[i] = data[i].operarios
+            newWorkers[i] = data[i].operarios.toString()
         }
-
+        //console.info(newDeadTimes)
         context.dispatchPlan({ type: 'SET', value: newPLan })
         context.dispatchActual({ type: 'SET', value: newActual })
         context.dispatchDiferencia({ type: 'SET', value: newDiferencia })
@@ -174,7 +186,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
         context.dispatchComentario({ type: 'SET', value: newComentario })
         context.dispatchContramedida({ type: 'SET', value: newContramedida })
         context.dispatchCantidad({ type: 'SET', value: newCantidad })
-        context.dispatchTimeout({ type: 'SET', value: newTimeout })
+        context.dispatchTimeout({ type: 'SET', value: newDeadTimes })
         context.dispatchWorker({type: "SET", value: newWorkers})
     }
 
@@ -222,18 +234,19 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                     context.dispatchActual({ type: 'SET', value: newActual })
                 }
             }).catch(e => console.log(e))
-        }, 1000);
+        }, 5000);
     }
 
     const getAllInfo = (userType) => {
-        getData(userType).then(({ InfProd, InfGen, Linea, Andon, lineas }) => {
+        getData(userType).then(({ InfProd, InfGen, Linea, Andon, lineas, deadTimes }) => {
             const dataInfo = JSON.parse(InfGen)
             const data = JSON.parse(InfProd).map(row => row.fields)
             const andon = JSON.parse(Andon).map(row => row.fields)
             console.info(data)
             setDataFetched(data)
-            setInfoTable(data)
-            console.log(dataInfo)
+            setInfoTable(data, deadTimes)
+            setDeadTimes(deadTimes)
+            //console.log(deadTimes)
             setGeneralInfo({...dataInfo, linea: JSON.parse(Linea).linea})
             setDataLine(JSON.parse(Linea).linea)
             setAndonInfo(andon)
@@ -325,7 +338,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                 let lineStatus = status.map(item => {return item})
                 actStatus.current = lineStatus
             })
-            .catch(error => console.error(error))       
+            .catch(error => console.error(error))     
         }
     }, [context.linea])
 
@@ -342,7 +355,7 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
             }, 9000)
             intervalColor.current = setInterval(getColorCurrent, 1000)
         }
-        return () => {clearInterval(intervalColor.current)}
+        return () => {clearInterval(intervalColor.current); clearInterval(intervalStatus.current)}
     }, [actStatus.current])
 
     return(
@@ -368,6 +381,8 @@ function Table({ setRerender, rerender, hxhHistory, data, setGeneralInfo, setLin
                         length={returnSchedule().length}
                         isActual={idx === idxAct ? true : false}
                         borderColor={currentColor.current}
+                        deadTimes={deadTimes}
+                        userType={userType}
                     />
                 ))}
                 </>

@@ -51,7 +51,7 @@ function UsersMain(){
         .then((data) => {
             if(data.Logged){
                 setPriv(data.priv)
-                if(data.priv == "production"){setUserLine(data.linea)}
+                if(data.priv === "production"){setUserLine(data.linea)}
                 
                 getAllLines()
                 .then(({ lineas }) => {
@@ -60,6 +60,7 @@ function UsersMain(){
                     fetchStaff()
                     .then(({ key }) => {
                         context.dispatchKey({type: "SET", value: key})
+                        setKeys(key)
                     })
                     .catch(error => console.error(error))
 

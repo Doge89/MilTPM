@@ -1,14 +1,16 @@
 import ast, json, time
 from icecream import ic
+from hxh.models import *
 from itertools import chain
 from datetime import datetime
-from .models import infoGeneral, infoProduccion
-from usuarios.models import Usuarios, Linea, Andon, AndonHist, LineaStaff
+from usuarios.models import *
 from django.shortcuts import render
-from django.forms.models import model_to_dict
-from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from staff.views import __getHourRange
 from django.utils.dateparse import parse_date
+from django.forms.models import model_to_dict
+from .models import infoGeneral, infoProduccion
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 
@@ -76,6 +78,7 @@ def get(request, linea = None):
             serializedInfGen = json.dumps(datInfGen)
             datLinea = model_to_dict(datLinea)
             serializedLinea = json.dumps(datLinea)
+            
             # print(serializedInfProd)
             # print(serializedInfGen)
             # print(serializedLinea)
@@ -92,11 +95,34 @@ def get(request, linea = None):
                 print("NO EXISTEN REGISTROS EN LA LINEA")
                 return HttpResponse(status=200)
             #ic(serializedInfProd)
-            return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea, 'Andon': serializedAndon}, status = 200)
+
+            now = datetime.now()
+            ranges = ()
+            tmpDT = []
+            
+            #PREPARE DATA FOR THE DT INPUT
+            for i in datosInfProd:
+                if i.tiempoMuerto:
+                    continue
+                ranges = _getNumber()
+                tmpDT = _prepareData(rangeNumb=ranges[0], hour=ranges[1], times=[None] * ranges[0], idx = 0, to_line=line)
+                break
+
+            serializedDT = [i.tiempoMuerto for i in datosInfProd] if tmpDT == [] else tmpDT
+            
+            if now.hour != 6 and now.hour != 15 and now.hour != 23:
+                prodLine = request.session['Linea'] if 'Linea' in request.session else line
+                prevWorkers = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{prodLine}", fecha__exact=f"{now.date()}", inicio__exact = f"{now.hour - 1}:00:00")
+                actWorkers = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{prodLine}", fecha__exact=f"{datetime.date(now)}", inicio__exact=f"{now.hour}:00:00")
+                actWorkers.operarios = prevWorkers.operarios
+                actWorkers.save()
+                ic({'prev': prevWorkers, 'act': actWorkers})
+
+            return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea, 'Andon': serializedAndon, 'deadTimes': serializedDT}, status = 200)
         except Exception as e:
             print(e)
-        #return HttpResponse(status=200)
-    return HttpResponse(status=401)
+            return HttpResponse(status=500)
+    return HttpResponse(status=405)
 
 #ACTUALIZA LA INFORMACION EN LA BD
 @require_http_methods(['POST'])
@@ -105,12 +131,14 @@ def post(request, linea = None):
     if request.method == 'POST':
         try:
             data = request.POST.get('data')
+            #print(data)
             data = ast.literal_eval(data)
             print(data)
             dataProd = _get_objects(Linea = data['linea'])
             general = infoGeneral.objects.filter(linea_id__linea__exact=f"{data['linea']}").last()
             j = 0
             for i in dataProd:
+                ic(j)
                 i.plan = data['plan'][j]
                 i.actual = data['actual'][j]
                 i.diferencia = data['diferencia'][j]
@@ -132,8 +160,9 @@ def post(request, linea = None):
             general.save()
         except Exception as e:
             print(e)
+            return HttpResponse(status = 500)
         return HttpResponse(status=201)
-    return HttpResponse(status = 401)
+    return HttpResponse(status = 405)
 
 @require_http_methods(['GET'])
 def _get_actual(request, linea = None):
@@ -236,7 +265,7 @@ def _get_all_hxh(request):
                 table = _get_objects(request.session['Linea'] if 'Linea' in request.session else request.session['admin_line'])
                 andHist = __get_And_Hist(request.session['Linea'] if 'Linea' in request.session else request.session['admin_line'])
                 generalInfo = LineaStaff.objects.get(linea_id__linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else request.session['admin_line']}", turno__exact=__getTurn())
-                staffOf = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.sessio['Linea'] if 'Linea' in request.session else request.session['admin_line']}").last()
+                staffOf = infoGeneral.objects.filter(linea_id__linea__exact=f"{request.session['Linea'] if 'Linea' in request.session else request.session['admin_line']}").last()
                 totalWorkers = generalInfo.staff - (int(staffOf.faltas) if staffOf.faltas else 0)
                 serializedData = {
                     'piecesOk': [i.actual for i in table],
@@ -273,6 +302,23 @@ def _get_status_line(request, linea = None):
             return HttpResponse(status = 500)
     return HttpResponse(status = 405)
 
+@require_http_methods(['GET'])
+def _getDeadTime(request, linea = None):
+
+    if request.method == "GET":
+        try:
+            size = _getNumber()
+            data = [None] * size[0]
+            #ic(data)
+            to_line = request.session['Linea'] if 'Linea' in request.session else linea
+            deadTimes = AndonHist.objects.filter(linea_id__linea__exact=to_line, finishReg__range=(f"{datetime.date(datetime.now())} {__getHourRange()[0]}", f"{datetime.date(datetime.now())} {__getHourRange()[1]}"))
+            data = _prepareData(rangeNumb = size[0], hour = size[1], times = data, idx = 0, to_line=to_line)
+            return JsonResponse({'times': [i.tiempoM for i in deadTimes], 'deadTimes': data}, status = 200)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
+
 
  
 #METODOS SIN VISTAS 
@@ -280,10 +326,42 @@ def _get_objects(Linea = None):
     #print(Linea)
     ahora = datetime.now()
     if ahora.hour >= 6 and ahora.hour < 15:
-        datosInfProd = infoProduccion.objects.filter(inicio__range=('06:00:00','15:00:00'), fecha__exact=datetime.date(datetime.now()), info_id__linea__linea__exact=f'{Linea}')
+        datosInfProd = infoProduccion.objects.filter(inicio__range=('06:00:00','14:00:00'), fecha__exact=datetime.date(datetime.now()), info_id__linea__linea__exact=f'{Linea}')
     elif ahora.hour >= 15 and ahora.hour < 23:
-        datosInfProd = infoProduccion.objects.filter(inicio__range=('15:00:00','23:00:00'), fecha__exact=datetime.date(datetime.now()), info_id__linea__linea__exact=f'{Linea}')
+        datosInfProd = infoProduccion.objects.filter(inicio__range=('15:00:00','22:00:00'), fecha__exact=datetime.date(datetime.now()), info_id__linea__linea__exact=f'{Linea}')
     elif ahora.hour == 23 or ahora.hour < 6:
-        datosInfProd = infoProduccion.objects.filter(inicio__range=('23:00:00','06:00:00'), fecha__exact=datetime.date(datetime.now()), info_id__linea__linea__exact=f'{Linea}')
+        datosInfProd = infoProduccion.objects.filter(inicio__range=('23:00:00','05:00:00'), fecha__exact=datetime.date(datetime.now()), info_id__linea__linea__exact=f'{Linea}')
     #print(datosInfProd)
     return datosInfProd
+
+
+def _getNumber() -> tuple:
+    now = datetime.now()
+    return (9, 6) if now.hour >= 6 and now.hour < 15\
+        else (8, 15) if now.hour >= 15 and now.hour < 23\
+            else (7, 23)
+
+#RECURSIVE
+def _prepareData(rangeNumb: int, hour: int , times: list, idx: int, to_line: str) -> list:
+    """
+        Recursive, prepare all the Dead Times of a single hour
+        Returns a list of all the Dead Times in the turn
+    """
+    timeIdx = "00:00:00"
+    if rangeNumb == 0:
+        ic(times)
+        return times
+    else:
+        now = datetime.now()
+        tpm_next_hour = hour + 1 if hour != 23 else 0
+        to_time = AndonHist.objects.filter(linea_id__linea__exact=to_line, finishReg__range=(f"{now.date()} {hour}:00:00", f"{now.date()} {tpm_next_hour}:00:00"))
+        
+        for i in to_time:
+            sum_timeIdx = timedelta(hours=int(timeIdx.split(":")[0]), minutes=int(timeIdx.split(":")[1]), seconds=int(timeIdx.split(":")[2]))
+            to_sum_timeIdx = timedelta(hours=int(i.tiempoM.split(":")[0]), minutes=int(i.tiempoM.split(":")[1]), seconds=int(i.tiempoM.split(":")[2]))
+            tmp_sum = sum_timeIdx + to_sum_timeIdx
+            timeIdx = f"{tmp_sum}"
+        
+        times[idx] = timeIdx
+
+        return _prepareData(rangeNumb=rangeNumb - 1, hour = hour + 1 if hour != 23 else 0, times = times, idx= idx + 1, to_line=to_line)

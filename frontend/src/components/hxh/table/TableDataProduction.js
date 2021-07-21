@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
+import axios from 'axios'
 
 import Input from '../../common/Input'
 
@@ -8,13 +9,14 @@ import { Text } from '../../../styles/common'
 import { appContext } from '../../../reducers/ProviderHXH'
 
 import { twoDigits } from '../../../scripts'
-import { maxWidth } from '../../../var'
+import { maxWidth, URL } from '../../../var'
 
-function TableDataProduction({ getWidthCell, idx, history }){
+
+function TableDataProduction({ getWidthCell, idx, history, deadTimes, userType }){
 
     const context = useContext(appContext)
     
-    const [timeoutHxh, setTimeoutHxh] = useState('00:00:00')
+    // const [timeoutHxh, setTimeoutHxh] = useState('00:00:00')
     const [diferencia, setDiferencia] = useState('')
     const [color, setColor] = useState('')
     const [inputcolor, setInputColor] = useState('')
@@ -63,25 +65,24 @@ function TableDataProduction({ getWidthCell, idx, history }){
         
     }
 
-    const setTimeoutValue = dif => {
-        let newTimeout = [...context.timeout]
-        if(dif < 0){
-            const timeout = (Math.abs(dif) * 60 * 60 ) / Number(context.plan[idx])
-            const timeoutValue = `${twoDigits(Math.floor(timeout / 3600) % 60)}:${twoDigits(Math.floor(timeout / 60) % 60)}:${twoDigits(parseInt(timeout%60))}`
-            setTimeoutHxh(timeoutValue)
-            newTimeout[idx] = timeoutValue
-        }else{ 
-            setTimeoutHxh('00:00:00') 
-            newTimeout[idx] = '00:00:00'
-        }
-        context.dispatchTimeout({ type: 'SET', value: newTimeout })
-    } 
+    // const setTimeoutValue = dif => {
+    //     let newTimeout = [...context.timeout]
+    //     if(dif < 0){
+    //         const timeout = (Math.abs(dif) * 60 * 60 ) / Number(context.plan[idx])
+    //         const timeoutValue = `${twoDigits(Math.floor(timeout / 3600) % 60)}:${twoDigits(Math.floor(timeout / 60) % 60)}:${twoDigits(parseInt(timeout%60))}`
+    //         setTimeoutHxh(deadTimes[idx])
+    //         newTimeout[idx] = deadTimes[idx]
+    //     }else{ 
+    //         setTimeoutHxh('00:00:00') 
+    //         newTimeout[idx] = '00:00:00'
+    //     }
+    //     context.dispatchTimeout({ type: 'SET', value: deadTimes })
+    // } 
 
     useEffect(() => {
         const dif = Number(context.actual[idx]) - Number(context.plan[idx])
         if(!isNaN(dif)){
             setDifference(dif)
-            setTimeoutValue(dif)
         }
     }, [context.plan[idx], context.actual[idx]])
 
@@ -166,10 +167,9 @@ function TableDataProduction({ getWidthCell, idx, history }){
                 <Input 
                     width="90%"
                     woLabel
-                    inputClassName="border-bottom text-align"
-                    
+                    inputClassName="border-bottom text-align"                  
                     disabled
-                    value={timeoutHxh}
+                    value={deadTimes[idx]}
                 />
             </Cell>
         </div>

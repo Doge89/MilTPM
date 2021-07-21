@@ -104,7 +104,7 @@ def manage_users(request, linea = None):
                         history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
                         staffUser.linea = staffLine
                         staffUser.save()
-                        workers = __changeWorkers(staffUser.status, productionInfo)
+                        workers = __changeWorkers(staffUser.status, productionInfo, request.session['Linea'] if 'Linea' in request.session else data['linea'])
                         return JsonResponse({'date': newEntrance.fecha, "hour": newEntrance.hora, 'workers': workers}, status = 200)
                     raise Exception("Tiene que marcar una salida primero")
                 except Staff.DoesNotExist:
@@ -146,7 +146,7 @@ def manage_exit_users(request, linea = None):
                     staffUser.status = "OFF"
                     history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
                     staffUser.save()
-                    workers = __changeWorkers(staffUser.status, productionInfo)
+                    workers = __changeWorkers(staffUser.status, productionInfo, request.session['Linea'] if 'Linea' in request.session else data['linea'])
                     return JsonResponse({'hour': newEntrance.hora, 'date': newEntrance.fecha, 'workers': workers}, status = 200)
                 raise Exception("Tiene que marcar primero la entrada")
         except Exception as e:
@@ -175,7 +175,12 @@ def __getHourRange() -> tuple:
         ("15:00:00", "23:00:00") if datetime.now().hour >= 13 and datetime.now().hour < 23 else \
             ("23:00:00","06:00:00")
 
-def __changeWorkers(reazon: str, objProduction: infoProduccion) -> int:
+def __changeWorkers(reazon: str, objProduction: infoProduccion, linea: str) -> int:
+    if objProduction.operarios == 0:
+        to_sum_workers = infoProduccion.objects.get(info_id__linea_id__linea__exact=linea, inicio__exact = f"{datetime.now().hour - 1}:00:00", fecha__exact=f"{datetime.date(datetime.now())}")
+        objProduction.operarios = to_sum_workers.operarios
+        objProduction.save()
+
     if reazon == "IN":
         objProduction.operarios += 1
     else:
