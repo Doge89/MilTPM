@@ -11,5 +11,6 @@ urlpatterns = [
     path('getIn/', views.manage_users),
     path('exits/<linea>/', views.manage_exit_users),
     path('exits/', views.manage_exit_users),
+    path('filter/', views.QueryByFilter)
 ]
 
