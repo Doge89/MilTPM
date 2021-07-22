@@ -170,3 +170,53 @@ export const FormUserIn = styled.div`
     }
 
 `
+
+export const QueryForm = styled.div`
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: row ;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px;
+    margin: 10px 0
+
+    
+
+`
+
+export const QuerySearchColumn = styled.div`
+    width: 33.3%;
+    display: flex;
+    align-items: center;
+    flex-flow: column wrap;
+    justify-content: center;
+    padding: 5px;
+
+    .query-form{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-flow: column wrap;
+        margin: 10px 0;
+        padding: 5px;
+    }
+    .header{
+        font-size: 25px;
+        color: rgb(254, 13, 43);
+        text-transform: uppercase;
+        text-align: center;
+        letter-spacing: normal;
+        word-spacing: 0.01em;
+        word-break: break-word;
+
+    }
+    .label{
+        margin-right: 10px;
+        letter-spacing: normal;
+        font-size: 16px;
+        color: rgb(254, 13, 43);
+        font-weight: bold;
+    }
+`   

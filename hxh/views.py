@@ -99,6 +99,7 @@ def get(request, linea = None):
             now = datetime.now()
             ranges = ()
             tmpDT = []
+            workers = 0
             
             #PREPARE DATA FOR THE DT INPUT
             for i in datosInfProd:
@@ -110,13 +111,12 @@ def get(request, linea = None):
 
             serializedDT = [i.tiempoMuerto for i in datosInfProd] if tmpDT == [] else tmpDT
             
-            if now.hour != 6 and now.hour != 15 and now.hour != 23:
-                prodLine = request.session['Linea'] if 'Linea' in request.session else line
-                prevWorkers = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{prodLine}", fecha__exact=f"{now.date()}", inicio__exact = f"{now.hour - 1}:00:00")
-                actWorkers = infoProduccion.objects.get(info_id__linea_id__linea__exact=f"{prodLine}", fecha__exact=f"{datetime.date(now)}", inicio__exact=f"{now.hour}:00:00")
-                actWorkers.operarios = prevWorkers.operarios
-                actWorkers.save()
-                ic({'prev': prevWorkers, 'act': actWorkers})
+            actWorkers = infoProduccion.objects.get(info_id__linea_id__linea__exact=line, fecha__exact=f"{now.date()}", inicio__exact=f"{now.hour}:00:00")
+            to_workers = Staff.objects.filter(linea_id__linea__exact=line)
+            for i in to_workers:
+                if i.status == "IN": workers += 1
+            actWorkers.operarios = workers
+            actWorkers.save()         
 
             return JsonResponse({'InfProd':serializedInfProd, 'InfGen': serializedInfGen, 'Linea': serializedLinea, 'Andon': serializedAndon, 'deadTimes': serializedDT}, status = 200)
         except Exception as e:
@@ -347,6 +347,7 @@ def _prepareData(rangeNumb: int, hour: int , times: list, idx: int, to_line: str
         Recursive, prepare all the Dead Times of a single hour
         Returns a list of all the Dead Times in the turn
     """
+    ic(idx)
     timeIdx = "00:00:00"
     if rangeNumb == 0:
         ic(times)

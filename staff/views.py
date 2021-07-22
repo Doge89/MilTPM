@@ -6,8 +6,8 @@ from usuarios.models import *
 from datetime import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 # Create your views here.
 
 def index(request):
@@ -104,8 +104,8 @@ def manage_users(request, linea = None):
                         history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
                         staffUser.linea = staffLine
                         staffUser.save()
-                        workers = __changeWorkers(staffUser.status, productionInfo, request.session['Linea'] if 'Linea' in request.session else data['linea'])
-                        return JsonResponse({'date': newEntrance.fecha, "hour": newEntrance.hora, 'workers': workers}, status = 200)
+                        workers = __changeWorkers(staffUser.status, productionInfo, request.session['Linea'] if 'Linea' in request.session else data['linea'], datetime.now().hour + 1)
+                        return JsonResponse({'date': newEntrance.fecha, "hour": newEntrance.hora, 'workers': 0}, status = 200)
                     raise Exception("Tiene que marcar una salida primero")
                 except Staff.DoesNotExist:
                     print("NO EXISTE USUARIO CON ESA LLAVE")
@@ -146,8 +146,8 @@ def manage_exit_users(request, linea = None):
                     staffUser.status = "OFF"
                     history = History.objects.create(Id = None, user = staffUser, linea = staffLine, status = staffUser.status, registro = datetime.now())
                     staffUser.save()
-                    workers = __changeWorkers(staffUser.status, productionInfo, request.session['Linea'] if 'Linea' in request.session else data['linea'])
-                    return JsonResponse({'hour': newEntrance.hora, 'date': newEntrance.fecha, 'workers': workers}, status = 200)
+                    workers = __changeWorkers(staffUser.status, productionInfo, request.session['Linea'] if 'Linea' in request.session else data['linea'], datetime.now().hour + 1)
+                    return JsonResponse({'hour': newEntrance.hora, 'date': newEntrance.fecha, 'workers': 0}, status = 200)
                 raise Exception("Tiene que marcar primero la entrada")
         except Exception as e:
             print(e)
@@ -168,22 +168,84 @@ def History_Line(request, linea = None):
             return HttpResponse(status = 500)
     return HttpResponse(status = 405)
 
+@require_http_methods(['POST', 'GET', 'PUT', 'DELETE'])
+@csrf_exempt
+def QueryByFilter(request):
+
+    def SortData(obj_to_sort: History, **kwargs):
+        """
+            Sort de data given by the params
+        """
+        query1 = ""
+        query2 = ""
+        query3 = ""
+        if 'byName' and "byHour" and "byAsc" in kwargs:
+
+            query1 = "-user__name" if kwargs['byName'] and not kwargs['byAsc'] else \
+                "user__name" if kwargs['byName'] and kwargs['byAsc'] else ""
+
+            query2 = "-registro" if kwargs['byHour'] and not kwargs['byAsc'] else \
+                "registro" if kwargs['byHour'] and kwargs['byAsc'] else ""
+
+            query3 = "pk" if kwargs['byAsc'] else "-pk"
+            ic("OK")
+            data = obj_to_sort.order_by(f"{query1}") if query1 and not query2 else \
+                obj_to_sort.order_by(f"{query2}") if not query2 and query2 else \
+                    obj_to_sort.order_by(f"{query1}", f"{query2}") if query1 and query2 else \
+                        obj_to_sort.order_by(f"{query3}")
+            ic(data)
+        return data
+
+    ic(request.method)
+    if request.method == "POST":
+        try:
+            now = datetime.now()
+            data = request.POST.get('data')
+            data= ast.literal_eval(data)
+            line_to_query = request.session['Linea'] if 'Linea' in request.session else data['line']
+            for i in data:
+                # ic("%s %s" % (type(data[i]), data[i]))
+                data[i] = bool(data[i])
+            ic(data)
+            query_range = (f"{now.date()} {__getHourRange()[0]}", f"{now.date()} {__getHourRange()[1]}")
+            res_query = History.objects.filter(registro__range=query_range, linea_id__linea__exact = line_to_query)
+            #START "DYNAMIC" QUERY
+            if(data['first']):
+                res_query = res_query.first()
+                if res_query != None:
+                    return JsonResponse({"key": [res_query.user.name], "hour": [res_query.registro], "status": [res_query.status]}, status = 200)
+                return JsonResponse({ 'key': [], 'hour': [], 'status': [] }, status = 200)
+            
+            if(data['last']):
+                res_query = res_query.last()
+                if res_query != None:
+                    return JsonResponse({"key": [res_query.user.name], "hour": [res_query.registro], "status": [res_query.status]}, status = 200)
+                return JsonResponse({ 'key': [], 'hour': [], 'status': [] }, status = 200)
+
+            res_query = SortData(obj_to_sort=res_query, byName = data['orderByName'], byHour = data['orderByHour'], byAsc = data['orderAsc'])
+
+            return JsonResponse({ 'key': [i.user.name for i in res_query], 'hour': [i.registro for i in res_query], 'status': [i.status for i in res_query] }, status = 200)
+        except Exception as e:
+            print(e)
+            return HttpResponse(status = 500)
+    return HttpResponse(status = 405)
+
 
 #ONLY METHODS
 def __getHourRange() -> tuple:
-    return ("06:00:00", "15:00:00") if datetime.now().hour >= 6 and datetime.now().hour < 13 else \
-        ("15:00:00", "23:00:00") if datetime.now().hour >= 13 and datetime.now().hour < 23 else \
+    return ("06:00:00", "14:00:00") if datetime.now().hour >= 6 and datetime.now().hour < 13 else \
+        ("15:00:00", "22:00:00") if datetime.now().hour >= 13 and datetime.now().hour < 23 else \
             ("23:00:00","06:00:00")
 
-def __changeWorkers(reazon: str, objProduction: infoProduccion, linea: str) -> int:
-    if objProduction.operarios == 0:
-        to_sum_workers = infoProduccion.objects.get(info_id__linea_id__linea__exact=linea, inicio__exact = f"{datetime.now().hour - 1}:00:00", fecha__exact=f"{datetime.date(datetime.now())}")
-        objProduction.operarios = to_sum_workers.operarios
-        objProduction.save()
-
-    if reazon == "IN":
-        objProduction.operarios += 1
-    else:
-        objProduction.operarios -= 1
+def __changeWorkers(reazon: str, objProduction: infoProduccion, linea: str, nxt_hour: int) -> int:
+    workes = 0
+    to_sum_workers = Staff.objects.filter(linea_id__linea__exact=linea)
+    worker_next_hour = infoProduccion.objects.get(inicio__exact=f"{nxt_hour}:00:00", fecha__exact=f"{datetime.date(datetime.now())}", info_id__linea_id__linea__exact=f"{linea}")
+    for i in to_sum_workers:
+        if i.status == "IN":
+            workes += 1
+    objProduction.operarios = workes
+    worker_next_hour.operarios = workes
+    worker_next_hour.save()
     objProduction.save()
     return objProduction.operarios

@@ -156,7 +156,7 @@ class AndonHist(models.Model):
     linea = models.ForeignKey(Linea, on_delete=models.CASCADE, related_name='histLin', default=None)
     registro = models.DateTimeField(verbose_name=_('Fecha y hora de reporte'), auto_now_add=False)
     finishDep = models.CharField(max_length=50, verbose_name=_("Razon de la falla"), help_text=_("Razon de la falla"), blank = False, default = '')
-    tiempoM = models.CharField(max_length=50, verbose_name=_("Tiempo Muerto"), blank = True, default = '', help_text=_("Tiempo Muerto"))
+    tiempoM = models.CharField(max_length=50, verbose_name=_("Tiempo Muerto"), blank = True, default = '00:00:00', help_text=_("Tiempo Muerto"))
     finishReg = models.DateTimeField(verbose_name=_("Fin Tiempo Muerto"), auto_now_add=False, help_text=_("Fecha y hora exacta de finalizacion"), default=datetime.now())
 
     class Meta:

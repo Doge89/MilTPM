@@ -117,6 +117,7 @@ def finish_andon(request):
             ahoraInit = request.POST.get('inicio')
             descrip = request.POST.get('descrip')
             descrip = descrip if descrip != None else ""
+            ic(tiempo)
             tiempo = int(tiempo)
 
             print(ahoraInit)
@@ -148,7 +149,7 @@ def finish_andon(request):
                 andHist.save()
                 andAct.delete()
                 
-            elif hrInit != finHr and user.clave == clave:
+            elif int(hrInit) != finHr and user.clave == clave:
                 ahoraInit = datetime.strptime(ahoraInit, '%Y/%m/%d %H:%M:%S')
                 # print(ahoraInit)
                 # print(fin)
