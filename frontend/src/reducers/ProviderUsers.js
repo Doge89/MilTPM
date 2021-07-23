@@ -19,11 +19,15 @@ function ProviderUsers({ children }){
     const [ orderByName, dispatchOrderByName ] = useReducer(defaultReducer, false)
     const [ orderByHour, dispatchOrderByHour ] = useReducer(defaultReducer, false)
     const [ orderAsc, dispatchOrderAsc ] = useReducer(defaultReducer, false)
+    const [ usersIn, dispatchUsersIn ] = useReducer(defaultReducer, false)
+    const [ usersOff, dispatchUsersOff ] = useReducer(defaultReducer, false)
+
 
     return(
         <appContext.Provider
             value={{key, totalStaff, staff, turn, name, register, newKey, newName,
-            getFirst, orderByName, orderByHour, orderAsc, getLast ,dispatchGetFirst, dispatchOrderByName,
+            getFirst, orderByName, orderByHour, orderAsc, getLast, usersIn, usersOff,
+            dispatchGetFirst, dispatchOrderByName, dispatchUsersIn, dispatchUsersOff,
             dispatchOrderByHour, dispatchName, dispatchNewKey, dispatchNewName, dispatchRegister, dispatchStaff,
             dispatchTotalStaff, dispatchTurn, dispatchKey, dispatchOrderAsc, dispatchGetLast}}
         >

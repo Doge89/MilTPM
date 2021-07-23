@@ -19,6 +19,9 @@ function QueryColumn({ title, idx }){
     const handleOrderAsc = e => context.dispatchOrderAsc({ type: "SET", value: true })
     const handleOrderDesc = e => context.dispatchOrderAsc({ type: "SET", value: false })
 
+    const handleUsersIn = e => context.dispatchUsersIn({ type: "SET", value: context.usersOff ? false : context.usersIn ? false : true })
+    const handleUsersOff = e => context.dispatchUsersOff({ type: "SET", value: context.usersIn ? false : context.usersOff ? false : true })
+
     return(
         <QuerySearchColumn>
             <h2 className="header">{title}</h2>
@@ -49,7 +52,7 @@ function QueryColumn({ title, idx }){
                     value={context.orderByHour}
                 />
                </>
-            ) : (
+            ) : title === "Ordenar: " ? (
                 <>
                 <QueryColumnRow 
                     subtitles="Ascendente"
@@ -60,6 +63,19 @@ function QueryColumn({ title, idx }){
                     handleOneOptionRadio={handleOrderDesc}
                     subtitles="Descendente"
                     value={!context.orderAsc}
+                />
+                </>
+            ) : (
+                <>
+                <QueryColumnRow 
+                    subtitles="En Linea"
+                    handleOneOptionRadio={handleUsersIn}
+                    value={context.usersIn}
+                />
+                <QueryColumnRow 
+                    handleOneOptionRadio={handleUsersOff}
+                    subtitles="Fuera de Linea"
+                    value={context.usersOff}
                 />
                 </>
             )}

@@ -235,7 +235,7 @@ function Resume( { open, close, line } ){
                         />
  
                     </ResumeRowContainer>
-                    <ResumeRowContainer>
+                    {/* <ResumeRowContainer>
                         <Pieces 
                             title="Operarios"
                             staff={totalStaff}
@@ -246,7 +246,7 @@ function Resume( { open, close, line } ){
                             staff={staff}
                             staffResume={true}
                         />
-                    </ResumeRowContainer>
+                    </ResumeRowContainer> */}
                     <div>
                         {labels.map((label, idx) => (
                             <DeadTime 
