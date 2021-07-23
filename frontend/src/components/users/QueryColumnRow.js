@@ -6,13 +6,6 @@ import { Container } from '../../styles/common'
 import RadioButton from '../common/RadioButton'
 
 function QueryColumnRow({ subtitles, handleOneOptionRadio, value }){
-
-    const context = useContext(appContext)
-
-    useEffect(() => {
-        console.info(subtitles)
-    }, [])
-
     return(
         <Container 
             width="100%"

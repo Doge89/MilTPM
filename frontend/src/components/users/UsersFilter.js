@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React from 'react'
 
 import QueryColumn from './QueryColumn'
 import { QueryForm } from '../../styles/users'
 
 function UserFilter({  }){
 
-    const labels = ["Obtener el: ", "Ordenar por: ", "Ordenar: "]
+    const labels = ["Obtener el: ", "Ordenar por: ", "Ordenar: ", "Operarios: "]
 
     return(
 

@@ -49,7 +49,8 @@ function UserGeneral({ priv, lines, userLine }){
     const prepareData = () => {
         return JSON.stringify({
             first: context.getFirst ? 1 : 0, last: context.getLast ? 1 : 0, orderByName: context.orderByName ? 1 : 0,
-            orderByHour: context.orderByHour ? 1 : 0, orderAsc: context.orderAsc ? 1 : 0, line: userLine || selectedLine
+            orderByHour: context.orderByHour ? 1 : 0, orderAsc: context.orderAsc ? 1 : 0, 
+            usersIn: context.usersIn ? 1 : 0, usersOff: context.usersOff ? 1 : 0 ,line: userLine || selectedLine
         })
     }
 
@@ -99,7 +100,8 @@ function UserGeneral({ priv, lines, userLine }){
             })
             .catch(error => console.error(error))
         }
-    }, [context.getLast, context.getFirst, context.orderByName, context.orderAsc, context.orderByHour])
+    }, [context.getLast, context.getFirst, context.orderByName, context.orderAsc, 
+        context.orderByHour, context.usersIn, context.usersOff])
 
     useEffect(() => {
         if(userLine !== ""){
